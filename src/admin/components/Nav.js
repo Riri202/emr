@@ -21,13 +21,17 @@ import ListItemText from '@mui/material/ListItemText';
 import Avatar from '@mui/material/Avatar';
 import { FaHospitalUser, FaUserNurse } from 'react-icons/fa';
 import { RiAdminLine } from 'react-icons/ri';
-import { MdOutlineInventory } from 'react-icons/md';
+import { MdOutlineInventory, MdSick } from 'react-icons/md';
+import { Person } from '@mui/icons-material';
+
+//admin pages
 import WorkerLoginDetails from '../pages/WorkerLoginDetails';
 import AdminLoginDetails from '../pages/AdminLoginDetails';
 import Inventory from '../pages/Inventory';
 import PatientsBiodata from '../pages/PatientsBiodata';
 import PatientDetails from '../pages/Patients';
-import { Person } from '@mui/icons-material';
+import Symptoms from '../pages/Symptoms';
+import Diagnosis from '../pages/Diagnosis';
 
 const drawerWidth = 240;
 
@@ -117,6 +121,12 @@ export default function Nav() {
     if (index === 3) {
       navigate(`/patients-biodata`);
     }
+    if (index === 4) {
+      navigate(`/symptoms`);
+    }
+    if (index === 5) {
+      navigate(`/diagnosis`);
+    }
   };
 
   // const handleListItemActive = () => {
@@ -152,7 +162,14 @@ export default function Nav() {
         </DrawerHeader>
         <Divider />
         <List>
-          {['Worker Login', 'Admin Login', 'Inventory', 'Patients Bio-Data'].map((text, index) => (
+          {[
+            'Worker Login',
+            'Admin Login',
+            'Inventory',
+            'Patients Bio-Data',
+            'Symptoms',
+            'Diagnosis'
+          ].map((text, index) => (
             <ListItem key={text} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 sx={{
@@ -176,8 +193,12 @@ export default function Nav() {
                     <RiAdminLine />
                   ) : index === 2 ? (
                     <MdOutlineInventory />
-                  ) : (
+                  ) : index === 3 ? (
                     <FaHospitalUser />
+                  ) : index === 4 ? (
+                    <MdSick />
+                  ) : (
+                    <MdSick />
                   )}
                 </ListItemIcon>
                 <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
@@ -214,6 +235,8 @@ export default function Nav() {
           <Route path="/inventory" element={<Inventory />} />
           <Route path="/patients-biodata" element={<PatientsBiodata />} />
           <Route path="/patients-biodata/:id/:name" element={<PatientDetails />} />
+          <Route path="/symptoms" element={<Symptoms />} />
+          <Route path="/diagnosis" element={<Diagnosis />} />
         </Routes>
       </Box>
     </Box>
