@@ -19,7 +19,7 @@ const useStyles = makeStyles({
   }
 });
 
-const headers = ['No', 'Name', 'Quantity', 'Unit Price (#)', 'Edit', 'Delete'];
+const headers = ['No', 'Name', 'Quantity', 'No in pack', 'Unit Price (#)', 'Edit', 'Delete'];
 
 function Inventory() {
   const classes = useStyles();
@@ -28,18 +28,21 @@ function Inventory() {
       id: 1,
       name: 'Panadol',
       quantity: 3,
+      noInPack: 5,
       unitPrice: 35
     },
     {
       id: 2,
       name: 'Ampiclox',
       quantity: 3,
+      noInPack: 5,
       unitPrice: 13
     },
     {
       id: 3,
       name: 'Penicillin',
       quantity: 6,
+      noInPack: 5,
       unitPrice: 45
     }
   ]);
@@ -127,6 +130,7 @@ function Inventory() {
                 <TableCell align="right">{index + 1}</TableCell>
                 <TableCell align="right">{row.name}</TableCell>
                 <TableCell align="right">{row.quantity}</TableCell>
+                <TableCell align="right">{row.noInPack}</TableCell>
                 <TableCell align="right">{row.unitPrice}</TableCell>
                 <TableCell align="right">
                   <IconButton onClick={() => handleRowDelete(row.id)} className="outline-none">
