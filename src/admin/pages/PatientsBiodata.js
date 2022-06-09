@@ -55,20 +55,26 @@ function PatientsBiodata() {
       username: e.target.value
     });
   };
-  const handleRowDelete = (id) => {
-    const filteredRows = rows.filter((row) => row.id !== id);
-    setRows(filteredRows);
-  };
   const handleSubmit = (e) => {
     e.preventDefault();
     setRows([...rows, inputData]);
     //TODO: fix row only being updated on second click
     console.log(rows);
   };
+  // const findRowKeys = (obj) => {
+  //   return Object.keys(obj);
+  // };
+  // const r = rows.forEach((row) => findRowKeys(row));
+  // console.log(r);
 
+  // console.log(findRowKeys(r));
+
+  // const rowItems = findRowKeys(rows, 1);
+  // console.log(rowItems);
   return (
     <div>
       <h2 className="text-lg mb-3">Patients Biodata</h2>
+      {/* <h2 className="text-lg mb-3">{findRowKeys(r)}</h2> */}
       <Box component={Paper} sx={{ mb: 4, padding: 2, display: 'flex', spacing: 2 }}>
         <form onSubmit={handleSubmit}>
           <TextField
@@ -122,15 +128,7 @@ function PatientsBiodata() {
                   </IconButton>
                 </TableCell>
                 <TableCell align="right">
-                  {/* <IconButton onClick={() => handleRowDelete(row.id)}>
-                    <Delete />
-                  </IconButton> */}
-                  <FormDialog
-                    id={row.id}
-                    setRows={setRows}
-                    rows={rows}
-                    delete={() => handleRowDelete(row.id)}
-                  />
+                  <FormDialog id={row.id} setRows={setRows} rows={rows} />
                 </TableCell>
               </TableRow>
             ))}
