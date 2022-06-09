@@ -38,6 +38,7 @@ export default function FormDialog({ id, rows, setRows }) {
         <DialogActions>
           <Box sx={{ display: 'flex' }}>
             <Button
+              sx={{ mr: 3 }}
               onClick={handleClose}
               color="primary"
               variant="outlined"
