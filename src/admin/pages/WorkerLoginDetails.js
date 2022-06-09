@@ -153,8 +153,12 @@ function WorkerLoginDetails() {
                 <TableCell align="right">{row.username}</TableCell>
                 <TableCell align="right">{row.password}</TableCell>
                 <TableCell align="right">{row.role}</TableCell>
-                <TableCell align="right">{row.shiftStart}</TableCell>
-                <TableCell align="right">{row.shiftEnd}</TableCell>
+                <TableCell align="right">
+                  <input type="time" />
+                </TableCell>
+                <TableCell align="right">
+                  <input type="time" />
+                </TableCell>
                 <TableCell align="right">
                   <IconButton className="outline-none">
                     <Edit />
