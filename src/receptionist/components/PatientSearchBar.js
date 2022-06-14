@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
-import SearchIcon from '@mui/icons-material/Search';
+// import IconButton from '@mui/material/IconButton';
+// import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
 
 function PatientSearchBar({ setSearchQuery, setIsSearching }) {
@@ -19,11 +19,10 @@ function PatientSearchBar({ setSearchQuery, setIsSearching }) {
           label="Find a patient"
           variant="outlined"
           placeholder="Search..."
-          size="small"
         />
-        <IconButton type="submit" aria-label="search">
+        {/* <IconButton type="submit" aria-label="search">
           <SearchIcon style={{ fill: 'blue' }} />
-        </IconButton>
+        </IconButton> */}
       </Box>
     </div>
   );
