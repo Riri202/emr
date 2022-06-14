@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import Papa from 'papaparse';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -13,6 +14,7 @@ import Button from '@mui/material/Button';
 import { Edit } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
 import FormDialog from '../components/Dialog';
+import { Divider } from '@material-ui/core';
 
 const useStyles = makeStyles({
   table: {
@@ -24,21 +26,44 @@ const headers = ['No', 'Symptom', 'Edit', 'Delete'];
 
 function Symptoms() {
   const classes = useStyles();
-  const [rows, setRows] = useState([]);
+  const [rows, setRows] = useState(JSON.parse(localStorage.getItem('symptomsRows')) ?? []);
   const [inputData, setInputData] = useState({
     id: '',
     symptom: ''
   });
-  const handleSymptomChange = (e) => {
-    setInputData({
-      ...inputData,
-      symptom: e.target.value
-    });
+  const handleChange = (e) => {
+    setInputData((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value
+    }));
   };
-  const handleIdChange = (e) => {
-    setInputData({
-      ...inputData,
-      id: e.target.value
+  // const handleSymptomChange = (e) => {
+  //   setInputData({
+  //     ...inputData,
+  //     symptom: e.target.value
+  //   });
+  // };
+  // const handleIdChange = (e) => {
+  //   setInputData({
+  //     ...inputData,
+  //     id: e.target.value
+  //   });
+  // };
+  const handleCsvChange = (event) => {
+    // Passing file data (event.target.files[0]) to parse using Papa.parse
+    Papa.parse(event.target.files[0], {
+      header: true,
+      skipEmptyLines: true,
+      complete: function (results) {
+        // console.log(results.data);
+        if (rows.length === 0) {
+          rows.push(...results.data);
+          console.log(rows);
+        } else if (rows.length > 0) {
+          rows.push(...results.data);
+          console.log(rows);
+        }
+      }
     });
   };
   const handleSubmit = (e) => {
@@ -51,25 +76,32 @@ function Symptoms() {
     }
     console.log(rows);
   };
-
+  // persist data in local storage
+  useEffect(() => {
+    localStorage.setItem('symptomsRows', JSON.stringify(rows));
+  }, [rows]);
   return (
     <div>
       <h2 className="text-lg mb-3">Symptoms</h2>
       <Box component={Paper} sx={{ mb: 4, padding: 2, display: 'flex', spacing: 2 }}>
         <form onSubmit={handleSubmit}>
           <TextField
-            label="name"
-            onChange={handleSymptomChange}
+            name="symptom"
+            onChange={handleChange}
             variant="standard"
             sx={{ mr: 3 }}></TextField>
           <TextField
-            label="id"
-            onChange={handleIdChange}
+            name="id"
+            onChange={handleChange}
             variant="standard"
             sx={{ mr: 3 }}></TextField>
           <Button type="submit" className="p-3 mt-1 bg-green-500 text-[#000] mr-3">
             Add new symptom
           </Button>
+        </form>
+        <Divider orientation="vertical" variant="middle" flexItem />
+        <form>
+          <input type={'file'} accept={'.csv'} onChange={handleCsvChange} />
         </form>
       </Box>
       <TableContainer component={Paper}>

@@ -8,7 +8,7 @@ function Login() {
   let navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/admin');
+    navigate('/receptionist');
   };
   return (
     <div className="flex flex-col justify-center items-center h-screen">
