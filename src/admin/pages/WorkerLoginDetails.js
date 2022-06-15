@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -65,7 +65,7 @@ function WorkerLoginDetails() {
       name: 'Stark',
       username: 'Arya',
       password: 16,
-      role: 'nurse',
+      role: 'doctor',
       shiftStart: '10am',
       shiftEnd: '8pm'
     }
@@ -104,7 +104,9 @@ function WorkerLoginDetails() {
     //TODO: fix row only being updated on second click
     console.log(rows);
   };
-
+  useEffect(() => {
+    localStorage.setItem('allWorkers', JSON.stringify(rows));
+  }, [rows]);
   return (
     <>
       <h2 className="text-lg mb-3">Worker Login Details</h2>

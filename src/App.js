@@ -2,7 +2,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@material-ui/core';
 import AdminNav from './admin/components/AdminNav';
 import Login from './auth/Login';
-import ReceptionistNome from './receptionist/pages/ReceptionistHome';
+import ReceptionistHome from './receptionist/pages/ReceptionistHome';
+import DoctorHome from './doctor/pages/DoctorHome';
 
 function App() {
   const theme = createTheme({
@@ -22,7 +23,8 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/*" element={<AdminNav />} />
-            <Route path="/receptionist" element={<ReceptionistNome />} />
+            <Route path="/receptionist" element={<ReceptionistHome />} />
+            <Route path="/doctor" element={<DoctorHome />} />
           </Routes>
         </BrowserRouter>
       </>

@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-key */
 import React, { useState } from 'react';
-import Nav from '../components/Nav';
-import PatientSearchBar from '../components/PatientSearchBar';
+import Nav from '../../common-components/Nav';
+import PatientSearchBar from '../../common-components/PatientSearchBar';
 import Box from '@mui/material/Box';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -11,14 +11,15 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import Checkbox from '@mui/material/Checkbox';
 
 const useStyles = makeStyles({
   table: {
     minWidth: 650
   }
 });
-function Home() {
-  const headers = ['Index', 'ID', 'Name'];
+function ReceptionistHome() {
+  const headers = ['Index', 'ID', 'Name', 'Select'];
   const patientsList = JSON.parse(localStorage.getItem('patients')) ?? [];
   const classes = useStyles();
 
@@ -78,6 +79,13 @@ function Home() {
                           {d.id}
                         </TableCell>
                         <TableCell align="center">{d.name}</TableCell>
+                        <TableCell align="center" component="th" scope="row">
+                          <Checkbox
+                            size="small"
+                            // checked={isDoctorAvailable}
+                            // onChange={handleCheckboxChange}
+                          />
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -91,4 +99,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default ReceptionistHome;
