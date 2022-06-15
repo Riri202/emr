@@ -13,7 +13,7 @@ function Login() {
   return (
     <div className="flex flex-col justify-center items-center h-screen">
       <h2 className="mb-3">Login</h2>
-      <Box comsponent="form" sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Box component="form" sx={{ display: 'flex', flexDirection: 'column' }}>
         <TextField
           required
           id="filled-required"

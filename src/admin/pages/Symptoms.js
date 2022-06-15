@@ -37,18 +37,6 @@ function Symptoms() {
       [e.target.name]: e.target.value
     }));
   };
-  // const handleSymptomChange = (e) => {
-  //   setInputData({
-  //     ...inputData,
-  //     symptom: e.target.value
-  //   });
-  // };
-  // const handleIdChange = (e) => {
-  //   setInputData({
-  //     ...inputData,
-  //     id: e.target.value
-  //   });
-  // };
   const handleCsvChange = (event) => {
     // Passing file data (event.target.files[0]) to parse using Papa.parse
     Papa.parse(event.target.files[0], {

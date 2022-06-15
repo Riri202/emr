@@ -26,7 +26,6 @@ const useStyles = makeStyles({
 function Diagnosis() {
   const classes = useStyles();
   const headers = ['No', 'Diagnosis', 'Edit', 'Delete'];
-  const [parsedData, setParsedData] = useState([]);
   const [rows, setRows] = useState(JSON.parse(localStorage.getItem('diagnosisRows')) ?? []);
   const [inputData, setInputData] = useState({
     id: '',

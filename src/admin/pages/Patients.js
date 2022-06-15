@@ -81,7 +81,6 @@ function PatientDetails() {
           <TextField
             label="title"
             onChange={handleTitleChange}
-            // value={inputData.name}
             variant="standard"
             sx={{ mr: 3 }}></TextField>
           <TextField
@@ -109,7 +108,7 @@ function PatientDetails() {
           </TableHead>
           <TableBody>
             {rows.map((row, index) => (
-              <TableRow key={row.name}>
+              <TableRow key={row.id}>
                 <TableCell component="th" scope="row">
                   {index + 1}
                 </TableCell>
