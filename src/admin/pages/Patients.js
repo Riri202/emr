@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -69,7 +69,9 @@ function PatientDetails() {
     //TODO: fix row only being updated on second click
     console.log(rows);
   };
-
+  useEffect(() => {
+    localStorage.setItem('patientsInfo/Biodata', JSON.stringify(rows));
+  }, [rows]);
   return (
     <div className="p-6">
       <h2 className="text-lg mb-3">Patient Biodata Details</h2>

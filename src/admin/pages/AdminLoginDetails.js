@@ -148,6 +148,7 @@
 // export default AdminLoginDetails;
 
 import React, { useState } from 'react';
+import Papa from 'papaparse';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -162,6 +163,7 @@ import Button from '@mui/material/Button';
 import Switch from '@material-ui/core/Switch';
 import { Edit, Delete } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
+import { Divider } from '@material-ui/core';
 
 const useStyles = makeStyles({
   table: {
@@ -212,6 +214,23 @@ function AdminLoginDetails() {
     const filteredRows = rows.filter((row) => row.id !== id);
     setRows(filteredRows);
   };
+  const handleCsvChange = (event) => {
+    // Passing file data (event.target.files[0]) to parse using Papa.parse
+    Papa.parse(event.target.files[0], {
+      header: true,
+      skipEmptyLines: true,
+      complete: function (results) {
+        // console.log(results.data);
+        if (rows.length === 0) {
+          rows.push(...results.data);
+          console.log(rows);
+        } else if (rows.length > 0) {
+          rows.push(...results.data);
+          console.log(rows);
+        }
+      }
+    });
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     setRows([...rows, inputData]);
@@ -243,6 +262,10 @@ function AdminLoginDetails() {
           <Button type="submit" variant="contained">
             Add new admin
           </Button>
+        </form>
+        <Divider orientation="vertical" variant="middle" flexItem />
+        <form>
+          <input type={'file'} accept={'.csv'} onChange={handleCsvChange} />
         </form>
       </Box>
       <TableContainer component={Paper}>

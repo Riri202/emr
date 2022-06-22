@@ -9,7 +9,7 @@ import Avatar from '@mui/material/Avatar';
 function Nav() {
   return (
     <div>
-      <AppBar position="sticky" className="bg-green-500">
+      <AppBar position="sticky" style={{ background: '#48bb78' }}>
         <Toolbar>
           <Typography variant="h6" noWrap component="div">
             EMR

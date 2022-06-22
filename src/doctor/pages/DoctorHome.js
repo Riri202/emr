@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Checkbox from '@mui/material/Checkbox';
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
@@ -7,9 +9,25 @@ import { Person } from '@mui/icons-material';
 import Nav from '../../common-components/Nav';
 import PatientSearchBar from '../../common-components/PatientSearchBar';
 import { FaUserMd } from 'react-icons/fa';
-import { createStyles } from '@mui/styles';
+import { makeStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import { filterData } from '../../utils/index';
+import PatientsPersonalPage from './PatientsPersonalPage';
 
+const useStyles = makeStyles({
+  table: {
+    minWidth: 650
+  }
+});
 function DoctorHome() {
+  const classes = useStyles();
+  const headers = ['Index', 'ID', 'Name'];
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const allWorkers = JSON.parse(localStorage.getItem('allWorkers'));
@@ -27,6 +45,7 @@ function DoctorHome() {
   };
   const thisDoctor = findDoctor('doctor', 4);
   console.log(thisDoctor);
+  const dataFiltered = filterData(searchQuery, patientsList);
 
   const handleCheckboxChange = (event) => {
     if (event.target.checked) {
@@ -78,6 +97,44 @@ function DoctorHome() {
           <p className="text-sm mt-[-2px]">Incoming patients</p>
         </section>
       </div>
+      {patientsList && isSearching ? (
+        <TableContainer component={Paper}>
+          <Table className={classes.table} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                {headers.map((header, key) => {
+                  return (
+                    <TableCell key={key} align="center" className="bg-green-500">
+                      {header}
+                    </TableCell>
+                  );
+                })}
+              </TableRow>
+            </TableHead>
+            {dataFiltered.length === 0 ? (
+              <h1 className="text-lg mb-3 text-red-500">Patient is not on the list.</h1>
+            ) : (
+              <TableBody>
+                {dataFiltered.map((d, index) => (
+                  <TableRow key={index}>
+                    <TableCell align="center" component="th" scope="row">
+                      {index + 1}
+                    </TableCell>
+                    <TableCell align="center" component="th" scope="row">
+                      {d.id}
+                    </TableCell>
+                    <TableCell align="center" component="th" scope="row">
+                      <Link style={{ textDecoration: 'none' }} to={`/patient/${d.id}/${d.name}`}>
+                        {d.name}
+                      </Link>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            )}
+          </Table>
+        </TableContainer>
+      ) : null}
     </div>
   );
 }

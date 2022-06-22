@@ -136,7 +136,7 @@ export default function AdminNav() {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open} className="bg-green-500">
+      <AppBar position="fixed" open={open} style={{ background: '#48bb78' }}>
         <Toolbar>
           <IconButton
             color="inherit"
