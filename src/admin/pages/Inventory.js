@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -99,7 +99,9 @@ function Inventory() {
     //TODO: fix row only being updated on second click
     console.log(rows);
   };
-
+  useEffect(() => {
+    localStorage.setItem('drugsList', JSON.stringify(rows));
+  }, [rows]);
   return (
     <div>
       <h2 className="text-lg mb-3">Inventory</h2>

@@ -1,18 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Nav from '../../common-components/Nav';
 import Avatar from '@mui/material/Avatar';
 import { Person, Add } from '@mui/icons-material';
 import Paper from '@material-ui/core/Paper';
 import Button from '@mui/material/Button';
+import { Divider } from '@material-ui/core';
 import DropdownButton from '../../common-components/DropdownButton';
+// import DropdownSearch from '../../common-components/DropdownSearch';
+import SymptomsCard from '../components/SymptomsCard';
+import DiagnosisCard from '../components/DiagnosisCard';
 
 function DrugsTestDiagnosis() {
-  const patientsInfo = JSON.parse(localStorage.getItem('patientsInfo/Biodata'));
-  console.log(patientsInfo);
-  const diagnosis = JSON.parse(localStorage.getItem('diagnosisRows'));
-  const arr = diagnosis.map((d) => d.diagnosis);
-  console.log(arr);
+  // const patientsInfo = JSON.parse(localStorage.getItem('patientsInfo/Biodata'));
+  // console.log(patientsInfo);
+
+  // get dropdown menu items obj from local storage, map through them to get the items
+  const drugs = JSON.parse(localStorage.getItem('drugsList'));
+  const drugsArr = drugs.map((drug) => drug.name);
+
+  const [choice, setChoice] = useState([]);
+
+  // function to handle checkbox change in dropdown button component to get and store value in api or localStorage
+  const handleCheckboxChange = (event) => {
+    if (event.target.checked && !choice.length) {
+      setChoice([event.target.value]);
+    } else if (event.target.checked && choice.length > 0) {
+      setChoice([...choice, event.target.value]);
+    }
+    if (!event.target.checked) {
+      const filterdArr = choice.filter((c) => c !== event.target.value);
+      setChoice([...filterdArr]);
+    }
+    console.log(choice);
+    // localStorage.setItem(`selected${chosen}`, JSON.stringify(choice));
+  };
 
   return (
     <div className="h-screen">
@@ -33,48 +55,12 @@ function DrugsTestDiagnosis() {
         <section className="flex space-x-3">
           {/* symptoms card */}
           <div className="w-1/2">
-            <Paper sx={{ flexGrow: 1 }} className="p-3">
-              <div className="flex justify-between">
-                <h3 className="text-lg mb-3">Symptoms</h3>
-                <div className="flex flex-col space-y-2">
-                  <DropdownButton btnText="Add symptoms" menuItems={arr} />
-                  <Button variant="text" endIcon={<Add />}>
-                    Add Note
-                  </Button>
-                </div>
-              </div>
-              <ol>
-                <li>dummmy text</li>
-                <li>dummmy text</li>
-                <li>dummmy text</li>
-              </ol>
-              <button className="border-none">
-                <DropdownButton btnText="send to" menuItems={arr} />
-              </button>
-            </Paper>
+            <SymptomsCard />
           </div>
 
           {/* diagnosis card */}
           <div className="w-1/2">
-            <Paper sx={{ flexGrow: 1 }} className="p-3">
-              <div className="flex justify-between">
-                <h3 className="text-lg mb-3">Diagnosis</h3>
-                <div className="flex flex-col space-y-2">
-                  <DropdownButton btnText="Add diagnosis" menuItems={arr} />
-                  <Button variant="text" endIcon={<Add />}>
-                    Add Note
-                  </Button>
-                </div>
-              </div>
-              <ol>
-                <li>dummmy text</li>
-                <li>dummmy text</li>
-                <li>dummmy text</li>
-              </ol>
-              <button className="border-none">
-                <DropdownButton btnText="send to" menuItems={arr} />
-              </button>
-            </Paper>
+            <DiagnosisCard />
           </div>
         </section>
         <section className="mt-3">
@@ -84,20 +70,38 @@ function DrugsTestDiagnosis() {
               <div className="flex justify-between">
                 <h3 className="text-lg mb-3">Drugs and Tests</h3>
                 <div className="flex flex-col space-y-2">
-                  <DropdownButton btnText="Add drugs" menuItems={arr} />
-                  <DropdownButton btnText="Add tests" menuItems={arr} />
+                  <DropdownButton
+                    btnText="Add drugs"
+                    menuItems={drugsArr}
+                    handleCheckboxChange={handleCheckboxChange}
+                  />
+                  <DropdownButton
+                    btnText="Add tests"
+                    menuItems={drugsArr}
+                    handleCheckboxChange={handleCheckboxChange}
+                  />
                   <Button variant="text" endIcon={<Add />}>
                     Add Note
                   </Button>
                 </div>
               </div>
               <ol>
-                <li>dummmy text</li>
-                <li>dummmy text</li>
-                <li>dummmy text</li>
+                {choice.map((c, index) => {
+                  return (
+                    <>
+                      <li key={index} className="flex flex-row justify-evenly mt-2 mb-2">
+                        <span>{c}</span>
+                        <input type="number" placeholder="No of drugs" />
+                        <input type="number" placeholder="No of days" />
+                        <span>total tablet</span>
+                      </li>
+                      <Divider orientation="horizontal" variant="fullWidth" />
+                    </>
+                  );
+                })}
               </ol>
               <button className="border-none">
-                <DropdownButton btnText="send to" menuItems={arr} />
+                <DropdownButton btnText="send to" menuItems={drugsArr} />
               </button>
             </Paper>
           </div>

@@ -3,9 +3,12 @@ import * as React from 'react';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Checkbox from '@mui/material/Checkbox';
+import ListItemText from '@mui/material/ListItemText';
+
 import { KeyboardArrowDown } from '@mui/icons-material';
 
-export default function DropdownButton({ btnText, menuItems }) {
+export default function DropdownButton({ btnText, menuItems, handleCheckboxChange }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -18,7 +21,6 @@ export default function DropdownButton({ btnText, menuItems }) {
   return (
     <div>
       <Button
-        // style={{ color: '##48bb78' }}
         color="primary"
         endIcon={<KeyboardArrowDown />}
         id="basic-button"
@@ -38,8 +40,10 @@ export default function DropdownButton({ btnText, menuItems }) {
         }}>
         {menuItems.map((item, index) => {
           return (
-            <MenuItem key={index} onClick={handleClose}>
-              {item}
+            <MenuItem key={index}>
+              <Checkbox value={item} onChange={() => handleCheckboxChange(event)} />
+              <ListItemText primary={item} />
+              {/* {item} */}
             </MenuItem>
           );
         })}

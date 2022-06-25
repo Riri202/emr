@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-key */
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Nav from '../../common-components/Nav';
+import DropdownButton from '../../common-components/DropdownButton';
 import PatientSearchBar from '../../common-components/PatientSearchBar';
 import Box from '@mui/material/Box';
 import { makeStyles } from '@material-ui/core/styles';
@@ -12,6 +13,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@mui/material/Checkbox';
+import { filterData, handleCheckboxChange } from '../../utils';
+import { Chip } from '@mui/material';
 
 const useStyles = makeStyles({
   table: {
@@ -23,56 +26,19 @@ function ReceptionistHome() {
   const headers = ['Index', 'ID', 'Name', 'Select'];
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  // list of patients to send to doctor
-  // eslint-disable-next-line no-unused-vars
-  const [incomingPatientsList, setIncomingPatientsList] = useState([]);
-  // to have checkbox checked state persist on page refresh
-  const [isIncomingPatient, setIsIncomingPatient] = useState(
-    JSON.parse(localStorage.getItem('IncomingPatient')) ?? false
-  );
+
   // get patients list from admin
   const patientsList = JSON.parse(localStorage.getItem('patients')) ?? [];
-  const [arr, setArr] = useState([]);
-  const handleCheckboxChange = (event) => {
-    if (event.target.checked) {
-      console.log(event.target.value);
+  // to display patients in chips when selected from the table
+  const [choice, setChoice] = useState([]);
 
-      if (arr.length > 0) {
-        setArr([...arr, JSON.parse(event.target.value)]);
-        // arr.push(...arr, JSON.parse(event.target.value));
-      }
-      if (arr.length === 0) {
-        // arr.push(JSON.parse(event.target.value));
-        // setArr([JSON.parse(event.target.value)]);
-        // setArr(arr.push(JSON.parse(event.target.value)));
-        setArr(arr.push(JSON.parse(event.target.value)));
-      }
-      console.log(arr);
-      setIsIncomingPatient(true);
-      // if (incomingPatientsList.length > 0) {
-      //   setIncomingPatientsList(incomingPatientsList.push(JSON.parse(event.target.value)));
-      //   console.log(incomingPatientsList);
-      // } else if (incomingPatientsList.length === 0) {
-      //   setIncomingPatientsList([JSON.parse(event.target.value)]);
-      //   console.log(incomingPatientsList);
-      // }
-    }
-    if (!event.target.checked) {
-      console.log('uncjecked');
-      // setIsIncomingPatient(false);
-      // setIncomingPatientsList(
-      //   incomingPatientsList.filter((patient) => patient !== event.target.value)
-      // );
-    }
-  };
-
-  const filterData = (query, patientsList) => {
-    if (!query) {
-      return patientsList;
-    } else {
-      return patientsList.filter((patient) => patient.name.toLowerCase().includes(query));
-    }
-  };
+  // const filterData = (query, patientsList) => {
+  //   if (!query) {
+  //     return patientsList;
+  //   } else {
+  //     return patientsList.filter((patient) => patient.name.toLowerCase().includes(query));
+  //   }
+  // };
 
   const dataFiltered = filterData(searchQuery, patientsList);
 
@@ -80,12 +46,12 @@ function ReceptionistHome() {
   const date = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
   const time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
 
-  useEffect(() => {
-    localStorage.setItem('incomingPatientsList', JSON.stringify(incomingPatientsList));
-  }, [incomingPatientsList]);
-  useEffect(() => {
-    localStorage.setItem('isIncomingPatient', JSON.stringify(isIncomingPatient));
-  }, [isIncomingPatient]);
+  // useEffect(() => {
+  //   localStorage.setItem('incomingPatientsList', JSON.stringify(incomingPatientsList));
+  // }, [incomingPatientsList]);
+  // useEffect(() => {
+  //   localStorage.setItem('isIncomingPatient', JSON.stringify(isIncomingPatient));
+  // }, [isIncomingPatient]);
 
   return (
     <div>
@@ -101,6 +67,31 @@ function ReceptionistHome() {
             <PatientSearchBar setIsSearching={setIsSearching} setSearchQuery={setSearchQuery} />
           </div>
         </div>
+        {choice.length ? (
+          <Paper style={{ marginBottom: '8px' }}>
+            <div className="flex flex-row space-x-4  p-5">
+              <span className="text-lg text-red-500">Selected patients</span>
+              <DropdownButton
+                btnText="send to"
+                menuItems={['dr. Stark', 'Dr Drake Remurray']}
+                handleCheckboxChange={() => console.log('send to doctor')}
+              />
+            </div>
+            <div className="flex flex-row space-x-2 p-5 flex-wrap">
+              {choice.map((c, index) => {
+                return (
+                  <Chip
+                    key={index}
+                    label={c}
+                    onDelete={() => console.log('deleted chip')}
+                    variant="outlined"
+                  />
+                );
+              })}
+            </div>
+          </Paper>
+        ) : null}
+
         <div style={{ padding: 3 }}>
           {patientsList && isSearching ? (
             <TableContainer component={Paper}>
@@ -133,8 +124,8 @@ function ReceptionistHome() {
                           <Checkbox
                             size="small"
                             // checked={isIncomingPatient}
-                            onChange={handleCheckboxChange}
-                            value={JSON.stringify(d)}
+                            onChange={() => handleCheckboxChange(event, setChoice, choice)}
+                            value={d.name}
                           />
                         </TableCell>
                       </TableRow>
