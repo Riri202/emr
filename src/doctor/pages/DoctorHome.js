@@ -83,7 +83,11 @@ function DoctorHome() {
             </div>
           </div>
           <div className="">
-            <PatientSearchBar setIsSearching={setIsSearching} setSearchQuery={setSearchQuery} />
+            <PatientSearchBar
+              setIsSearching={setIsSearching}
+              setSearchQuery={setSearchQuery}
+              label="Find a patient"
+            />
           </div>
         </section>
         <section className="mt-6">

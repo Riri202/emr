@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 // import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
 
-function PatientSearchBar({ setSearchQuery, setIsSearching }) {
+function PatientSearchBar({ setSearchQuery, setIsSearching, label }) {
   return (
     <div>
       <Box component="form" sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -16,7 +16,7 @@ function PatientSearchBar({ setSearchQuery, setIsSearching }) {
             setIsSearching(true);
             setSearchQuery(e.target.value);
           }}
-          label="Find a patient"
+          label={label}
           variant="outlined"
           placeholder="Search..."
         />

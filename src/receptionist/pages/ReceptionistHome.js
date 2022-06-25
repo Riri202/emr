@@ -64,7 +64,11 @@ function ReceptionistHome() {
             <p>time: {time}</p>
           </div>
           <div className="flex-grow">
-            <PatientSearchBar setIsSearching={setIsSearching} setSearchQuery={setSearchQuery} />
+            <PatientSearchBar
+              setIsSearching={setIsSearching}
+              setSearchQuery={setSearchQuery}
+              label="Find a patient"
+            />
           </div>
         </div>
         {choice.length ? (

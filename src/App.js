@@ -7,6 +7,7 @@ import DoctorHome from './doctor/pages/DoctorHome';
 import PatientsPersonalPage from './doctor/pages/PatientsPersonalPage';
 import DrugsTestDiagnosis from './doctor/pages/DrugsTestDiagnosis';
 import PatientHistory from './doctor/pages/PatientHistory';
+import HistoryOverview from './doctor/pages/HistoryOverview';
 
 function App() {
   const theme = createTheme({
@@ -30,6 +31,7 @@ function App() {
             <Route path="/doctor" element={<DoctorHome />} />
             <Route path="/patient/:id/:name" element={<PatientsPersonalPage />} />
             <Route path="/diagnosis-drugs-test" element={<DrugsTestDiagnosis />} />
+            <Route path="/history-overview" element={<HistoryOverview />} />
             <Route path="/history" element={<PatientHistory />} />
           </Routes>
         </BrowserRouter>
