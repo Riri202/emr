@@ -7,7 +7,7 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@mui/material/Button';
 import { Divider } from '@material-ui/core';
 import DropdownButton from '../../common-components/DropdownButton';
-// import DropdownSearch from '../../common-components/DropdownSearch';
+import DropdownSearch from '../../common-components/DropdownSearch';
 import SymptomsCard from '../components/SymptomsCard';
 import DiagnosisCard from '../components/DiagnosisCard';
 
@@ -69,20 +69,17 @@ function DrugsTestDiagnosis() {
             <Paper sx={{ flexGrow: 1 }} className="p-3">
               <div className="flex justify-between">
                 <h3 className="text-lg mb-3">Drugs and Tests</h3>
-                <div className="flex flex-col space-y-2">
-                  <DropdownButton
+                <div className="flex flex-row space-x-2">
+                  <DropdownSearch
                     btnText="Add drugs"
                     menuItems={drugsArr}
-                    handleCheckboxChange={handleCheckboxChange}
+                    handleCheckboxChange={() => handleCheckboxChange(event, setChoice, choice)}
                   />
-                  <DropdownButton
+                  <DropdownSearch
                     btnText="Add tests"
                     menuItems={drugsArr}
-                    handleCheckboxChange={handleCheckboxChange}
+                    handleCheckboxChange={() => handleCheckboxChange(event, setChoice, choice)}
                   />
-                  <Button variant="text" endIcon={<Add />}>
-                    Add Note
-                  </Button>
                 </div>
               </div>
               <ol>
@@ -93,6 +90,7 @@ function DrugsTestDiagnosis() {
                         <span>{c}</span>
                         <input type="number" placeholder="No of drugs" />
                         <input type="number" placeholder="No of days" />
+                        <input placeholder="more..." />
                         <span>total tablet</span>
                       </li>
                       <Divider orientation="horizontal" variant="fullWidth" />
@@ -100,9 +98,14 @@ function DrugsTestDiagnosis() {
                   );
                 })}
               </ol>
-              <button className="border-none">
-                <DropdownButton btnText="send to" menuItems={drugsArr} />
-              </button>
+              <div clasName="flex flex-row space-x-2">
+                <Button variant="text" endIcon={<Add />}>
+                  Add Note
+                </Button>
+                <button className="border-none">
+                  <DropdownButton btnText="send to" menuItems={drugsArr} />
+                </button>
+              </div>
             </Paper>
           </div>
         </section>

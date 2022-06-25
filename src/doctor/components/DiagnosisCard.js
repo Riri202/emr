@@ -15,13 +15,11 @@ function DiagnosisCard() {
     <Paper sx={{ flexGrow: 1 }} className="p-3">
       <div className="flex justify-between">
         <h3 className="text-lg mb-3">Diagnosis</h3>
-        <div className="flex flex-col space-y-2">
-          <DropdownSearch
-            btnText="Add diagnosis"
-            menuItems={diagnosisArr}
-            handleCheckboxChange={() => handleCheckboxChange(event, setChoice, choice)}
-          />
-        </div>
+        <DropdownSearch
+          btnText="Add diagnosis"
+          menuItems={diagnosisArr}
+          handleCheckboxChange={() => handleCheckboxChange(event, setChoice, choice)}
+        />
       </div>
       <ol>
         {choice.map((c, index) => {
