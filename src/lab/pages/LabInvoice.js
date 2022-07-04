@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Nav from '../../common-components/Nav';
 import Avatar from '@mui/material/Avatar';
 import { Person } from '@mui/icons-material';
@@ -12,8 +12,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Button from '@mui/material/Button';
-import { Chip, TextField } from '@mui/material';
+import { Chip } from '@mui/material';
 import DropdownButton from '../../common-components/DropdownButton';
+import LabTestResultForm from '../components/LabTestResultForm';
 
 const useStyles = makeStyles({
   table: {
@@ -25,54 +26,18 @@ function LabInvoice() {
   const headers = ['Item description', 'Qty', 'Rate', 'Amount'];
   // get drugs list
   const drugs = JSON.parse(localStorage.getItem('drugsList'));
-  const [testResults, setTestResults] = useState(
-    JSON.parse(localStorage.getItem('testResults')) ?? []
-  );
   // show form for inputing test results
   const [showForm, setShowForm] = useState(false);
-  const [counter, setCounter] = useState(0);
 
-  const [inputData, setInputData] = useState({
-    id: '',
-    testName: '',
-    testResult: ''
-  });
   // get drugs total amount
   const drugsTotalAmount = drugs
     .map((drug) => drug.quantity * drug.unitPrice)
     .reduce((prev, curr) => prev + curr, 0);
-
   // display section to add test results when user clicks on button
   const handleDisplayAddTestSection = () => {
     setShowForm(true);
   };
-  // add more input fields to add test result section
-  const handleAddInputField = () => {
-    setCounter(counter + 1);
-  };
-  const handleTestResultChange = (e) => {
-    setInputData((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value
-    }));
-  };
 
-  const handleTestResultSubmit = (e) => {
-    e.preventDefault();
-    if (!testResults.length) {
-      setTestResults([inputData]);
-    }
-    if (testResults.length) {
-      setTestResults([...testResults, inputData]);
-    }
-  };
-
-  console.log(testResults);
-
-  // persist data in local storage
-  useEffect(() => {
-    localStorage.setItem('testResults', JSON.stringify(testResults));
-  }, [testResults]);
   return (
     <>
       <Nav />
@@ -156,47 +121,7 @@ function LabInvoice() {
         </section>
 
         <section>
-          {showForm && (
-            <>
-              <Paper className="flex flex-col items-center flex-1 mt-5">
-                <h3>Test Results</h3>
-                <Button
-                  onClick={handleAddInputField}
-                  className="p-2 mt-1 bg-green-500 text-[#000] ml-3">
-                  Add input
-                </Button>
-                <form onSubmit={handleTestResultSubmit}>
-                  <ol>
-                    {Array.from(Array(counter)).map((c) => {
-                      return (
-                        <li key={c}>
-                          <div className="flex flex-row space-x-4 mt-2 mb-2">
-                            <TextField
-                              onChange={handleTestResultChange}
-                              name="testName"
-                              size="small"
-                              label="add test name"
-                              variant="outlined"
-                            />
-                            <TextField
-                              onChange={handleTestResultChange}
-                              name="testResult"
-                              size="small"
-                              label="add test result"
-                              variant="outlined"
-                            />
-                          </div>
-                        </li>
-                      );
-                    })}
-                  </ol>
-                  <Button type="submit" className="p-2 mt-1 bg-green-500 text-[#000] ml-3">
-                    submit
-                  </Button>
-                </form>
-              </Paper>
-            </>
-          )}
+          <LabTestResultForm showForm={showForm} />
         </section>
       </div>
     </>
