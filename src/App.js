@@ -13,7 +13,9 @@ import PatientInvoice from './cashier/pages/PatientInvoice';
 import PharmacistHome from './pharmacist/pages/PharmacistHome';
 import PharmacistInvoice from './pharmacist/pages/PharmacistInvoice';
 import LabHome from './lab/pages/LabHome';
-import LabInvoice from './lab/pages/LabInvoice';
+import XrayHome from './x-ray/pages/XrayHome';
+import LabResults from './lab/pages/LabResults';
+import XrayResults from './x-ray/pages/XrayResults';
 
 function App() {
   const theme = createTheme({
@@ -54,7 +56,11 @@ function App() {
 
             {/* lab routes */}
             <Route path="/lab" element={<LabHome />} />
-            <Route path="/lab-invoice" element={<LabInvoice />} />
+            <Route path="/lab-results" element={<LabResults />} />
+
+            {/* x-ray routes */}
+            <Route path="/xray" element={<XrayHome />} />
+            <Route path="/xray-results" element={<XrayResults />} />
           </Routes>
         </BrowserRouter>
       </div>
