@@ -30,7 +30,7 @@ function LabHome() {
               {patientsList.map((patient, key) => {
                 return (
                   <li key={key}>
-                    <Link to={'/lab-invoice'} style={{ textDecoration: 'none' }}>
+                    <Link to={'/lab-results'} style={{ textDecoration: 'none' }}>
                       {patient.id} {patient.name}
                     </Link>
                   </li>
