@@ -19,21 +19,46 @@ function DrugsTestDiagnosis() {
   const drugs = JSON.parse(localStorage.getItem('drugsList'));
   const drugsArr = drugs.map((drug) => drug.name);
 
-  const [choice, setChoice] = useState([]);
+  const [drugChoice, setDrugChoice] = useState([]);
+  const [labTestChoice, setLabTestChoice] = useState([]);
+  const [xrayTestChoice, setXrayTestChoice] = useState([]);
 
   // function to handle checkbox change in dropdown button component to get and store value in api or localStorage
-  const handleCheckboxChange = (event) => {
-    if (event.target.checked && !choice.length) {
-      setChoice([event.target.value]);
-    } else if (event.target.checked && choice.length > 0) {
-      setChoice([...choice, event.target.value]);
+  const handleDrugChoice = (event) => {
+    if (event.target.checked && !drugChoice.length) {
+      setDrugChoice([event.target.value]);
+    } else if (event.target.checked && drugChoice.length > 0) {
+      setDrugChoice([...drugChoice, event.target.value]);
     }
+    // remove choice from list when you uncheck its checkbox
     if (!event.target.checked) {
-      const filterdArr = choice.filter((c) => c !== event.target.value);
-      setChoice([...filterdArr]);
+      const filterdArr = drugChoice.filter((c) => c !== event.target.value);
+      setDrugChoice([...filterdArr]);
     }
-    console.log(choice);
-    // localStorage.setItem(`selected${chosen}`, JSON.stringify(choice));
+  };
+  const handleLabTestChoice = (event) => {
+    if (event.target.checked && !labTestChoice.length) {
+      setLabTestChoice([event.target.value]);
+    } else if (event.target.checked && labTestChoice.length > 0) {
+      setLabTestChoice([...labTestChoice, event.target.value]);
+    }
+    // remove choice from list when you uncheck its checkbox
+    if (!event.target.checked) {
+      const filterdArr = labTestChoice.filter((c) => c !== event.target.value);
+      setLabTestChoice([...filterdArr]);
+    }
+  };
+  const handleXrayTestChoice = (event) => {
+    if (event.target.checked && !xrayTestChoice.length) {
+      setXrayTestChoice([event.target.value]);
+    } else if (event.target.checked && xrayTestChoice.length > 0) {
+      setXrayTestChoice([...xrayTestChoice, event.target.value]);
+    }
+    // remove choice from list when you uncheck its checkbox
+    if (!event.target.checked) {
+      const filterdArr = xrayTestChoice.filter((c) => c !== event.target.value);
+      setXrayTestChoice([...filterdArr]);
+    }
   };
 
   return (
@@ -73,31 +98,86 @@ function DrugsTestDiagnosis() {
                   <DropdownSearch
                     btnText="Add drugs"
                     menuItems={drugsArr}
-                    handleCheckboxChange={() => handleCheckboxChange(event, setChoice, choice)}
+                    handleCheckboxChange={() => handleDrugChoice(event, setDrugChoice, drugChoice)}
                   />
                   <DropdownSearch
-                    btnText="Add tests"
-                    menuItems={drugsArr}
-                    handleCheckboxChange={() => handleCheckboxChange(event, setChoice, choice)}
+                    btnText="Add lab tests"
+                    menuItems={['hpv', 'malaria', 'pcv', 'typhoid']}
+                    handleCheckboxChange={() =>
+                      handleLabTestChoice(event, setLabTestChoice, labTestChoice)
+                    }
+                  />
+                  <DropdownSearch
+                    btnText="Add x-ray tests"
+                    menuItems={['legbone xray', 'chest xray', 'hand xray']}
+                    handleCheckboxChange={() =>
+                      handleXrayTestChoice(event, setXrayTestChoice, xrayTestChoice)
+                    }
                   />
                 </div>
               </div>
-              <ol>
-                {choice.map((c, index) => {
-                  return (
-                    <>
-                      <li key={index} className="flex flex-row justify-evenly mt-2 mb-2">
-                        <span>{c}</span>
-                        <input type="number" placeholder="No of drugs" />
-                        <input type="number" placeholder="No of days" />
-                        <input placeholder="more..." />
-                        <span>total tablet</span>
-                      </li>
-                      <Divider orientation="horizontal" variant="fullWidth" />
-                    </>
-                  );
-                })}
-              </ol>
+              <section className="flex flex-col space-y-3">
+                <div>
+                  {drugChoice.length ? <h3>Drugs</h3> : null}
+                  <ol>
+                    {drugChoice &&
+                      drugChoice.map((choice, index) => {
+                        return (
+                          <>
+                            <li key={index} className="flex flex-row justify-evenly mt-2 mb-2">
+                              <span>{choice}</span>
+                              <input type="number" placeholder="No of drugs" />
+                              <input type="number" placeholder="No of days" />
+                              <input placeholder="more..." />
+                              <span>total tablet</span>
+                            </li>
+                            <Divider orientation="horizontal" variant="fullWidth" />
+                          </>
+                        );
+                      })}
+                  </ol>
+                </div>
+                <div>
+                  {labTestChoice.length ? <h3>Lab Tests</h3> : null}
+                  <ol>
+                    {labTestChoice &&
+                      labTestChoice.map((choice, index) => {
+                        return (
+                          <>
+                            <li key={index} className="flex flex-row justify-evenly mt-2 mb-2">
+                              <span>{choice}</span>
+                              {/* <input type="number" placeholder="No of drugs" />
+                              <input type="number" placeholder="No of days" />
+                              <input placeholder="more..." />
+                              <span>total tablet</span> */}
+                            </li>
+                            <Divider orientation="horizontal" variant="fullWidth" />
+                          </>
+                        );
+                      })}
+                  </ol>
+                </div>
+                <div>
+                  {xrayTestChoice.length ? <h3>X-Ray Tests</h3> : null}
+                  <ol>
+                    {xrayTestChoice &&
+                      xrayTestChoice.map((choice, index) => {
+                        return (
+                          <>
+                            <li key={index} className="flex flex-row justify-evenly mt-2 mb-2">
+                              <span>{choice}</span>
+                              {/* <input type="number" placeholder="No of drugs" />
+                              <input type="number" placeholder="No of days" />
+                              <input placeholder="more..." />
+                              <span>total tablet</span> */}
+                            </li>
+                            <Divider orientation="horizontal" variant="fullWidth" />
+                          </>
+                        );
+                      })}
+                  </ol>
+                </div>
+              </section>
               <div clasName="flex flex-row space-x-2">
                 <Button variant="text" endIcon={<Add />}>
                   Add Note
