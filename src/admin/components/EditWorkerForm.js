@@ -58,18 +58,7 @@ export default function EditWorkerForm({ selectedWorker, setRows, rows }) {
       }).then((response) => {
         console.log(response);
         console.log(JSON.parse(response.config.data));
-        if (rows.length > 0) {
-          // setRows([...rows, inputData].sort());
-          // const updatedStaffInfo = response.config.data.json();
-          // const updatedRows = rows.map((row) =>
-          //   updatedStaffInfo.find(({ uuid }) => uuid === row.uuid)
-          // );
-          // setRows(updatedRows);
-          updatedStaff(uuid, inputData);
-        }
-        if (rows.length === 0) {
-          setRows([inputData]);
-        }
+        updatedStaff(uuid, inputData);
       });
       console.log(response);
     } catch (error) {
