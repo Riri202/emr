@@ -10,6 +10,8 @@ import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
 
 function HistoryOverview() {
+  // const [isSearching, setIsSearching] = useState(false);
+  // const [searchQuery, setSearchQuery] = useState('');
   const patientHistory = [
     {
       title: 'malaria',
