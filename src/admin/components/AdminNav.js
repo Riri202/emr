@@ -18,11 +18,9 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import Avatar from '@mui/material/Avatar';
 import { FaHospitalUser, FaUserNurse } from 'react-icons/fa';
 import { RiAdminLine } from 'react-icons/ri';
 import { MdOutlineInventory, MdSick } from 'react-icons/md';
-import { Person } from '@mui/icons-material';
 
 //admin pages
 import WorkerLoginDetails from '../pages/WorkerLoginDetails';
@@ -32,6 +30,7 @@ import PatientsBiodata from '../pages/PatientsBiodata';
 import PatientDetails from '../pages/Patients';
 import Symptoms from '../pages/Symptoms';
 import Diagnosis from '../pages/Diagnosis';
+import AccountMenu from '../../common-components/AccountMenu';
 
 const drawerWidth = 240;
 
@@ -213,9 +212,7 @@ export default function AdminNav() {
           <Box sx={{ display: 'flex' }}>
             <Box sx={{ flexGrow: 1 }} />
             <Box>
-              <Avatar className="bg-green-500 mt-1" variant="circular">
-                <Person />
-              </Avatar>
+              <AccountMenu />
             </Box>
           </Box>
           <Box sx={{ display: 'flex' }}>
