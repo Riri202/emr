@@ -5,14 +5,18 @@ import App from './App';
 import { StyledEngineProvider } from '@mui/material/styles';
 import reportWebVitals from './reportWebVitals';
 import { CssBaseline } from '@mui/material';
+import { store } from './redux/store';
+import { Provider } from 'react-redux';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <StyledEngineProvider injectFirst>
-      <CssBaseline />
-      <App />
-    </StyledEngineProvider>
+    <Provider store={store}>
+      <StyledEngineProvider injectFirst>
+        <CssBaseline />
+        <App />
+      </StyledEngineProvider>
+    </Provider>
   </React.StrictMode>
 );
 
