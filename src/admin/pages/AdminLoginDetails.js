@@ -149,6 +149,7 @@
 
 import React, { useState } from 'react';
 import Papa from 'papaparse';
+import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -176,40 +177,28 @@ const headers = ['name', 'username', 'password', 'access', 'edit', 'delete'];
 function AdminLoginDetails() {
   const classes = useStyles();
   const [rows, setRows] = useState([
-    { id: 1, name: 'Snow', username: 'Jon', password: 35 },
-    { id: 2, name: 'Lannister', username: 'Cersei', password: 42 },
-    { id: 3, name: 'Lannister', username: 'Jaime', password: 45 },
-    { id: 4, name: 'Stark', username: 'Arya', password: 16 },
-    { id: 5, name: 'Targaryen', username: 'Daenerys', password: null },
-    { id: 6, name: 'Melisandre', username: 'null', password: 150 },
-    { id: 7, name: 'Clifford', username: 'Ferrara', password: 44 },
-    { id: 8, name: 'Frances', username: 'Rossini', password: 36 },
-    { id: 9, name: 'Roxie', username: 'Harvey', password: 65 }
+    { id: 1, fullName: 'Snow', username: 'Jon', password: 35 },
+    { id: 2, fullName: 'Lannister', username: 'Cersei', password: 42 },
+    { id: 3, fullName: 'Lannister', username: 'Jaime', password: 45 },
+    { id: 4, fullName: 'Stark', username: 'Arya', password: 16 },
+    { id: 5, fullName: 'Targaryen', username: 'Daenerys', password: null },
+    { id: 6, fullName: 'Melisandre', username: 'null', password: 150 },
+    { id: 7, fullName: 'Clifford', username: 'Ferrara', password: 44 },
+    { id: 8, fullName: 'Frances', username: 'Rossini', password: 36 },
+    { id: 9, fullName: 'Roxie', username: 'Harvey', password: 65 }
   ]);
   const [inputData, setInputData] = useState({
-    id: 0,
-    name: '',
+    fullName: '',
     username: '',
     password: ''
   });
-  const handleNameChange = (e) => {
-    setInputData({
-      ...inputData,
-      name: e.target.value
-    });
+  const handleChange = (e) => {
+    setInputData((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value
+    }));
   };
-  const handleUsernameChange = (e) => {
-    setInputData({
-      ...inputData,
-      username: e.target.value
-    });
-  };
-  const handlePasswordChange = (e) => {
-    setInputData({
-      ...inputData,
-      password: e.target.value
-    });
-  };
+
   const handleRowDelete = (id) => {
     const filteredRows = rows.filter((row) => row.id !== id);
     setRows(filteredRows);
@@ -231,11 +220,33 @@ function AdminLoginDetails() {
       }
     });
   };
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setRows([...rows, inputData]);
-    //TODO: fix row only being updated on second click
-    console.log(rows);
+    const staffFormData = new FormData();
+    staffFormData.append('fullName', inputData.fullName);
+    staffFormData.append('username', inputData.username);
+    staffFormData.append('password', inputData.password);
+
+    try {
+      const response = await axios({
+        method: 'post',
+        url: 'https://emr-server.herokuapp.com/staff',
+        data: staffFormData
+      }).then((response) => {
+        console.log(response);
+      });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+
+    if (rows.length > 0) {
+      setRows([...rows, inputData]);
+    }
+    if (rows.length === 0) {
+      setRows([inputData]);
+    }
   };
 
   return (
@@ -245,18 +256,20 @@ function AdminLoginDetails() {
         <form onSubmit={handleSubmit}>
           <TextField
             label="name"
-            onChange={handleNameChange}
-            // value={inputData.name}
+            name="fullName"
+            onChange={handleChange}
             variant="standard"
             sx={{ mr: 3 }}></TextField>
           <TextField
             label="username"
-            onChange={handleUsernameChange}
+            name="username"
+            onChange={handleChange}
             variant="standard"
             sx={{ mr: 3 }}></TextField>
           <TextField
             label="password"
-            onChange={handlePasswordChange}
+            name="password"
+            onChange={handleChange}
             variant="standard"
             sx={{ mr: 3 }}></TextField>
           <Button type="submit" variant="contained">
@@ -285,7 +298,7 @@ function AdminLoginDetails() {
             {rows.map((row) => (
               <TableRow key={row.name}>
                 <TableCell component="th" scope="row">
-                  {row.name}
+                  {row.fullName}
                 </TableCell>
                 <TableCell align="right">{row.username}</TableCell>
                 <TableCell align="right">{row.password}</TableCell>
