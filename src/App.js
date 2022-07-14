@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { createTheme, ThemeProvider } from '@material-ui/core';
 import AdminNav from './admin/components/AdminNav';
 import Login from './auth/Login';
 import ReceptionistHome from './receptionist/pages/ReceptionistHome';
@@ -18,53 +17,41 @@ import LabResults from './lab/pages/LabResults';
 import XrayResults from './x-ray/pages/XrayResults';
 
 function App() {
-  const theme = createTheme({
-    palette: {
-      primary: {
-        main: '#48bb78'
-      },
-      secondary: {
-        main: '#ffa500'
-      }
-    }
-  });
   return (
-    <ThemeProvider theme={theme}>
-      <div className="bg-[#f6f7fa]">
-        <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/*" element={<AdminNav />} />
+    <div className="bg-[#f6f7fa]">
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/*" element={<AdminNav />} />
 
-            {/* receptionist route */}
-            <Route path="/receptionist" element={<ReceptionistHome />} />
+          {/* receptionist route */}
+          <Route path="/receptionist" element={<ReceptionistHome />} />
 
-            {/* doctor routes */}
-            <Route path="/doctor" element={<DoctorHome />} />
-            <Route path="/patient/:id/:name" element={<PatientsPersonalPage />} />
-            <Route path="/diagnosis-drugs-test" element={<DrugsTestDiagnosis />} />
-            <Route path="/history-overview" element={<HistoryOverview />} />
-            <Route path="/history" element={<PatientHistory />} />
+          {/* doctor routes */}
+          <Route path="/doctor" element={<DoctorHome />} />
+          <Route path="/patient/:id/:name" element={<PatientsPersonalPage />} />
+          <Route path="/diagnosis-drugs-test" element={<DrugsTestDiagnosis />} />
+          <Route path="/history-overview" element={<HistoryOverview />} />
+          <Route path="/history" element={<PatientHistory />} />
 
-            {/* cashier route */}
-            <Route path="/cashier" element={<CashierHome />} />
-            <Route path="/patient-invoice" element={<PatientInvoice />} />
+          {/* cashier route */}
+          <Route path="/cashier" element={<CashierHome />} />
+          <Route path="/patient-invoice" element={<PatientInvoice />} />
 
-            {/* pharmacist routes */}
-            <Route path="/pharmacist" element={<PharmacistHome />} />
-            <Route path="/approved-invoice" element={<PharmacistInvoice />} />
+          {/* pharmacist routes */}
+          <Route path="/pharmacist" element={<PharmacistHome />} />
+          <Route path="/approved-invoice" element={<PharmacistInvoice />} />
 
-            {/* lab routes */}
-            <Route path="/lab" element={<LabHome />} />
-            <Route path="/lab-results" element={<LabResults />} />
+          {/* lab routes */}
+          <Route path="/lab" element={<LabHome />} />
+          <Route path="/lab-results" element={<LabResults />} />
 
-            {/* x-ray routes */}
-            <Route path="/xray" element={<XrayHome />} />
-            <Route path="/xray-results" element={<XrayResults />} />
-          </Routes>
-        </BrowserRouter>
-      </div>
-    </ThemeProvider>
+          {/* x-ray routes */}
+          <Route path="/xray" element={<XrayHome />} />
+          <Route path="/xray-results" element={<XrayResults />} />
+        </Routes>
+      </BrowserRouter>
+    </div>
   );
 }
 
