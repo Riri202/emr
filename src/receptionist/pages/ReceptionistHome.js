@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-key */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Nav from '../../common-components/Nav';
 import DropdownButton from '../../common-components/DropdownButton';
 import PatientSearchBar from '../../common-components/PatientSearchBar';
@@ -13,8 +14,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@mui/material/Checkbox';
-import { filterData, handleCheckboxChange } from '../../utils';
+import { handleCheckboxChange } from '../../utils';
 import { Chip } from '@mui/material';
+import authHeader from '../../redux/features/auth/authHeader';
 
 const useStyles = makeStyles({
   table: {
@@ -28,23 +30,85 @@ function ReceptionistHome() {
   const [searchQuery, setSearchQuery] = useState('');
 
   // get patients list from admin
-  const patientsList = JSON.parse(localStorage.getItem('patients')) ?? [];
+  const [patientsList, setPatientsList] = useState([]);
+  // get doctors list from admin
+  const [doctorsList, setDoctorsList] = useState([]);
+
   // to display patients in chips when selected from the table
   const [choice, setChoice] = useState([]);
-
-  // const filterData = (query, patientsList) => {
-  //   if (!query) {
-  //     return patientsList;
-  //   } else {
-  //     return patientsList.filter((patient) => patient.name.toLowerCase().includes(query));
-  //   }
-  // };
-
-  const dataFiltered = filterData(searchQuery, patientsList);
 
   const today = new Date();
   const date = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
   const time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
+
+  const filterData = (query, patientsList) => {
+    if (!query) {
+      return patientsList;
+    } else {
+      return patientsList.filter((patient) => patient.name.toLowerCase().includes(query));
+    }
+  };
+  const getAvailableDoctors = (allStaff) => {
+    const allDoctors = allStaff.filter(
+      // TODO this filter should have a condition to also return doctors with available property set to true
+      (staff) => staff.role === 'DOCTOR' || staff.role === 'doctor'
+    );
+    setDoctorsList([...allDoctors]);
+    console.log(allDoctors);
+    console.log(doctorsList);
+  };
+  const getAllPatients = async () => {
+    // setIsLoading(true);
+    try {
+      const response = await axios({
+        method: 'get',
+        url: 'https://emr-server.herokuapp.com/patient',
+        params: {
+          page: 0,
+          size: 20
+        },
+        headers: authHeader()
+      }).then((response) => {
+        console.log(response);
+        if (response.data.rows.length) {
+          setPatientsList([...response.data.rows]);
+          console.log(patientsList);
+          filterData(searchQuery, patientsList);
+        }
+        // setIsLoading(false);
+      });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getAllDoctors = async () => {
+    // setIsLoading(true);
+    try {
+      const response = await axios({
+        method: 'get',
+        url: 'https://emr-server.herokuapp.com/staff',
+        params: {
+          page: 0,
+          size: 20
+        },
+        headers: authHeader()
+      }).then((response) => {
+        console.log(response);
+        if (response.data.rows.length) {
+          getAvailableDoctors(response.data.rows);
+        }
+        // setIsLoading(false);
+      });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getAllPatients();
+    getAllDoctors();
+  }, []);
 
   // useEffect(() => {
   //   localStorage.setItem('incomingPatientsList', JSON.stringify(incomingPatientsList));
@@ -111,11 +175,11 @@ function ReceptionistHome() {
                     })}
                   </TableRow>
                 </TableHead>
-                {dataFiltered.length === 0 ? (
+                {patientsList.length === 0 ? (
                   <h1 className="text-lg mb-3 text-red-500">Patient is not on the list.</h1>
                 ) : (
                   <TableBody>
-                    {dataFiltered.map((d, index) => (
+                    {patientsList.map((d, index) => (
                       <TableRow key={index}>
                         <TableCell align="center" component="th" scope="row">
                           {index + 1}

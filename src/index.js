@@ -4,17 +4,28 @@ import './index.css';
 import App from './App';
 import { StyledEngineProvider } from '@mui/material/styles';
 import reportWebVitals from './reportWebVitals';
-import { CssBaseline } from '@mui/material';
+import { createTheme, CssBaseline } from '@mui/material';
 import { store } from './redux/store';
 import { Provider } from 'react-redux';
+import { ThemeProvider } from '@mui/styles';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+const theme = createTheme({
+  pallete: {
+    primary: {
+      main: '#48bb78'
+    },
+    secondary: '#678900'
+  }
+});
 root.render(
   <React.StrictMode>
     <Provider store={store}>
       <StyledEngineProvider injectFirst>
-        <CssBaseline />
-        <App />
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <App />
+        </ThemeProvider>
       </StyledEngineProvider>
     </Provider>
   </React.StrictMode>

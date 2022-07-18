@@ -13,7 +13,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { Edit } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
-import FormDialog from '../components/Dialog';
+import DeleteDialog from '../components/DeleteDialog';
 import { Divider } from '@material-ui/core';
 
 const useStyles = makeStyles({
@@ -122,7 +122,7 @@ function Symptoms() {
                     </IconButton>
                   </TableCell>
                   <TableCell align="right">
-                    <FormDialog id={row.id} setRows={setRows} rows={rows} />
+                    <DeleteDialog id={row.id} setRows={setRows} rows={rows} />
                   </TableCell>
                 </TableRow>
               ))}

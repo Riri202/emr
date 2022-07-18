@@ -16,18 +16,18 @@ function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { user, isLoading, isError, isSuccess, message } = useSelector((state) => state.auth);
+  const { user, isLoading, isError, message } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (isError) {
       alert(message);
     }
-    if ((isSuccess || user) && user.user.role === 'ADMIN') {
+    if (user && user.user.role === 'ADMIN') {
       alert('succeessful login');
       navigate('/admin');
     }
     dispatch(reset());
-  }, [user, isError, isSuccess, message, navigate, dispatch]);
+  }, [user, isError, message, navigate, dispatch]);
   const onChange = (e) => {
     setFormData((prevState) => ({
       ...prevState,
@@ -43,48 +43,56 @@ function Login() {
     dispatch(login(loginData));
   };
   return (
-    <div className="flex flex-col mx-auto items-center h-screen">
-      <h1 className="mb-3">Login</h1>
-      <Box
-        onSubmit={handleLogin}
-        component="form"
-        sx={{ display: 'flex', flexDirection: 'column' }}>
-        <TextField
-          required
-          id="filled-required"
-          label="Required"
-          name="username"
-          onChange={onChange}
-          sx={{ mb: 2 }}
-        />
-        <TextField
-          required
-          id="filled-required"
-          label="Required"
-          name="password"
-          onChange={onChange}
-          sx={{ mb: 2 }}
-        />
-        <Box sx={{ position: 'relative' }}>
-          <Button disabled={isLoading} type="submit" className="p-3 mt-1 bg-green-500 text-[#000]">
-            Login
-          </Button>
-          {isLoading && (
-            <CircularProgress
-              color="success"
-              size={24}
-              sx={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                zIndex: 1,
-                marginTop: '-12px',
-                marginLeft: '-12px'
-              }}
-            />
-          )}
+    <div className="flex flex-col items-center justify-center h-screen">
+      <div className="w-3/5">
+        <h1 className="mb-3">Login</h1>
+        <Box
+          fullWidth
+          onSubmit={handleLogin}
+          component="form"
+          sx={{ display: 'flex', flexDirection: 'column' }}>
+          <TextField
+            fullWidth
+            required
+            id="filled-required"
+            label="Username"
+            name="username"
+            onChange={onChange}
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            fullWidth
+            required
+            id="filled-required"
+            label="Password"
+            name="password"
+            onChange={onChange}
+            sx={{ mb: 2 }}
+          />
+          <Box sx={{ position: 'relative' }} fullWidth>
+            <Button
+              disabled={isLoading}
+              type="submit"
+              className="p-3 w-full mt-1 bg-green-500 text-[#000]">
+              Login
+            </Button>
+            {isLoading && (
+              <CircularProgress
+                color="success"
+                size={24}
+                sx={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  zIndex: 1,
+                  marginTop: '-12px',
+                  marginLeft: '-12px'
+                }}
+              />
+            )}
+          </Box>
         </Box>
-      </Box>
+      </div>
     </div>
   );
 }

@@ -11,11 +11,13 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import { Edit } from '@mui/icons-material';
-import IconButton from '@mui/material/IconButton';
-import FormDialog from '../components/Dialog';
-import { Divider } from '@material-ui/core';
+import DeleteDialog from '../components/DeleteDialog';
+import { Divider, Button } from '@material-ui/core';
+import { FaFileCsv } from 'react-icons/fa';
+// import IntuitiveButton from '../../common-components/IntuitiveButton';
+import authHeader from '../../redux/features/auth/authHeader';
+import axios from 'axios';
+import EditPatientForm from '../components/EditPatientForm';
 
 const useStyles = makeStyles({
   table: {
@@ -23,33 +25,27 @@ const useStyles = makeStyles({
   }
 });
 
-const headers = ['Index', 'ID', 'Name', 'Edit', 'Delete'];
+const headers = ['Index', 'ID', 'Name', 'Email', 'Phone No', 'DOB', 'Edit', 'Delete'];
 
 function PatientsBiodata() {
   const classes = useStyles();
-  const [rows, setRows] = useState(JSON.parse(localStorage.getItem('patients')) ?? []);
+  const [rows, setRows] = useState([]);
+  // const [isAddingPatient, setIsAddingPatient] = useState(false);
   const [inputData, setInputData] = useState({
-    id: '',
-    name: ''
+    name: '',
+    email: '',
+    phoneNumber: '',
+    dob: ''
   });
+  const { name, email, phoneNumber, dob } = inputData;
+
   const handleChange = (e) => {
     setInputData((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value
     }));
   };
-  // const handleNameChange = (e) => {
-  //   setInputData({
-  //     ...inputData,
-  //     name: e.target.value
-  //   });
-  // };
-  // const handleIdChange = (e) => {
-  //   setInputData({
-  //     ...inputData,
-  //     username: e.target.value
-  //   });
-  // };
+
   const handleCsvChange = (event) => {
     // Passing file data (event.target.files[0]) to parse using Papa.parse
     Papa.parse(event.target.files[0], {
@@ -70,41 +66,117 @@ function PatientsBiodata() {
       }
     });
   };
-  const handleSubmit = (e) => {
+
+  const addPatient = async (e) => {
     e.preventDefault();
-    if (rows.length > 0) {
-      setRows([...rows, inputData]);
+    // setIsAddingPatient(true);
+    const patientFormData = { name, email, phoneNumber, dob };
+
+    try {
+      const response = await axios({
+        method: 'post',
+        url: 'https://emr-server.herokuapp.com/patient',
+        data: patientFormData,
+        headers: authHeader()
+      }).then((response) => {
+        console.log(response.data.patient);
+        if (rows.length > 0) {
+          setRows([...rows, response.data.patient]);
+        }
+        if (rows.length === 0) {
+          setRows([response.patient]);
+        }
+      });
+      // return {response.data.patient}
+      console.log(response);
+      // setIsAddingPatient(false);
+    } catch (error) {
+      console.log(error);
     }
-    if (rows.length === 0) {
-      setRows([inputData]);
+  };
+  const getAllPatients = async () => {
+    // setIsLoading(true);
+    try {
+      const response = await axios({
+        method: 'get',
+        url: 'https://emr-server.herokuapp.com/patient',
+        params: {
+          page: 0,
+          size: 20
+        },
+        headers: authHeader()
+      }).then((response) => {
+        console.log(response);
+        if (response.data.rows.length) {
+          setRows(response.data.rows);
+        }
+        // setIsLoading(false);
+      });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
     }
   };
   useEffect(() => {
-    localStorage.setItem('patients', JSON.stringify(rows));
-  }, [rows]);
+    getAllPatients();
+  }, []);
   return (
     <div>
       <h2 className="text-lg mb-3">Patients Biodata</h2>
-      <Box component={Paper} sx={{ mb: 4, padding: 2, display: 'flex', spacing: 2 }}>
-        <form onSubmit={handleSubmit}>
-          <TextField
-            name="name"
-            onChange={handleChange}
-            // value={inputData.name}
-            variant="standard"
-            sx={{ mr: 3 }}></TextField>
-          <TextField
-            name="id"
-            onChange={handleChange}
-            variant="standard"
-            sx={{ mr: 3 }}></TextField>
-          <Button type="submit" variant="contained" color="primary">
-            Add new patient
-          </Button>
+      <Box
+        component={Paper}
+        sx={{ mb: 4, padding: 2, display: 'flex', flexDirection: 'column', spacing: 2 }}>
+        <form onSubmit={addPatient}>
+          <div className="flex flex-row justify-center space-x-4">
+            <TextField
+              name="name"
+              id="name"
+              label="Name"
+              type="text"
+              onChange={handleChange}
+              variant="standard"
+              sx={{ mr: 3 }}></TextField>
+            <TextField
+              name="email"
+              id="email"
+              label="Email"
+              type="email"
+              onChange={handleChange}
+              variant="standard"
+              sx={{ mr: 3 }}></TextField>
+            <TextField
+              name="phoneNumber"
+              id="phoneNumber"
+              label="Phone No."
+              type="number"
+              onChange={handleChange}
+              variant="standard"
+              sx={{ mr: 3 }}></TextField>
+            <input name="dob" type="date" id="dob" onChange={handleChange} className="p-3" />
+          </div>
+          <div className="flex justify-center mt-2 mb-2">
+            {/* <div className="w-1/2">
+              <IntuitiveButton text="Add new patient" isLoading={isAddingPatient} />
+            </div> */}
+            <Button type="submit" variant="outlined" className="w-1/2 p-3 bg-green-500 text-[#000]">
+              Add new patient
+            </Button>
+          </div>
         </form>
-        <Divider orientation="vertical" variant="middle" flexItem />
-        <form>
-          <input type={'file'} accept={'.csv'} onChange={handleCsvChange} />
+        <Divider className="mt-2 mb-2" orientation="horizontal" variant="fullWidth" />
+        <form className="flex flex-row mt-2 justify-center">
+          <div className="p-3 bg-green-500 rounded-md">
+            <label htmlFor="csvFile" className="cursor-pointer">
+              Import a csv files <FaFileCsv className="text-[30px] mb-[-5px]" />
+              <input
+                type={'file'}
+                id="csvFile"
+                accept={'.csv'}
+                onChange={handleCsvChange}
+                className="hidden"
+              />
+            </label>
+          </div>
         </form>
       </Box>
       <TableContainer component={Paper}>
@@ -134,20 +206,21 @@ function PatientsBiodata() {
                   <TableCell component="th" scope="row">
                     {row.id}
                   </TableCell>
-                  <TableCell align="right">
+                  <TableCell align="center">
                     <Link
                       style={{ textDecoration: 'none' }}
                       to={`/patients-biodata/${row.id}/${row.name}`}>
                       {row.name}
                     </Link>
                   </TableCell>
-                  <TableCell align="right">
-                    <IconButton className="outline-none">
-                      <Edit />
-                    </IconButton>
+                  <TableCell align="center">{row.email}</TableCell>
+                  <TableCell align="center">{row.phoneNumber}</TableCell>
+                  <TableCell align="center">{row.dob}</TableCell>
+                  <TableCell align="center">
+                    <EditPatientForm selectedPatient={row} setRows={setRows} rows={rows} />
                   </TableCell>
-                  <TableCell align="right">
-                    <FormDialog id={row.id} setRows={setRows} rows={rows} />
+                  <TableCell align="center">
+                    <DeleteDialog id={row.uuid} setRows={setRows} rows={rows} role="patient" />
                   </TableCell>
                 </TableRow>
               ))}

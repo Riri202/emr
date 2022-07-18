@@ -13,18 +13,18 @@ import { Edit } from '@mui/icons-material';
 import authHeader from '../../redux/features/auth/authHeader';
 import IntuitiveButton from '../../common-components/IntuitiveButton';
 
-export default function EditWorkerForm({ selectedWorker, setRows, rows }) {
+export default function EditWorkerForm({ selectedPatient, setRows, rows }) {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   // eslint-disable-next-line no-unused-vars
   const [inputData, setInputData] = useState({
-    fullName: selectedWorker.fullName,
-    username: selectedWorker.username,
-    password: selectedWorker.password,
-    role: selectedWorker.role
+    name: selectedPatient.name,
+    email: selectedPatient.email,
+    phoneNumber: selectedPatient.phoneNumber,
+    dob: selectedPatient.dob
   });
-  const { fullName, username, password, role } = inputData;
+  const { name, email, phoneNumber, dob } = inputData;
   const handleChange = (e) => {
     setInputData((prevState) => ({
       ...prevState,
@@ -40,27 +40,27 @@ export default function EditWorkerForm({ selectedWorker, setRows, rows }) {
     setOpen(false);
   };
 
-  // add changes made to the staff table
-  const updatedStaff = (id, inputData) => {
+  // add changes made to the patient table
+  const updatedPatient = (id, inputData) => {
     setRows(rows.map((row) => (row.uuid === id ? inputData : row)));
   };
 
   const handleUpdateStaffDetails = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    const uuid = selectedWorker.uuid;
+    const uuid = selectedPatient.uuid;
     console.log(uuid);
-    const staffFormData = { fullName, username, password, role, uuid };
+    const patientFormData = { name, email, phoneNumber, dob, uuid };
 
     try {
       const response = await axios({
         method: 'patch',
-        url: 'https://emr-server.herokuapp.com/staff',
-        data: staffFormData,
+        url: 'https://emr-server.herokuapp.com/patient',
+        data: patientFormData,
         headers: authHeader()
       }).then((response) => {
         console.log(response);
-        updatedStaff(uuid, inputData);
+        updatedPatient(uuid, inputData);
         setIsLoading(false);
         setOpen(false);
       });
@@ -78,41 +78,52 @@ export default function EditWorkerForm({ selectedWorker, setRows, rows }) {
       </IconButton>
       <Dialog open={open} onClose={handleClose} fullWidth>
         <form onSubmit={handleUpdateStaffDetails} className="w-full">
-          <DialogTitle>Edit Worker Details</DialogTitle>
+          <DialogTitle>Edit Pateint Details</DialogTitle>
           <DialogContent>
             <DialogContentText>Edit details below</DialogContentText>
             <div className="flex flex-col space-y-2">
               <TextField
-                name="fullName"
-                id="fullname"
+                name="name"
+                id="name"
                 label="Name"
                 type="text"
                 fullWidth
                 variant="outlined"
                 onChange={handleChange}
-                defaultValue={fullName}
+                defaultValue={name}
               />
               <TextField
-                name="username"
-                id="username"
-                label="Username"
+                name="email"
+                id="email"
+                label="Email"
+                type="email"
+                fullWidth
+                variant="outlined"
+                onChange={handleChange}
+                defaultValue={email}
+              />
+              <TextField
+                name="phoneNumber"
+                id="phoneNumber"
+                label="Phone Number"
                 type="text"
                 fullWidth
                 variant="outlined"
                 onChange={handleChange}
-                defaultValue={username}
+                defaultValue={phoneNumber}
               />
-              <TextField
-                name="password"
-                id="password"
-                label="Password"
-                type="text"
-                fullWidth
-                variant="outlined"
-                onChange={handleChange}
-                defaultValue={password}
-              />
-              <TextField
+              <div className="w-full">
+                <input
+                  name="dob"
+                  type="date"
+                  id="dob"
+                  defaultValue={dob}
+                  onChange={handleChange}
+                  className="p-3"
+                />
+              </div>
+
+              {/* <TextField
                 name="role"
                 id="role"
                 label="Role"
@@ -121,9 +132,9 @@ export default function EditWorkerForm({ selectedWorker, setRows, rows }) {
                 variant="outlined"
                 onChange={handleChange}
                 defaultValue={role}
-              />
+              /> */}
               <div className="w-full">
-                <IntuitiveButton text="Edit Staff" isLoading={isLoading} />
+                <IntuitiveButton text="Edit Patient" isLoading={isLoading} />
               </div>
               {/* <Button
                 fullWidth

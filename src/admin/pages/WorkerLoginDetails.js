@@ -11,12 +11,13 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import { Delete } from '@mui/icons-material';
-import IconButton from '@mui/material/IconButton';
+// import Button from '@mui/material/Button';
 import { Divider } from '@material-ui/core';
 import authHeader from '../../redux/features/auth/authHeader';
 import EditWorkerForm from '../components/EditWorkerForm';
+import DeleteDialog from '../components/DeleteDialog';
+import { FaFileCsv } from 'react-icons/fa';
+import IntuitiveButton from '../../common-components/IntuitiveButton';
 
 const useStyles = makeStyles({
   table: {
@@ -24,58 +25,14 @@ const useStyles = makeStyles({
   }
 });
 
-const headers = [
-  'Name',
-  'Username',
-  'Password',
-  'Role',
-  'Shift start',
-  'Shift end',
-  'Edit',
-  'Delete'
-];
+const headers = ['Name', 'Username', 'Role', 'Shift start', 'Shift end', 'Edit', 'Delete'];
 
 function WorkerLoginDetails() {
   const classes = useStyles();
   const [rows, setRows] = useState([]);
-  // const [rows, setRows] = useState([
-  //   {
-  //     id: 1,
-  //     fullName: 'Snow',
-  //     username: 'Jon',
-  //     password: 35,
-  //     role: 'nurse',
-  //     shiftStart: '10am',
-  //     shiftEnd: '8pm'
-  //   },
-  //   {
-  //     id: 2,
-  //     fullName: 'Lannister',
-  //     username: 'Cersei',
-  //     password: 42,
-  //     role: 'nurse',
-  //     shiftStart: '10am',
-  //     shiftEnd: '8pm'
-  //   },
-  //   {
-  //     id: 3,
-  //     fullName: 'Lannister',
-  //     username: 'Jaime',
-  //     password: 45,
-  //     role: 'nurse',
-  //     shiftStart: '10am',
-  //     shiftEnd: '8pm'
-  //   },
-  //   {
-  //     id: 4,
-  //     fullName: 'Stark',
-  //     username: 'Arya',
-  //     password: 16,
-  //     role: 'doctor',
-  //     shiftStart: '10am',
-  //     shiftEnd: '8pm'
-  //   }
-  // ]);
+  // const [isLoading, setIsLoading] = useState(false);
+  const [isAddingStaff, setIsAddingStaff] = useState(false);
+
   const [inputData, setInputData] = useState({
     fullName: '',
     username: '',
@@ -90,10 +47,6 @@ function WorkerLoginDetails() {
     }));
   };
 
-  const handleRowDelete = (id) => {
-    const filteredRows = rows.filter((row) => row.uuid !== id);
-    setRows(filteredRows);
-  };
   const handleCsvChange = (event) => {
     // Passing file data (event.target.files[0]) to parse using Papa.parse
     Papa.parse(event.target.files[0], {
@@ -111,8 +64,9 @@ function WorkerLoginDetails() {
       }
     });
   };
-  const handleSubmit = async (e) => {
+  const addStaff = async (e) => {
     e.preventDefault();
+    setIsAddingStaff(true);
     const staffFormData = { fullName, username, password, role };
 
     try {
@@ -123,6 +77,7 @@ function WorkerLoginDetails() {
         headers: authHeader()
       }).then((response) => {
         console.log(response);
+        setIsAddingStaff(false);
       });
       console.log(response);
     } catch (error) {
@@ -138,6 +93,7 @@ function WorkerLoginDetails() {
   };
 
   const getAllStaff = async () => {
+    // setIsLoading(true);
     try {
       const response = await axios({
         method: 'get',
@@ -152,6 +108,7 @@ function WorkerLoginDetails() {
         if (response.data.rows.length) {
           setRows(response.data.rows);
         }
+        // setIsLoading(false);
       });
       console.log(response);
     } catch (error) {
@@ -168,40 +125,63 @@ function WorkerLoginDetails() {
   return (
     <>
       <h2 className="text-lg mb-3">Worker Login Details</h2>
-      <Box component={Paper} sx={{ mb: 4, padding: 2, display: 'flex', spacing: 2 }}>
-        <form onSubmit={handleSubmit}>
-          <TextField
-            label="fullname"
-            name="fullName"
-            onChange={handleChange}
-            // value={inputData.name}
-            variant="standard"
-            sx={{ mr: 3 }}></TextField>
-          <TextField
-            label="username"
-            name="username"
-            onChange={handleChange}
-            variant="standard"
-            sx={{ mr: 3 }}></TextField>
-          <TextField
-            label="password"
-            name="password"
-            onChange={handleChange}
-            variant="standard"
-            sx={{ mr: 3 }}></TextField>
-          <TextField
-            label="role"
-            name="role"
-            onChange={handleChange}
-            variant="standard"
-            sx={{ mr: 3 }}></TextField>
-          <Button type="submit" variant="contained" color="primary">
-            Add new worker
-          </Button>
+      <Box
+        component={Paper}
+        sx={{ mb: 4, padding: 2, display: 'flex', flexDirection: 'column', spacing: 2 }}>
+        <form onSubmit={addStaff}>
+          <div className="flex flex-row justify-center space-x-4">
+            <TextField
+              label="fullname"
+              name="fullName"
+              onChange={handleChange}
+              variant="standard"
+              sx={{ mr: 3 }}></TextField>
+            <TextField
+              label="username"
+              name="username"
+              onChange={handleChange}
+              variant="standard"
+              sx={{ mr: 3 }}></TextField>
+            <TextField
+              label="password"
+              name="password"
+              onChange={handleChange}
+              variant="standard"
+              sx={{ mr: 3 }}></TextField>
+            <TextField
+              label="role"
+              name="role"
+              onChange={handleChange}
+              variant="standard"
+              sx={{ mr: 3 }}></TextField>
+          </div>
+          <div className="flex justify-center mt-2 mb-2">
+            <div className="w-1/2">
+              <IntuitiveButton text="Add new worker" isLoading={isAddingStaff} />
+            </div>
+            {/* <Button
+              type="submit"
+              variant="outlined"
+              color="success"
+              className="w-1/2 p-3 bg-green-500 text-[#000]">
+              Add new worker
+            </Button> */}
+          </div>
         </form>
-        <Divider orientation="vertical" variant="middle" flexItem />
-        <form>
-          <input type={'file'} accept={'.csv'} onChange={handleCsvChange} />
+        <Divider className="mt-2 mb-2" orientation="horizontal" variant="fullWidth" />
+        <form className="flex flex-row mt-2 justify-center">
+          <div className="p-3 bg-green-500 rounded-md">
+            <label htmlFor="csvFile" className="cursor-pointer">
+              Import a csv files <FaFileCsv className="text-[30px] mb-[-5px]" />
+              <input
+                type={'file'}
+                id="csvFile"
+                accept={'.csv'}
+                onChange={handleCsvChange}
+                className="hidden"
+              />
+            </label>
+          </div>
         </form>
       </Box>
       <TableContainer component={Paper}>
@@ -217,6 +197,22 @@ function WorkerLoginDetails() {
               })}
             </TableRow>
           </TableHead>
+          {/* {isLoading && (
+            <Box sx={{ position: 'relative' }}>
+              <CircularProgress
+                color="success"
+                size={35}
+                sx={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  zIndex: 1,
+                  marginTop: '-12px',
+                  marginLeft: '-12px'
+                }}
+              />
+            </Box>
+          )} */}
           {!rows.length ? (
             <p className="text-lg mb-3 text-red-500">
               Staff list is empty. Enter staff details above to add to list
@@ -229,7 +225,6 @@ function WorkerLoginDetails() {
                     {row.fullName}
                   </TableCell>
                   <TableCell align="right">{row.username}</TableCell>
-                  <TableCell align="right">{row.password}</TableCell>
                   <TableCell align="right">{row.role}</TableCell>
                   <TableCell align="right">
                     <input type="time" />
@@ -241,9 +236,7 @@ function WorkerLoginDetails() {
                     <EditWorkerForm selectedWorker={row} setRows={setRows} rows={rows} />
                   </TableCell>
                   <TableCell align="right">
-                    <IconButton onClick={() => handleRowDelete(row.uuid)}>
-                      <Delete />
-                    </IconButton>
+                    <DeleteDialog id={row.uuid} setRows={setRows} rows={rows} role="staff" />
                   </TableCell>
                 </TableRow>
               ))}

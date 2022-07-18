@@ -15,7 +15,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
+// import ListItemButton from '@mui/material/ListItemButton';
+import { ListItemButton } from '@mui/material';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { FaHospitalUser, FaUserNurse } from 'react-icons/fa';
@@ -180,11 +181,6 @@ export default function AdminNav() {
                 }}
                 onClick={() => handleNavigation(index)}>
                 <ListItemIcon
-                  // sx={{
-                  //   minWidth: 0,
-                  //   mr: open ? 3 : 'auto',
-                  //   justifyContent: 'center'
-                  // }}
                   className={(open ? 'mr-3' : 'auto') + ' justify-center min-w-0 text-green-500'}>
                   {index === 0 ? (
                     <FaUserNurse />
@@ -200,13 +196,14 @@ export default function AdminNav() {
                     <MdSick />
                   )}
                 </ListItemIcon>
+                {/* <span>{text}</span> */}
                 <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
           ))}
         </List>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
         <div className="mb-3">
           <Box sx={{ display: 'flex' }}>
