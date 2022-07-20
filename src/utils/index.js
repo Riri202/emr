@@ -8,14 +8,26 @@ export const filterData = (query, patientsList) => {
 };
 
 // function to handle checkbox change in dropdown button component to get and store value in api or localStorage
-export const handleCheckboxChange = (event, setChoice, choice) => {
+export const handleCheckboxChange = (event, setChoice, choice, id) => {
   if (event.target.checked && !choice.length) {
-    setChoice([event.target.value]);
+    // setChoice([event.target.value]);
+    setChoice([
+      {
+        value: event.target.value,
+        id: id
+      }
+    ]);
   } else if (event.target.checked && choice.length > 0) {
-    setChoice([...choice, event.target.value]);
+    setChoice([
+      ...choice,
+      {
+        value: event.target.value,
+        id: id
+      }
+    ]);
   }
   if (!event.target.checked) {
-    const filterdArr = choice.filter((c) => c !== event.target.value);
+    const filterdArr = choice.filter((c) => c.value !== event.target.value);
     setChoice([...filterdArr]);
   }
   console.log(choice);

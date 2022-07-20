@@ -39,9 +39,10 @@ export default function DropdownButton({ btnText, menuItems, handleCheckboxChang
           'aria-labelledby': 'basic-button'
         }}>
         {menuItems.map((item, index) => {
+          // change to menuItems.name to get names of doctors
           return (
             <MenuItem key={index}>
-              <Checkbox value={item} onChange={() => handleCheckboxChange(event)} />
+              <Checkbox value={item} onChange={() => handleCheckboxChange} />
               <ListItemText primary={item} />
               {/* {item} */}
             </MenuItem>

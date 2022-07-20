@@ -77,7 +77,7 @@ export default function DropdownSearch({ btnText, menuItems, handleCheckboxChang
     <Autocomplete
       multiple
       limitTags={2}
-      id="checkboxes-tags-demo"
+      id="checkboxes-tags"
       options={menuItems}
       disableCloseOnSelect
       getOptionLabel={(option) => option}

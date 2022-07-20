@@ -18,7 +18,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { filterData } from '../../utils/index';
-import PatientsPersonalPage from './PatientsPersonalPage';
+// import PatientsPersonalPage from './PatientsPersonalPage';
+import { getSentQueues } from '../../utils/api';
 
 const useStyles = makeStyles({
   table: {
@@ -27,46 +28,66 @@ const useStyles = makeStyles({
 });
 function DoctorHome() {
   const classes = useStyles();
-  const headers = ['Index', 'ID', 'Name'];
+  const headers = ['Index', 'ID', 'Name', 'Email', 'Phone No', 'DOB'];
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const allWorkers = JSON.parse(localStorage.getItem('allWorkers'));
+  const [patientsList, setPatientsList] = useState([]);
+  // const allWorkers = JSON.parse(localStorage.getItem('allWorkers'));
   const [isDoctorAvailable, setIsDoctorAvailable] = useState(
     JSON.parse(localStorage.getItem('isDoctorAvailable')) ?? false
   );
   const [availableDoctors, setAvailableDoctors] = useState(
     JSON.parse(localStorage.getItem('availableDoctors')) ?? []
   );
-  // TODO this list should come from the receptionist so set receptionist send to in localstorage and then get it from here for specific doctor
-  const patientsList = JSON.parse(localStorage.getItem('patients')) ?? [];
 
-  const findDoctor = (role, id) => {
-    return allWorkers.filter((worker) => worker.role === role && worker.id === id);
+  const user = JSON.parse(localStorage.getItem('user'));
+
+  const patientsFromReceptionist = async () => {
+    const staffId = user.user.uuid;
+    const data = await getSentQueues(staffId, 'PENDING');
+    console.log(data);
+    const patients = data.rows.map((row) => row.Patient);
+    if (data) {
+      setPatientsList(patients);
+    }
   };
-  const thisDoctor = findDoctor('doctor', 4);
-  console.log(thisDoctor);
   const dataFiltered = filterData(searchQuery, patientsList);
 
+  // TODO this list should come from the receptionist so set receptionist send to in localstorage and then get it from here for specific doctor
+  // const patientsList = JSON.parse(localStorage.getItem('patients')) ?? [];
+
+  // const findDoctor = (role, id) => {
+  //   return allWorkers.filter((worker) => worker.role === role && worker.id === id);
+  // };
+  // const thisDoctor = findDoctor('doctor', 4);
+  // console.log(thisDoctor);
+
+  // TODO this function will instead make a patch or put request to update the doctors availability on the backend
   const handleCheckboxChange = (event) => {
     if (event.target.checked) {
       setIsDoctorAvailable(true);
       if (availableDoctors.length > 0) {
-        setAvailableDoctors(availableDoctors.push(thisDoctor[0].name));
+        setAvailableDoctors(availableDoctors.push(user.user.fullName));
       } else if (availableDoctors.length === 0) {
-        setAvailableDoctors([thisDoctor[0].name]);
+        setAvailableDoctors([user.user.fullName]);
       }
     }
     if (!event.target.checked) {
       setIsDoctorAvailable(false);
-      setAvailableDoctors(availableDoctors.filter((doc) => doc !== thisDoctor[0].name));
+      setAvailableDoctors(availableDoctors.filter((doc) => doc !== user.user.fullName));
     }
   };
   useEffect(() => {
     localStorage.setItem('availableDoctors', JSON.stringify(availableDoctors));
   }, [availableDoctors]);
+
   useEffect(() => {
     localStorage.setItem('isDoctorAvailable', JSON.stringify(isDoctorAvailable));
   }, [isDoctorAvailable]);
+
+  useEffect(() => {
+    patientsFromReceptionist();
+  }, []);
   return (
     <div>
       <Nav />
@@ -75,7 +96,7 @@ function DoctorHome() {
           <div>
             <div className="flex space-x-2">
               <FaUserMd className="mt-5" />
-              <h2 className="text-xl">Dr. {thisDoctor[0].name} </h2>
+              <h2 className="text-xl">Dr. {user.user.fullName} </h2>
             </div>
             <div className="flex space-x-2 mt-[-2px]">
               <Checkbox size="small" checked={isDoctorAvailable} onChange={handleCheckboxChange} />
@@ -119,18 +140,29 @@ function DoctorHome() {
               <h1 className="text-lg mb-3 text-red-500">Patient is not on the list.</h1>
             ) : (
               <TableBody>
-                {dataFiltered.map((d, index) => (
+                {dataFiltered.map((data, index) => (
                   <TableRow key={index}>
                     <TableCell align="center" component="th" scope="row">
                       {index + 1}
                     </TableCell>
                     <TableCell align="center" component="th" scope="row">
-                      {d.id}
+                      {data.id}
                     </TableCell>
                     <TableCell align="center" component="th" scope="row">
-                      <Link style={{ textDecoration: 'none' }} to={`/patient/${d.id}/${d.name}`}>
-                        {d.name}
+                      <Link
+                        style={{ textDecoration: 'none' }}
+                        to={`/patient/${data.uuid}/${data.fullName}`}>
+                        {data.name}
                       </Link>
+                    </TableCell>
+                    <TableCell align="center" component="th" scope="row">
+                      {data.email}
+                    </TableCell>
+                    <TableCell align="center" component="th" scope="row">
+                      {data.phoneNumber}
+                    </TableCell>
+                    <TableCell align="center" component="th" scope="row">
+                      {data.dob}
                     </TableCell>
                   </TableRow>
                 ))}
