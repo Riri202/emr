@@ -1,6 +1,11 @@
 import axios from 'axios';
 import authHeader from '../../redux/features/auth/authHeader';
+import httpService from '../axios';
 import { API_URL } from '../constants';
+
+const addStaffUrl = '/staff';
+const InventoryUrl = '/inventory';
+const PatientUrl = '/patient';
 
 export const getAllStaff = async () => {
   try {
@@ -56,4 +61,18 @@ export const getSentQueues = async (staffId, status) => {
   } catch (error) {
     console.log(error);
   }
+};
+export const updatePatient = (data) => {
+  return httpService.patch(PatientUrl, data);
+};
+export const addNewStaff = (data) => {
+  return httpService.post(addStaffUrl, data);
+};
+
+export const addNewInventory = (data) => {
+  return httpService.post(InventoryUrl, data);
+};
+
+export const updateInventory = (data) => {
+  return httpService.patch(InventoryUrl, data);
 };

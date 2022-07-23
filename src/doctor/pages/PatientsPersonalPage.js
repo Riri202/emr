@@ -10,6 +10,7 @@ import Button from '@mui/material/Button';
 function PatientsPersonalPage() {
   let { id, name } = useParams();
   const navigate = useNavigate();
+  // TODO get patients biodata from backend instead, use the uuid or id from this page url for the api url
   const patientsInfo = JSON.parse(localStorage.getItem('patientsInfo/Biodata'));
 
   const handleClick = () => {

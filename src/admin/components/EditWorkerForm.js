@@ -1,17 +1,8 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import axios from 'axios';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import IconButton from '@mui/material/IconButton';
-import { Edit } from '@mui/icons-material';
 import authHeader from '../../redux/features/auth/authHeader';
-import IntuitiveButton from '../../common-components/IntuitiveButton';
+import EditForm from './EditForm';
 
 export default function EditWorkerForm({ selectedWorker, setRows, rows }) {
   const [open, setOpen] = useState(false);
@@ -70,79 +61,44 @@ export default function EditWorkerForm({ selectedWorker, setRows, rows }) {
       console.log(error);
     }
   };
-
+  const formDetails = [
+    {
+      name: 'fullName',
+      id: 'fullname',
+      label: 'Name',
+      defaultValue: fullName
+    },
+    {
+      name: 'username',
+      id: 'username',
+      label: 'Username',
+      defaultValue: username
+    },
+    {
+      name: 'password',
+      id: 'password',
+      label: 'Password',
+      defaultValue: password
+    },
+    {
+      name: 'role',
+      id: 'role',
+      label: 'Role',
+      defaultValue: role
+    }
+  ];
   return (
     <div>
-      <IconButton className="outline-none" onClick={handleClickOpen}>
-        <Edit />
-      </IconButton>
-      <Dialog open={open} onClose={handleClose} fullWidth>
-        <form onSubmit={handleUpdateStaffDetails} className="w-full">
-          <DialogTitle>Edit Worker Details</DialogTitle>
-          <DialogContent>
-            <DialogContentText>Edit details below</DialogContentText>
-            <div className="flex flex-col space-y-2">
-              <TextField
-                name="fullName"
-                id="fullname"
-                label="Name"
-                type="text"
-                fullWidth
-                variant="outlined"
-                onChange={handleChange}
-                defaultValue={fullName}
-              />
-              <TextField
-                name="username"
-                id="username"
-                label="Username"
-                type="text"
-                fullWidth
-                variant="outlined"
-                onChange={handleChange}
-                defaultValue={username}
-              />
-              <TextField
-                name="password"
-                id="password"
-                label="Password"
-                type="text"
-                fullWidth
-                variant="outlined"
-                onChange={handleChange}
-                defaultValue={password}
-              />
-              <TextField
-                name="role"
-                id="role"
-                label="Role"
-                type="text"
-                fullWidth
-                variant="outlined"
-                onChange={handleChange}
-                defaultValue={role}
-              />
-              <div className="w-full">
-                <IntuitiveButton text="Edit Staff" isLoading={isLoading} />
-              </div>
-              {/* <Button
-                fullWidth
-                type="submit"
-                onClick={handleClose}
-                className="bg-green-500 text-[#000]">
-                Edit Staff
-              </Button> */}
-            </div>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              onClick={handleClose}
-              className="pt-2 pb-2 pl-4 pr-4 mt-1 bg-green-500 text-[#000] self-end">
-              Cancel
-            </Button>
-          </DialogActions>
-        </form>
-      </Dialog>
+      <EditForm
+        open={open}
+        handleClickOpen={handleClickOpen}
+        handleClose={handleClose}
+        onSubmit={handleUpdateStaffDetails}
+        handleChange={handleChange}
+        formDetails={formDetails}
+        isLoading={isLoading}
+        titleText="staff"
+      />
     </div>
   );
 }

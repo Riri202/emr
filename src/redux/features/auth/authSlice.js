@@ -1,4 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import setAuthToken from '../../../utils/setAuthToken';
+// import authHeader from './authHeader';
 import authService from './authService';
 
 // get user from localStorage
@@ -18,6 +20,8 @@ export const login = createAsyncThunk(`${API_URL}/auth/login`, async (userData, 
   try {
     const data = await authService.login(userData);
     console.log(data);
+    setAuthToken(data.token);
+    localStorage.setItem('user', JSON.stringify(data));
     return { user: data };
   } catch (error) {
     console.log('an error occured');

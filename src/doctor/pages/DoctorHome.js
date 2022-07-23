@@ -96,7 +96,8 @@ function DoctorHome() {
           <div>
             <div className="flex space-x-2">
               <FaUserMd className="mt-5" />
-              <h2 className="text-xl">Dr. {user.user.fullName} </h2>
+              {/* <h2 className="text-xl">Dr. {user.user.fullName} </h2> */}
+              <h2 className="text-xl">Dr. doctortoror </h2>
             </div>
             <div className="flex space-x-2 mt-[-2px]">
               <Checkbox size="small" checked={isDoctorAvailable} onChange={handleCheckboxChange} />

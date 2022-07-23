@@ -1,22 +1,22 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import EditForm from './EditForm';
-import { updatePatient } from '../../utils/api';
 import setAuthToken from '../../utils/setAuthToken';
+import { updateInventory } from '../../utils/api';
+import EditForm from './EditForm';
 
 const user = JSON.parse(localStorage.getItem('user'));
-export default function EditWorkerForm({ selectedPatient, setRows, rows }) {
+export default function EditInventoryForm({ selectedItem, setRows, rows }) {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   // eslint-disable-next-line no-unused-vars
   const [inputData, setInputData] = useState({
-    name: selectedPatient.name,
-    email: selectedPatient.email,
-    phoneNumber: selectedPatient.phoneNumber,
-    dob: selectedPatient.dob
+    name: selectedItem.name,
+    quantity: selectedItem.quantity,
+    price: selectedItem.price,
+    type: selectedItem.type
   });
-  const { name, email, phoneNumber, dob } = inputData;
+  const { name, quantity, price, type } = inputData;
   const handleChange = (e) => {
     setInputData((prevState) => ({
       ...prevState,
@@ -32,25 +32,21 @@ export default function EditWorkerForm({ selectedPatient, setRows, rows }) {
     setOpen(false);
   };
 
-  // add changes made to the patient table
-  const updatedPatient = (id, inputData) => {
-    setRows(rows.map((row) => (row.uuid === id ? inputData : row)));
+  // add changes made to the staff table
+  const updatedInventory = (id, inputData) => {
+    setRows(rows.map((row) => (row.id === id ? inputData : row)));
   };
 
-  const handleUpdatePatientDetails = async (e) => {
+  const handleUpdateInventoryItem = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    const uuid = selectedPatient.uuid;
-    console.log(uuid);
-    const patientFormData = { name, email, phoneNumber, dob, uuid };
+    const id = selectedItem.id;
+    const InventoryFormData = { id, name, price, quantity, type };
     setAuthToken(user);
 
     try {
-      const data = await updatePatient(patientFormData);
-      updatedPatient(uuid, data);
-      setIsLoading(false);
-      setOpen(false);
-      updatedPatient(uuid, inputData);
+      const data = await updateInventory(InventoryFormData);
+      updatedInventory(id, data);
       setIsLoading(false);
       setOpen(false);
     } catch (error) {
@@ -65,22 +61,22 @@ export default function EditWorkerForm({ selectedPatient, setRows, rows }) {
       defaultValue: name
     },
     {
-      name: 'email',
-      id: 'email',
-      label: 'Email',
-      defaultValue: email
+      name: 'price',
+      id: 'price',
+      label: 'Price',
+      defaultValue: price
     },
     {
-      name: 'phoneNumber',
-      id: 'phoneNumber',
-      label: 'Phone Number',
-      defaultValue: phoneNumber
+      name: 'quantity',
+      id: 'quantity',
+      label: 'Quantity',
+      defaultValue: quantity
     },
     {
-      name: 'dob',
-      id: 'dob',
-      label: 'Date of Birth',
-      defaultValue: dob
+      name: 'type',
+      id: 'type',
+      label: 'Type',
+      defaultValue: type
     }
   ];
 
@@ -90,11 +86,11 @@ export default function EditWorkerForm({ selectedPatient, setRows, rows }) {
         open={open}
         handleClickOpen={handleClickOpen}
         handleClose={handleClose}
-        onSubmit={handleUpdatePatientDetails}
+        onSubmit={handleUpdateInventoryItem}
         handleChange={handleChange}
         formDetails={formDetails}
         isLoading={isLoading}
-        titleText="patient"
+        titleText="inventory item"
       />
     </div>
   );

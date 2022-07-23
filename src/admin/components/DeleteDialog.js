@@ -24,27 +24,25 @@ export default function DeleteDialog({ id, rows, setRows, role }) {
   const handleClose = () => {
     setOpen(false);
   };
-  const deleteStaff = (id, rows) => {
-    const filteredRows = rows.filter((row) => row.uuid !== id);
+  const deletedItem = (id, rows) => {
+    const filteredRows = rows.filter((row) => row.uuid || row.id !== id);
     setRows(filteredRows);
   };
 
   const handleDelete = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    const uuid = id;
-    console.log(uuid);
-    const staffFormData = { uuid };
+    const formData = { id };
 
     try {
       const response = await axios({
         method: 'delete',
-        url: `https://emr-server.herokuapp.com/${role}/${uuid}`,
-        params: staffFormData,
+        url: `https://emr-server.herokuapp.com/${role}/${id}`,
+        params: formData,
         headers: authHeader()
       }).then((response) => {
         console.log(response);
-        deleteStaff(uuid, rows);
+        deletedItem(id, rows);
         setIsLoading(false);
       });
       // TODO maybe return response or find out something else you can do with it

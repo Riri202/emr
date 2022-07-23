@@ -19,8 +19,8 @@ import Paper from '@material-ui/core/Paper';
 import authHeader from '../../redux/features/auth/authHeader';
 import { getAllStaff } from '../../utils/api';
 // import IntuitiveButton from '../../common-components/IntuitiveButton';
-import CollapsibleList from '../../common-components/CollapsibleList';
 import { filterData } from '../../utils';
+import CollapsibleList from '../components/CollapsibleList';
 
 // const useStyles = makeStyles({
 //   table: {
@@ -193,15 +193,22 @@ function ReceptionistHome() {
           </Paper>
         ) : null} */}
 
-        <div>
+        <div className="p-20">
+          <p>Incoming Patients</p>
           <Paper style={{ padding: 15, borderRadius: 16 }}>
-            {patientsList && isSearching ? (
-              <CollapsibleList
-                patientsList={patientsList}
-                doctorNames={doctorNames}
-                doctorsList={doctorsList}
-              />
-            ) : null}
+            {!patientsList.length ? (
+              <p className="text-lg mb-3 text-red-500">Patient is not on the list.</p>
+            ) : (
+              <div>
+                {patientsList && isSearching ? (
+                  <CollapsibleList
+                    patientsList={patientsList}
+                    doctorNames={doctorNames}
+                    doctorsList={doctorsList}
+                  />
+                ) : null}
+              </div>
+            )}
           </Paper>
         </div>
       </Box>

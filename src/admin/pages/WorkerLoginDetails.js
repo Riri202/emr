@@ -18,6 +18,8 @@ import EditWorkerForm from '../components/EditWorkerForm';
 import DeleteDialog from '../components/DeleteDialog';
 import { FaFileCsv } from 'react-icons/fa';
 import IntuitiveButton from '../../common-components/IntuitiveButton';
+import { addNewStaff } from '../../utils/api';
+import setAuthToken from '../../utils/setAuthToken';
 
 const useStyles = makeStyles({
   table: {
@@ -26,6 +28,7 @@ const useStyles = makeStyles({
 });
 
 const headers = ['Name', 'Username', 'Role', 'Shift start', 'Shift end', 'Edit', 'Delete'];
+const user = JSON.parse(localStorage.getItem('user'));
 
 function WorkerLoginDetails() {
   const classes = useStyles();
@@ -68,28 +71,41 @@ function WorkerLoginDetails() {
     e.preventDefault();
     setIsAddingStaff(true);
     const staffFormData = { fullName, username, password, role };
-
+    if (user) {
+      setAuthToken(user.token);
+    }
     try {
-      const response = await axios({
-        method: 'post',
-        url: 'https://emr-server.herokuapp.com/staff',
-        data: staffFormData,
-        headers: authHeader()
-      }).then((response) => {
-        console.log(response);
-        setIsAddingStaff(false);
-      });
-      console.log(response);
+      const data = await addNewStaff(staffFormData);
+      setIsAddingStaff(false);
+      if (rows.length > 0) {
+        setRows([...rows, data]);
+      }
+      if (rows.length === 0) {
+        setRows([data]);
+      }
     } catch (error) {
       console.log(error);
     }
 
-    if (rows.length > 0) {
-      setRows([...rows, inputData]);
-    }
-    if (rows.length === 0) {
-      setRows([inputData]);
-    }
+    // try {
+    //   return await axios({
+    //     method: 'post',
+    //     url: 'https://emr-server.herokuapp.com/staff',
+    //     data: staffFormData,
+    //     headers: authHeader()
+    //   }).then((response) => {
+    //     console.log(response);
+    //     setIsAddingStaff(false);
+    //     if (rows.length > 0) {
+    //       setRows([...rows, response.data]);
+    //     }
+    //     if (rows.length === 0) {
+    //       setRows([response.data]);
+    //     }
+    //   });
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   const getAllStaff = async () => {

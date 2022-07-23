@@ -28,6 +28,7 @@ export default function AccountMenu() {
   useEffect(() => {
     if (user === null) {
       alert('succeessful logout');
+      navigate('/login');
     }
   }, [user]);
   return (
