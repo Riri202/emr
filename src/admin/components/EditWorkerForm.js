@@ -98,6 +98,7 @@ export default function EditWorkerForm({ selectedWorker, setRows, rows }) {
         formDetails={formDetails}
         isLoading={isLoading}
         titleText="staff"
+        btnText="staff"
       />
     </div>
   );

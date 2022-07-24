@@ -21,7 +21,7 @@ function App() {
     <div className="bg-[#f6f7fa]">
       <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Login />} />
           <Route path="/*" element={<AdminNav />} />
 
           {/* receptionist route */}
@@ -29,8 +29,12 @@ function App() {
 
           {/* doctor routes */}
           <Route path="/doctor" element={<DoctorHome />} />
-          <Route path="/patient/:id/:name" element={<PatientsPersonalPage />} />
-          <Route path="/diagnosis-drugs-test" element={<DrugsTestDiagnosis />} />
+          <Route path="/patient/:patientId/:name/:sessionId" element={<PatientsPersonalPage />} />
+          <Route
+            path="/prescription/:patientId/:name/:sessionId"
+            // path="/prescription"
+            element={<DrugsTestDiagnosis />}
+          />
           <Route path="/history-overview" element={<HistoryOverview />} />
           <Route path="/history" element={<PatientHistory />} />
 

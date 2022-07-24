@@ -91,6 +91,7 @@ export default function EditInventoryForm({ selectedItem, setRows, rows }) {
         formDetails={formDetails}
         isLoading={isLoading}
         titleText="inventory item"
+        btnText="Inventory Item"
       />
     </div>
   );

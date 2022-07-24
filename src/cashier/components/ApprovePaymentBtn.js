@@ -9,7 +9,11 @@ function ApprovePaymentBtn({ amount }) {
   // state for changing button color when payment is approved
   const [isPaymentApproved, setIsPaymentApproved] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [choice, setChoice] = useState([]);
 
+  const handleChoice = (event) => {
+    setChoice([event.target.value]);
+  };
   const handleApprovePayment = () => {
     setIsLoading(true);
     setTimeout(() => {
@@ -54,7 +58,11 @@ function ApprovePaymentBtn({ amount }) {
                 color="success"
               />
               <Box className="flex justify-end mt-3 bg-white p-1">
-                <DropdownButton btnText="send to" menuItems={['dr. Stark', 'Dr Drake Remurray']} />
+                <DropdownButton
+                  choice={choice}
+                  onChange={handleChoice}
+                  menuItems={['dr. Stark', 'Dr Drake Remurray']}
+                />
               </Box>
             </div>
           </Grow>

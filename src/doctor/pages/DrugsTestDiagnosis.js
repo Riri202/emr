@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import Nav from '../../common-components/Nav';
 import Avatar from '@mui/material/Avatar';
 import { Person, Add } from '@mui/icons-material';
@@ -10,6 +10,11 @@ import DropdownButton from '../../common-components/DropdownButton';
 import DropdownSearch from '../../common-components/DropdownSearch';
 import SymptomsCard from '../components/SymptomsCard';
 import DiagnosisCard from '../components/DiagnosisCard';
+import { addPrescription } from '../../utils/api';
+import setAuthToken from '../../utils/setAuthToken';
+import IntuitiveButton from '../../common-components/IntuitiveButton';
+
+const user = JSON.parse(localStorage.getItem('user'));
 
 function DrugsTestDiagnosis() {
   // const patientsInfo = JSON.parse(localStorage.getItem('patientsInfo/Biodata'));
@@ -22,9 +27,21 @@ function DrugsTestDiagnosis() {
   const [drugChoice, setDrugChoice] = useState([]);
   const [labTestChoice, setLabTestChoice] = useState([]);
   const [xrayTestChoice, setXrayTestChoice] = useState([]);
+  const [drugInputData, setDrugInputData] = useState({
+    quantity: '',
+    days: ''
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const { days, quantity } = drugInputData;
+  const { patientId, sessionId } = useParams();
+  const [choice, setChoice] = useState([]);
+
+  const handleDoctorChoice = (event) => {
+    setChoice([event.target.value]);
+  };
 
   // function to handle checkbox change in dropdown button component to get and store value in api or localStorage
-  const handleDrugChoice = (event) => {
+  const handleDrugChoice = async (event) => {
     if (event.target.checked && !drugChoice.length) {
       setDrugChoice([event.target.value]);
     } else if (event.target.checked && drugChoice.length > 0) {
@@ -36,6 +53,7 @@ function DrugsTestDiagnosis() {
       setDrugChoice([...filterdArr]);
     }
   };
+
   const handleLabTestChoice = (event) => {
     if (event.target.checked && !labTestChoice.length) {
       setLabTestChoice([event.target.value]);
@@ -48,6 +66,7 @@ function DrugsTestDiagnosis() {
       setLabTestChoice([...filterdArr]);
     }
   };
+
   const handleXrayTestChoice = (event) => {
     if (event.target.checked && !xrayTestChoice.length) {
       setXrayTestChoice([event.target.value]);
@@ -58,6 +77,34 @@ function DrugsTestDiagnosis() {
     if (!event.target.checked) {
       const filterdArr = xrayTestChoice.filter((c) => c !== event.target.value);
       setXrayTestChoice([...filterdArr]);
+    }
+  };
+
+  const handleChange = (e) => {
+    setDrugInputData((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value
+    }));
+  };
+
+  const onSubmitDrugForm = async (e) => {
+    e.preventDefault();
+    setIsLoading(false);
+    const responses = [];
+    if (user) {
+      setAuthToken(user.token);
+    }
+    try {
+      for (let i = 0; i < drugChoice.length; i++) {
+        const drugId = drugChoice[i]['id'];
+        const requestBody = { patientId, sessionId, drugId, quantity, days };
+        responses.push(await addPrescription(requestBody));
+        console.log(responses);
+        // TODO use this responses to set the list of drugs displayed in the ui
+      }
+      setIsLoading(true);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -97,27 +144,23 @@ function DrugsTestDiagnosis() {
                 <div className="flex flex-row space-x-2">
                   <DropdownSearch
                     btnText="Add drugs"
-                    menuItems={drugsArr}
-                    handleCheckboxChange={() => handleDrugChoice(event, setDrugChoice, drugChoice)}
+                    menuItems={drugs}
+                    handleCheckboxChange={handleDrugChoice}
                   />
                   <DropdownSearch
                     btnText="Add lab tests"
-                    menuItems={['hpv', 'malaria', 'pcv', 'typhoid']}
-                    handleCheckboxChange={() =>
-                      handleLabTestChoice(event, setLabTestChoice, labTestChoice)
-                    }
+                    menuItems={drugs}
+                    handleCheckboxChange={handleLabTestChoice}
                   />
                   <DropdownSearch
                     btnText="Add x-ray tests"
-                    menuItems={['legbone xray', 'chest xray', 'hand xray']}
-                    handleCheckboxChange={() =>
-                      handleXrayTestChoice(event, setXrayTestChoice, xrayTestChoice)
-                    }
+                    menuItems={drugs}
+                    handleCheckboxChange={handleXrayTestChoice}
                   />
                 </div>
               </div>
               <section className="flex flex-col space-y-3">
-                <div>
+                <form onSubmit={onSubmitDrugForm}>
                   {drugChoice.length ? <h3>Drugs</h3> : null}
                   <ol>
                     {drugChoice &&
@@ -125,9 +168,24 @@ function DrugsTestDiagnosis() {
                         return (
                           <>
                             <li key={index} className="flex flex-row justify-evenly mt-2 mb-2">
-                              <span>{choice}</span>
-                              <input type="number" placeholder="No of drugs" />
-                              <input type="number" placeholder="No of days" />
+                              <input
+                                type="number"
+                                placeholder="No of drugs"
+                                name="quantity"
+                                onChange={handleChange}
+                              />
+                              <input
+                                type="number"
+                                placeholder="No of drugs"
+                                name="quantity"
+                                onChange={handleChange}
+                              />
+                              <input
+                                type="number"
+                                placeholder="No of days"
+                                name="days"
+                                onChange={handleChange}
+                              />
                               <input placeholder="more..." />
                               <span>total tablet</span>
                             </li>
@@ -136,7 +194,8 @@ function DrugsTestDiagnosis() {
                         );
                       })}
                   </ol>
-                </div>
+                  <IntuitiveButton text="Add prescription" isLoading={isLoading} />
+                </form>
                 <div>
                   {labTestChoice.length ? <h3>Lab Tests</h3> : null}
                   <ol>
@@ -182,9 +241,11 @@ function DrugsTestDiagnosis() {
                 <Button variant="text" endIcon={<Add />}>
                   Add Note
                 </Button>
-                <button className="border-none">
-                  <DropdownButton btnText="send to" menuItems={drugsArr} />
-                </button>
+                <DropdownButton
+                  choice={choice}
+                  onChange={handleDoctorChoice}
+                  menuItems={drugsArr}
+                />
               </div>
             </Paper>
           </div>

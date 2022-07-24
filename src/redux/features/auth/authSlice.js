@@ -18,10 +18,12 @@ const API_URL = 'https://emr-server.herokuapp.com';
 // login staff
 export const login = createAsyncThunk(`${API_URL}/auth/login`, async (userData, thunkAPI) => {
   try {
-    const data = await authService.login(userData);
+    const { data } = await authService.login(userData);
     console.log(data);
-    setAuthToken(data.token);
-    localStorage.setItem('user', JSON.stringify(data));
+    if (data) {
+      setAuthToken(data.token);
+      localStorage.setItem('user', JSON.stringify(data));
+    }
     return { user: data };
   } catch (error) {
     console.log('an error occured');
@@ -38,6 +40,13 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     reset: (state) => {
+      state.isError = false;
+      state.isSuccess = false;
+      state.isLoading = false;
+      state.message = '';
+    },
+    logout: (state) => {
+      state.user = null;
       state.isError = false;
       state.isSuccess = false;
       state.isLoading = false;
@@ -65,4 +74,4 @@ export const authSlice = createSlice({
 });
 
 export default authSlice.reducer;
-export const { reset } = authSlice.actions;
+export const { reset, logout } = authSlice.actions;

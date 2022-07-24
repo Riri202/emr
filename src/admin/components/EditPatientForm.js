@@ -95,6 +95,7 @@ export default function EditWorkerForm({ selectedPatient, setRows, rows }) {
         formDetails={formDetails}
         isLoading={isLoading}
         titleText="patient"
+        btnText="patient"
       />
     </div>
   );

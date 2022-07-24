@@ -18,6 +18,7 @@ import { FaFileCsv } from 'react-icons/fa';
 import setAuthToken from '../../utils/setAuthToken';
 import { addNewInventory } from '../../utils/api';
 import EditInventoryForm from '../components/EditInventoryForm';
+import DeleteDialog from '../components/DeleteDialog';
 
 const useStyles = makeStyles({
   table: {
@@ -190,9 +191,7 @@ function Inventory() {
                     <EditInventoryForm selectedItem={row} setRows={setRows} rows={rows} />
                   </TableCell>
                   <TableCell align="center">
-                    <IconButton>
-                      <Delete />
-                    </IconButton>
+                    <DeleteDialog id={row.id} setRows={setRows} rows={rows} role="staff" />
                   </TableCell>
                 </TableRow>
               ))}

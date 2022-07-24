@@ -73,12 +73,13 @@ const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 export default function DropdownSearch({ btnText, menuItems, handleCheckboxChange }) {
+  const arr = menuItems.map((item) => item.name);
   return (
     <Autocomplete
       multiple
       limitTags={2}
       id="checkboxes-tags"
-      options={menuItems}
+      options={arr}
       disableCloseOnSelect
       getOptionLabel={(option) => option}
       renderOption={(props, option, { selected }) => (
@@ -89,7 +90,7 @@ export default function DropdownSearch({ btnText, menuItems, handleCheckboxChang
             style={{ marginRight: 8 }}
             checked={selected}
             value={option}
-            onChange={() => handleCheckboxChange(event)}
+            onChange={handleCheckboxChange}
           />
           {option}
         </li>

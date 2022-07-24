@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Nav from '../../common-components/Nav';
 import Avatar from '@mui/material/Avatar';
 import { Person } from '@mui/icons-material';
@@ -30,6 +30,11 @@ function PharmacistInvoice() {
   const drugsTotalAmount = drugs
     .map((drug) => drug.quantity * drug.unitPrice)
     .reduce((prev, curr) => prev + curr, 0);
+  const [choice, setChoice] = useState([]);
+
+  const handleChoice = (event) => {
+    setChoice([event.target.value]);
+  };
 
   return (
     <>
@@ -93,7 +98,11 @@ function PharmacistInvoice() {
                       className="bg-green-500 font-bold">
                       <span>&#8358;</span> {drugsTotalAmount}
                     </TableCell>
-                    <DropdownButton btnText="send to" menuItems={['Lab', 'X-ray']} />
+                    <DropdownButton
+                      choice={choice}
+                      onChange={handleChoice}
+                      menuItems={['Lab', 'X-ray']}
+                    />
                   </TableRow>
                 </TableBody>
               </Table>

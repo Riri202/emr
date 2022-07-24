@@ -16,18 +16,45 @@ function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { user, isLoading, isError, message } = useSelector((state) => state.auth);
+  const { user, isSuccess, isLoading, isError, message } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (isError) {
       alert(message);
     }
-    if (user && user.user.role === 'ADMIN') {
+    if (isSuccess || user) {
       alert('succeessful login');
-      navigate('/admin');
+      if (user.user.role === 'ADMIN') {
+        navigate('/*');
+      } else if (user.user.role === 'RECEPTIONIST') {
+        navigate('/receptionist');
+      }
+      // switch (user.user.role) {
+      //   case 'ADMIN':
+      //     navigate('/*');
+      //     break;
+      //   case 'RECEPTIONIST':
+      //     navigate('/receptionist');
+      //     break;
+      //   case 'DOCTOR':
+      //     navigate('/doctor');
+      //     break;
+      //   case 'LAB':
+      //     navigate('/lab');
+      //     break;
+      //   case 'CASHIER':
+      //     navigate('/cashier');
+      //     break;
+      //   case 'PHARMACIST':
+      //     navigate('/pharmacist');
+      //     break;
+      //   case 'XRAY':
+      //     navigate('/xray');
+      //     break;
+      // }
     }
     dispatch(reset());
-  }, [user, isError, message, navigate, dispatch]);
+  }, [isError, message, navigate, user, isSuccess, dispatch]);
   const onChange = (e) => {
     setFormData((prevState) => ({
       ...prevState,
@@ -37,10 +64,12 @@ function Login() {
   const handleLogin = (e) => {
     e.preventDefault();
     const loginData = { username, password };
-
     console.log(loginData);
-
     dispatch(login(loginData));
+    if (isError) {
+      alert(message);
+    }
+    dispatch(reset());
   };
   return (
     <div className="flex flex-col items-center justify-center h-screen">

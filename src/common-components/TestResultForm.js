@@ -22,6 +22,11 @@ function TestResultForm({ showForm, role }) {
       testResult: ''
     }
   ]);
+  const [choice, setChoice] = useState([]);
+
+  const handleChoice = (event) => {
+    setChoice([event.target.value]);
+  };
 
   let handleChange = (i, e) => {
     let newFormValues = [...formValues];
@@ -142,7 +147,8 @@ function TestResultForm({ showForm, role }) {
                         />
                         <Box className="flex justify-end mt-3 bg-[#f6f7fa] p-1">
                           <DropdownButton
-                            btnText="send to"
+                            choice={choice}
+                            onChange={handleChange}
                             menuItems={['dr. Stark', 'Dr Drake Remurray']}
                           />
                         </Box>

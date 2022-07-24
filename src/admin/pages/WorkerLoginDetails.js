@@ -75,7 +75,7 @@ function WorkerLoginDetails() {
       setAuthToken(user.token);
     }
     try {
-      const data = await addNewStaff(staffFormData);
+      const { data } = await addNewStaff(staffFormData);
       setIsAddingStaff(false);
       if (rows.length > 0) {
         setRows([...rows, data]);
@@ -86,26 +86,6 @@ function WorkerLoginDetails() {
     } catch (error) {
       console.log(error);
     }
-
-    // try {
-    //   return await axios({
-    //     method: 'post',
-    //     url: 'https://emr-server.herokuapp.com/staff',
-    //     data: staffFormData,
-    //     headers: authHeader()
-    //   }).then((response) => {
-    //     console.log(response);
-    //     setIsAddingStaff(false);
-    //     if (rows.length > 0) {
-    //       setRows([...rows, response.data]);
-    //     }
-    //     if (rows.length === 0) {
-    //       setRows([response.data]);
-    //     }
-    //   });
-    // } catch (error) {
-    //   console.log(error);
-    // }
   };
 
   const getAllStaff = async () => {
@@ -175,13 +155,6 @@ function WorkerLoginDetails() {
             <div className="w-1/2">
               <IntuitiveButton text="Add new worker" isLoading={isAddingStaff} />
             </div>
-            {/* <Button
-              type="submit"
-              variant="outlined"
-              color="success"
-              className="w-1/2 p-3 bg-green-500 text-[#000]">
-              Add new worker
-            </Button> */}
           </div>
         </form>
         <Divider className="mt-2 mb-2" orientation="horizontal" variant="fullWidth" />

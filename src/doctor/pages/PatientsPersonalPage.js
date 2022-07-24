@@ -8,14 +8,14 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@mui/material/Button';
 
 function PatientsPersonalPage() {
-  let { id, name } = useParams();
+  let { patientId, name, sessionId } = useParams();
   const navigate = useNavigate();
   // TODO get patients biodata from backend instead, use the uuid or id from this page url for the api url
   const patientsInfo = JSON.parse(localStorage.getItem('patientsInfo/Biodata'));
 
   const handleClick = () => {
     // navigate(`/diagnosis-drugs-test/${id}/${name}`);
-    navigate(`/diagnosis-drugs-test`);
+    navigate(`/prescription/${patientId}/${name}/${sessionId}`);
   };
 
   return (
@@ -29,7 +29,7 @@ function PatientsPersonalPage() {
               <Person />
             </Avatar>
             <h2 className="text-lg mb-3">
-              {id}: {name}
+              {patientId}: {name}
             </h2>
           </div>
         </section>
@@ -52,7 +52,7 @@ function PatientsPersonalPage() {
           <div>
             <Button
               onClick={handleClick}
-              endIcon={<Add />}
+              startIcon={<Add />}
               className="p-3 mt-1 bg-green-500 text-[#000] ml-3">
               Add diagnosis and recommendations
             </Button>

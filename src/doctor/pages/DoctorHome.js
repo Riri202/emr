@@ -17,15 +17,16 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import { filterData } from '../../utils/index';
 // import PatientsPersonalPage from './PatientsPersonalPage';
-import { getSentQueues } from '../../utils/api';
+import { getReceivedQueues } from '../../utils/api';
+import setAuthToken from '../../utils/setAuthToken';
 
 const useStyles = makeStyles({
   table: {
     minWidth: 650
   }
 });
+const user = JSON.parse(localStorage.getItem('user'));
 function DoctorHome() {
   const classes = useStyles();
   const headers = ['Index', 'ID', 'Name', 'Email', 'Phone No', 'DOB'];
@@ -39,16 +40,30 @@ function DoctorHome() {
   const [availableDoctors, setAvailableDoctors] = useState(
     JSON.parse(localStorage.getItem('availableDoctors')) ?? []
   );
-
-  const user = JSON.parse(localStorage.getItem('user'));
-
+  const filterData = (query, patientsList) => {
+    if (!query) {
+      return patientsList;
+    } else {
+      return patientsList
+        .map((row) => row.Patient)
+        .filter((patient) => patient.name.toLowerCase().includes(query));
+    }
+  };
   const patientsFromReceptionist = async () => {
     const staffId = user.user.uuid;
-    const data = await getSentQueues(staffId, 'PENDING');
-    console.log(data);
-    const patients = data.rows.map((row) => row.Patient);
-    if (data) {
-      setPatientsList(patients);
+    if (user) {
+      setAuthToken(user.token);
+    }
+    try {
+      const { data } = await getReceivedQueues(staffId, 'PENDING');
+      const patients = data.rows;
+      console.log(data);
+      if (data) {
+        setPatientsList(patients);
+        console.log(patientsList);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
   const dataFiltered = filterData(searchQuery, patientsList);
@@ -96,8 +111,7 @@ function DoctorHome() {
           <div>
             <div className="flex space-x-2">
               <FaUserMd className="mt-5" />
-              {/* <h2 className="text-xl">Dr. {user.user.fullName} </h2> */}
-              <h2 className="text-xl">Dr. doctortoror </h2>
+              <h2 className="text-xl">Dr. {user.user.fullName} </h2>
             </div>
             <div className="flex space-x-2 mt-[-2px]">
               <Checkbox size="small" checked={isDoctorAvailable} onChange={handleCheckboxChange} />
@@ -123,7 +137,7 @@ function DoctorHome() {
           <p className="text-sm mt-[-2px]">Incoming patients</p>
         </section>
       </div>
-      {patientsList && isSearching ? (
+      {patientsList ? (
         <TableContainer component={Paper}>
           <Table className={classes.table} aria-label="simple table">
             <TableHead>
@@ -137,36 +151,30 @@ function DoctorHome() {
                 })}
               </TableRow>
             </TableHead>
-            {dataFiltered.length === 0 ? (
+            {/* TODO change this PatientList back to dataFiltered and figure out how to implement search again */}
+            {!patientsList.length ? (
               <h1 className="text-lg mb-3 text-red-500">Patient is not on the list.</h1>
             ) : (
               <TableBody>
-                {dataFiltered.map((data, index) => (
-                  <TableRow key={index}>
-                    <TableCell align="center" component="th" scope="row">
-                      {index + 1}
-                    </TableCell>
-                    <TableCell align="center" component="th" scope="row">
-                      {data.id}
-                    </TableCell>
-                    <TableCell align="center" component="th" scope="row">
-                      <Link
-                        style={{ textDecoration: 'none' }}
-                        to={`/patient/${data.uuid}/${data.fullName}`}>
-                        {data.name}
-                      </Link>
-                    </TableCell>
-                    <TableCell align="center" component="th" scope="row">
-                      {data.email}
-                    </TableCell>
-                    <TableCell align="center" component="th" scope="row">
-                      {data.phoneNumber}
-                    </TableCell>
-                    <TableCell align="center" component="th" scope="row">
-                      {data.dob}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {patientsList &&
+                  patientsList.map((data, index) => (
+                    <TableRow key={index}>
+                      <TableCell align="center" component="th" scope="row">
+                        {index + 1}
+                      </TableCell>
+                      <TableCell align="center">{data.Patient.id}</TableCell>
+                      <TableCell align="center">
+                        <Link
+                          style={{ textDecoration: 'none' }}
+                          to={`/patient/${data.Patient.uuid}/${data.Patient.name}/${data.session.id}`}>
+                          {data.Patient.name}
+                        </Link>
+                      </TableCell>
+                      <TableCell align="center">{data.Patient.email}</TableCell>
+                      <TableCell align="center">{data.Patient.phoneNumber}</TableCell>
+                      <TableCell align="center">{data.Patient.dob}</TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             )}
           </Table>

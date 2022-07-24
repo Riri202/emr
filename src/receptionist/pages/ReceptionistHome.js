@@ -21,6 +21,7 @@ import { getAllStaff } from '../../utils/api';
 // import IntuitiveButton from '../../common-components/IntuitiveButton';
 import { filterData } from '../../utils';
 import CollapsibleList from '../components/CollapsibleList';
+import setAuthToken from '../../utils/setAuthToken';
 
 // const useStyles = makeStyles({
 //   table: {
@@ -28,6 +29,8 @@ import CollapsibleList from '../components/CollapsibleList';
 //   }
 // });
 // const headers = ['Index', 'ID', 'Name', 'Select Doctor', 'Send'];
+const user = JSON.parse(localStorage.getItem('user'));
+
 function ReceptionistHome() {
   // const classes = useStyles();
   const [isSearching, setIsSearching] = useState(false);
@@ -59,14 +62,13 @@ function ReceptionistHome() {
   //   }
   // };
   const getAvailableDoctors = (allStaff) => {
-    const allDoctors = allStaff.filter(
+    const allDoctors = allStaff.rows.filter(
       // TODO this filter should have a condition to also return doctors with available property set to true
-      (staff) => staff.role === 'DOCTOR' || staff.role === 'doctor'
+      (staff) => staff.role === 'DOCTOR'
     );
     setDoctorsList([...allDoctors]);
+    console.log(doctorsList);
   };
-  const doctorNames = doctorsList.map((doctor) => doctor.name);
-
   // const handleDoctorChoice = (event) => {
   //   if (event.target.checked) {
   //     setStaffName(event.target.value);
@@ -125,18 +127,16 @@ function ReceptionistHome() {
   //   }
   // };
   const getAllDoctors = async () => {
-    const data = await getAllStaff();
+    const page = 0;
+    const size = 20;
+    if (user) {
+      setAuthToken(user.token);
+    }
+    const { data } = await getAllStaff(page, size);
     if (data) {
       getAvailableDoctors(data);
     }
   };
-
-  // const handleSendToDoctor = async (patientId) => {
-  //   const doctor = getSelectedDoctorInfo(staffName, doctorsList);
-  //   const toStaffId = doctor.uuid;
-  //   const data = await sendQueue(patientId, toStaffId);
-  //   console.log(data);
-  // };
 
   useEffect(() => {
     getAllPatients();
@@ -201,11 +201,7 @@ function ReceptionistHome() {
             ) : (
               <div>
                 {patientsList && isSearching ? (
-                  <CollapsibleList
-                    patientsList={patientsList}
-                    doctorNames={doctorNames}
-                    doctorsList={doctorsList}
-                  />
+                  <CollapsibleList patientsList={patientsList} doctorsList={doctorsList} />
                 ) : null}
               </div>
             )}

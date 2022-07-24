@@ -19,7 +19,8 @@ function EditForm({
   handleChange,
   formDetails,
   isLoading,
-  titleText
+  titleText,
+  btnText
 }) {
   return (
     <>
@@ -48,7 +49,7 @@ function EditForm({
                 );
               })}
               <div className="w-full">
-                <IntuitiveButton text="Edit Inventory Item" isLoading={isLoading} />
+                <IntuitiveButton text={`Edit ${btnText}`} isLoading={isLoading} />
               </div>
             </div>
           </DialogContent>

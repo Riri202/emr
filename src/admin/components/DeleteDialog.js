@@ -25,7 +25,7 @@ export default function DeleteDialog({ id, rows, setRows, role }) {
     setOpen(false);
   };
   const deletedItem = (id, rows) => {
-    const filteredRows = rows.filter((row) => row.uuid || row.id !== id);
+    const filteredRows = rows.filter((row) => row.uuid !== id || row.id !== id);
     setRows(filteredRows);
   };
 

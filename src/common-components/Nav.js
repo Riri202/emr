@@ -3,8 +3,7 @@ import AppBar from '@mui/material/AppBar';
 import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/material/Box';
-import { Person } from '@mui/icons-material';
-import Avatar from '@mui/material/Avatar';
+import AccountMenu from './AccountMenu';
 
 function Nav() {
   return (
@@ -15,9 +14,7 @@ function Nav() {
             EMR
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
-          <Avatar className="bg-green-500 mt-1" variant="circular">
-            <Person />
-          </Avatar>
+          <AccountMenu />
         </Toolbar>
       </AppBar>
     </div>

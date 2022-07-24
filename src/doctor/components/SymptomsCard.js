@@ -4,12 +4,24 @@ import Button from '@mui/material/Button';
 import { Divider } from '@material-ui/core';
 import { Add } from '@mui/icons-material';
 import DropdownSearch from '../../common-components/DropdownSearch';
-import { handleCheckboxChange } from '../../utils/index';
 
 function SymptomsCard() {
-  const symptoms = JSON.parse(localStorage.getItem('symptomsRows'));
-  const symptomsArr = symptoms.map((sym) => sym.symptom);
+  const drugs = JSON.parse(localStorage.getItem('drugsList'));
+  // const symptomsArr = symptoms.map((sym) => sym.symptom);
   const [choice, setChoice] = useState([]);
+
+  const handleSymptomChoice = (event) => {
+    if (event.target.checked && !choice.length) {
+      setChoice([event.target.value]);
+    } else if (event.target.checked && choice.length > 0) {
+      setChoice([...choice, event.target.value]);
+    }
+    // remove choice from list when you uncheck its checkbox
+    if (!event.target.checked) {
+      const filterdArr = choice.filter((c) => c !== event.target.value);
+      setChoice([...filterdArr]);
+    }
+  };
 
   return (
     <Paper sx={{ flexGrow: 1 }} className="p-3">
@@ -17,8 +29,8 @@ function SymptomsCard() {
         <h3 className="text-lg mb-3">Symptoms</h3>
         <DropdownSearch
           btnText="Add symptoms"
-          menuItems={symptomsArr}
-          handleCheckboxChange={() => handleCheckboxChange(event, setChoice, choice)}
+          menuItems={drugs}
+          handleCheckboxChange={handleSymptomChoice}
         />
       </div>
       <ol>

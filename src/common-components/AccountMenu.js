@@ -1,18 +1,20 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Avatar from '@mui/material/Avatar';
 import { Person } from '@mui/icons-material';
+import { logout } from '../redux/features/auth/authSlice';
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const { user } = useSelector((state) => state.auth);
+  // const { user } = useSelector((state) => state.auth);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -23,14 +25,16 @@ export default function AccountMenu() {
 
   const handleLogout = () => {
     localStorage.removeItem('user');
-    navigate('/login');
+    dispatch(logout());
+    navigate('/');
   };
-  useEffect(() => {
-    if (user === null) {
-      alert('succeessful logout');
-      navigate('/login');
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user === null) {
+  //     // TODO this is how you will redirect a user if they are not the correct role
+  //     alert('succeessful logout');
+  //     navigate('/');
+  //   }
+  // }, [user]);
   return (
     <div>
       <Button

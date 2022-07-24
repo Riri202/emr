@@ -1,8 +1,8 @@
 // import axios from 'axios';
 import httpService from '../../../utils/axios';
-// import setAuthToken from '../../../utils/setAuthToken';
+import setAuthToken from '../../../utils/setAuthToken';
 // const API_URL = 'https://emr-server.herokuapp.com';
-const loginUrl = '/login';
+const loginUrl = '/auth/login';
 
 const login = (userData) => {
   return httpService.post(loginUrl, userData);
@@ -23,6 +23,7 @@ const login = (userData) => {
 
 const logout = () => {
   localStorage.removeItem('user');
+  setAuthToken();
 };
 
 const authService = { login, logout };

@@ -136,9 +136,9 @@ const CustomizedListItem = ({ patient, doctorsList, doctorNames }) => {
         </List>
         <div>
           <DropdownButton
-            btnText="Select a doctor"
+            choice={staffName}
             menuItems={doctorNames}
-            handleCheckboxChange={handleDoctorChoice}
+            onChange={handleDoctorChoice}
           />
           <IntuitiveButton text="send to doctor" />
         </div>
