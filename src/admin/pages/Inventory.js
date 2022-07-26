@@ -56,12 +56,12 @@ function Inventory() {
     }
   ]);
   const [inputData, setInputData] = useState({
-    drug: '',
+    name: '',
     quantity: '',
     price: '',
     type: ''
   });
-  const { drug, quantity, price, type } = inputData;
+  const { name, quantity, price, type } = inputData;
   const handleChange = (e) => {
     setInputData((prevState) => ({
       ...prevState,
@@ -89,12 +89,12 @@ function Inventory() {
   const addInventory = async (e) => {
     e.preventDefault();
     setIsAddingInventory(true);
-    const inventoryFormData = { drug, quantity, price, type };
+    const inventoryFormData = { name, quantity, price, type };
     if (user) {
       setAuthToken(user.token);
     }
     try {
-      const data = await addNewInventory(inventoryFormData);
+      const { data } = await addNewInventory(inventoryFormData);
       setIsAddingInventory(false);
       if (rows.length > 0) {
         setRows([...rows, data]);
@@ -104,6 +104,7 @@ function Inventory() {
       }
     } catch (error) {
       console.log(error);
+      setIsAddingInventory(false);
     }
   };
   useEffect(() => {
@@ -131,7 +132,7 @@ function Inventory() {
               sx={{ mr: 3 }}></TextField>
             <TextField
               label="unit price"
-              name="unit price"
+              name="price"
               onChange={handleChange}
               variant="standard"
               sx={{ mr: 3 }}></TextField>
@@ -199,7 +200,7 @@ function Inventory() {
         </Table>
       </TableContainer>
       <TableContainer component={Paper} style={{ marginTop: 5 }}>
-        <h2 className="text-lg mb-3">Test Equipment</h2>
+        <h2 className="text-lg mb-3">Tests</h2>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>

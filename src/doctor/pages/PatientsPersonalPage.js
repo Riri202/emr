@@ -13,9 +13,13 @@ function PatientsPersonalPage() {
   // TODO get patients biodata from backend instead, use the uuid or id from this page url for the api url
   const patientsInfo = JSON.parse(localStorage.getItem('patientsInfo/Biodata'));
 
-  const handleClick = () => {
+  const handlePrescritionClick = () => {
     // navigate(`/diagnosis-drugs-test/${id}/${name}`);
     navigate(`/prescription/${patientId}/${name}/${sessionId}`);
+  };
+  const handlePatientHistoryClick = () => {
+    // navigate(`/diagnosis-drugs-test/${id}/${name}`);
+    navigate('/history-overview');
   };
 
   return (
@@ -51,19 +55,16 @@ function PatientsPersonalPage() {
           </Paper>
           <div>
             <Button
-              onClick={handleClick}
+              onClick={handlePrescritionClick}
               startIcon={<Add />}
               className="p-3 mt-1 bg-green-500 text-[#000] ml-3">
               Add diagnosis and recommendations
             </Button>
-            <Paper className="mt-8 p-6">
-              <h3 className="text-lg mb-3">Patient History</h3>
-              <ol>
-                <li>Visited the hospital on: 02 Feb 2022</li>
-                <li>Visited the hospital on: 05 Mar 2022</li>
-                <li>Visited the hospital on: 14 Jun 2022</li>
-              </ol>
-            </Paper>
+            <Button
+              onClick={handlePatientHistoryClick}
+              className="p-3 mt-1 bg-green-500 text-[#000] ml-3">
+              Patients History
+            </Button>
           </div>
         </section>
       </div>

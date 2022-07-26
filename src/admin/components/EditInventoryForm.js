@@ -51,6 +51,7 @@ export default function EditInventoryForm({ selectedItem, setRows, rows }) {
       setOpen(false);
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
     }
   };
   const formDetails = [

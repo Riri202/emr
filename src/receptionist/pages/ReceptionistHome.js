@@ -103,38 +103,20 @@ function ReceptionistHome() {
       console.log(error);
     }
   };
-  // const getAllDoctors = async () => {
-  //   // setIsLoading(true);
-  //   try {
-  //     const response = await axios({
-  //       method: 'get',
-  //       url: 'https://emr-server.herokuapp.com/staff',
-  //       params: {
-  //         page: 0,
-  //         size: 20
-  //       },
-  //       headers: authHeader()
-  //     }).then((response) => {
-  //       console.log(response);
-  //       if (response.data.rows.length) {
-  //         getAvailableDoctors(response.data.rows);
-  //       }
-  //       // setIsLoading(false);
-  //     });
-  //     console.log(response);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+
   const getAllDoctors = async () => {
     const page = 0;
     const size = 20;
     if (user) {
       setAuthToken(user.token);
     }
-    const { data } = await getAllStaff(page, size);
-    if (data) {
-      getAvailableDoctors(data);
+    try {
+      const { data } = await getAllStaff(page, size);
+      if (data) {
+        getAvailableDoctors(data);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 

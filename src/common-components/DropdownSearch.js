@@ -72,14 +72,16 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-export default function DropdownSearch({ btnText, menuItems, handleCheckboxChange }) {
-  const arr = menuItems.map((item) => item.name);
+export default function DropdownSearch({ btnText, menuItems, handleCheckboxChange, isTest }) {
+  const drugs = menuItems.map((item) => item.name);
+  const tests = menuItems.map((item) => item.title);
+
   return (
     <Autocomplete
       multiple
       limitTags={2}
       id="checkboxes-tags"
-      options={arr}
+      options={isTest ? tests : drugs}
       disableCloseOnSelect
       getOptionLabel={(option) => option}
       renderOption={(props, option, { selected }) => (
