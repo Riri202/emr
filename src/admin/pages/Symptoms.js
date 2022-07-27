@@ -8,13 +8,10 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 import { Edit } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
 import DeleteDialog from '../components/DeleteDialog';
-import { Divider } from '@material-ui/core';
+import InputDetailsForm from '../components/InputDetailsForm';
 
 const useStyles = makeStyles({
   table: {
@@ -26,6 +23,7 @@ const headers = ['No', 'Symptom', 'Edit', 'Delete'];
 
 function Symptoms() {
   const classes = useStyles();
+  const [isAddingSymptom, setIsAddingSymptom] = useState(false);
   const [rows, setRows] = useState(JSON.parse(localStorage.getItem('symptomsRows')) ?? []);
   const [inputData, setInputData] = useState({
     id: '',
@@ -56,6 +54,7 @@ function Symptoms() {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+    setIsAddingSymptom(true);
     if (rows.length > 0) {
       setRows([...rows, inputData]);
     }
@@ -63,15 +62,37 @@ function Symptoms() {
       setRows([inputData]);
     }
     console.log(rows);
+    setIsAddingSymptom(false);
   };
   // persist data in local storage
   useEffect(() => {
     localStorage.setItem('symptomsRows', JSON.stringify(rows));
   }, [rows]);
+  const formInputDetails = [
+    {
+      // Name might change depending on what is in the backend
+      name: 'symptom',
+      id: 'symptom',
+      label: 'Symptom'
+    },
+    {
+      name: 'id',
+      id: 'id',
+      label: 'ID'
+    }
+  ];
   return (
     <div>
       <h2 className="text-lg mb-3">Symptoms</h2>
-      <Box component={Paper} sx={{ mb: 4, padding: 2, display: 'flex', spacing: 2 }}>
+      <InputDetailsForm
+        onSubmit={handleSubmit}
+        onChange={handleChange}
+        handleCsvChange={handleCsvChange}
+        isLoading={isAddingSymptom}
+        formDetails={formInputDetails}
+        btnText="Add symptom"
+      />
+      {/* <Box component={Paper} sx={{ mb: 4, padding: 2, display: 'flex', spacing: 2 }}>
         <form onSubmit={handleSubmit}>
           <TextField
             name="symptom"
@@ -91,7 +112,7 @@ function Symptoms() {
         <form>
           <input type={'file'} accept={'.csv'} onChange={handleCsvChange} />
         </form>
-      </Box>
+      </Box> */}
       <TableContainer component={Paper}>
         <h2 className="text-lg mb-3">Symptoms List</h2>
         <Table className={classes.table} aria-label="simple table">

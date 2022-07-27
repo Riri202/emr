@@ -9,15 +9,13 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
 import DeleteDialog from '../components/DeleteDialog';
-import { Divider, Button } from '@material-ui/core';
-import { FaFileCsv } from 'react-icons/fa';
-// import IntuitiveButton from '../../common-components/IntuitiveButton';
 import authHeader from '../../redux/features/auth/authHeader';
 import axios from 'axios';
 import EditPatientForm from '../components/EditPatientForm';
+import InputDetailsForm from '../components/InputDetailsForm';
+import { addNewPatients } from '../../utils/api';
+import setAuthToken from '../../utils/setAuthToken';
 
 const useStyles = makeStyles({
   table: {
@@ -26,11 +24,12 @@ const useStyles = makeStyles({
 });
 
 const headers = ['Index', 'ID', 'Name', 'Email', 'Phone No', 'DOB', 'Edit', 'Delete'];
+const user = JSON.parse(localStorage.getItem('user'));
 
 function PatientsBiodata() {
   const classes = useStyles();
   const [rows, setRows] = useState([]);
-  // const [isAddingPatient, setIsAddingPatient] = useState(false);
+  const [isAddingPatient, setIsAddingPatient] = useState(false);
   const [inputData, setInputData] = useState({
     name: '',
     email: '',
@@ -66,34 +65,54 @@ function PatientsBiodata() {
       }
     });
   };
-
   const addPatient = async (e) => {
     e.preventDefault();
-    // setIsAddingPatient(true);
+    setIsAddingPatient(true);
     const patientFormData = { name, email, phoneNumber, dob };
-
+    if (user) {
+      setAuthToken(user.token);
+    }
     try {
-      const response = await axios({
-        method: 'post',
-        url: 'https://emr-server.herokuapp.com/patient',
-        data: patientFormData,
-        headers: authHeader()
-      }).then((response) => {
-        console.log(response.data.patient);
-        if (rows.length > 0) {
-          setRows([...rows, response.data.patient]);
-        }
-        if (rows.length === 0) {
-          setRows([response.patient]);
-        }
-      });
-      // return {response.data.patient}
-      console.log(response);
-      // setIsAddingPatient(false);
+      const { data } = await addNewPatients(patientFormData);
+      setIsAddingPatient(false);
+      if (rows.length > 0) {
+        setRows([...rows, data]);
+      }
+      if (rows.length === 0) {
+        setRows([data]);
+      }
     } catch (error) {
       console.log(error);
+      setIsAddingPatient(false);
     }
   };
+  // const addPatient = async (e) => {
+  //   e.preventDefault();
+  //   setIsAddingPatient(true);
+  //   const patientFormData = { name, email, phoneNumber, dob };
+
+  //   try {
+  //     const response = await axios({
+  //       method: 'post',
+  //       url: 'https://emr-server.herokuapp.com/patient',
+  //       data: patientFormData,
+  //       headers: authHeader()
+  //     }).then((response) => {
+  //       console.log(response.data.patient);
+  //       if (rows.length > 0) {
+  //         setRows([...rows, response.data.patient]);
+  //       }
+  //       if (rows.length === 0) {
+  //         setRows([response.patient]);
+  //       }
+  //     });
+  //     // return {response.data.patient}
+  //     console.log(response);
+  //     // setIsAddingPatient(false);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   const getAllPatients = async () => {
     // setIsLoading(true);
     try {
@@ -120,10 +139,36 @@ function PatientsBiodata() {
   useEffect(() => {
     getAllPatients();
   }, []);
+  const formInputDetails = [
+    {
+      name: 'name',
+      id: 'name',
+      label: 'Name'
+    },
+    {
+      name: 'email',
+      id: 'email',
+      label: 'Email'
+    },
+    {
+      name: 'phoneNumber',
+      id: 'phoneNumber',
+      label: 'Phone No.'
+    }
+  ];
   return (
     <div>
       <h2 className="text-lg mb-3">Patients Biodata</h2>
-      <Box
+      <InputDetailsForm
+        onSubmit={addPatient}
+        onChange={handleChange}
+        handleCsvChange={handleCsvChange}
+        isLoading={isAddingPatient}
+        formDetails={formInputDetails}
+        btnText="Add new patient"
+        isDateRequired={true}
+      />
+      {/* <Box
         component={Paper}
         sx={{ mb: 4, padding: 2, display: 'flex', flexDirection: 'column', spacing: 2 }}>
         <form onSubmit={addPatient}>
@@ -154,11 +199,11 @@ function PatientsBiodata() {
               sx={{ mr: 3 }}></TextField>
             <input name="dob" type="date" id="dob" onChange={handleChange} className="p-3" />
           </div>
-          <div className="flex justify-center mt-2 mb-2">
-            {/* <div className="w-1/2">
+          <div className="flex justify-center mt-2 mb-2"> */}
+      {/* <div className="w-1/2">
               <IntuitiveButton text="Add new patient" isLoading={isAddingPatient} />
             </div> */}
-            <Button type="submit" variant="outlined" className="w-1/2 p-3 bg-green-500 text-[#000]">
+      {/* <Button type="submit" variant="outlined" className="w-1/2 p-3 bg-green-500 text-[#000]">
               Add new patient
             </Button>
           </div>
@@ -178,7 +223,7 @@ function PatientsBiodata() {
             </label>
           </div>
         </form>
-      </Box>
+      </Box> */}
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>

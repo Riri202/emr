@@ -16,6 +16,7 @@ import { Edit } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
 import DeleteDialog from '../components/DeleteDialog';
 import { Divider } from '@material-ui/core';
+import InputDetailsForm from '../components/InputDetailsForm';
 
 const useStyles = makeStyles({
   table: {
@@ -26,6 +27,7 @@ const useStyles = makeStyles({
 function Diagnosis() {
   const classes = useStyles();
   const headers = ['No', 'Diagnosis', 'Edit', 'Delete'];
+  const [isAddingDiagnosis, setIsAddingDiagnosis] = useState(false);
   const [rows, setRows] = useState(JSON.parse(localStorage.getItem('diagnosisRows')) ?? []);
   const [inputData, setInputData] = useState({
     id: '',
@@ -61,23 +63,45 @@ function Diagnosis() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setIsAddingDiagnosis(true);
     if (rows.length > 0) {
       setRows([...rows, inputData]);
     }
     if (rows.length === 0) {
       setRows([inputData]);
     }
+    setIsAddingDiagnosis(false);
   };
 
   // persist data in local storage
   useEffect(() => {
     localStorage.setItem('diagnosisRows', JSON.stringify(rows));
   }, [rows]);
-
+  const formInputDetails = [
+    {
+      // Name might change depending on what is in the backend
+      name: 'diagnosis',
+      id: 'diagnosis',
+      label: 'Diagnosis'
+    },
+    {
+      name: 'id',
+      id: 'id',
+      label: 'ID'
+    }
+  ];
   return (
     <div>
       <h2 className="text-lg mb-3">Diagnosis</h2>
-      <Box component={Paper} sx={{ mb: 4, padding: 2, display: 'flex', spacing: 2 }}>
+      <InputDetailsForm
+        onSubmit={handleSubmit}
+        onChange={handleChange}
+        handleCsvChange={handleCsvChange}
+        isLoading={isAddingDiagnosis}
+        formDetails={formInputDetails}
+        btnText="Add diagnosis"
+      />
+      {/* <Box component={Paper} sx={{ mb: 4, padding: 2, display: 'flex', spacing: 2 }}>
         <form onSubmit={handleSubmit}>
           <TextField
             name="diagnosis"
@@ -97,7 +121,7 @@ function Diagnosis() {
         <form>
           <input type={'file'} accept={'.csv'} onChange={handleCsvChange} />
         </form>
-      </Box>
+      </Box> */}
       <TableContainer component={Paper}>
         <h2 className="text-lg mb-3">Diagnoses List</h2>
         <Table className={classes.table} aria-label="simple table">

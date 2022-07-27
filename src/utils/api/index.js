@@ -27,7 +27,9 @@ export const sendQueue = (data) => {
 export const getReceivedQueues = (staffId, status) => {
   return httpService.get(ReceivedQueuesUrl, { params: { staffId, status } });
 };
-
+export const addNewPatients = (data) => {
+  return httpService.post(PatientUrl, data);
+};
 export const getAllPatients = (page, size) => {
   return httpService.get(PatientUrl, { params: { page, size } });
 };

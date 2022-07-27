@@ -8,17 +8,13 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
 import { Delete } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
-import { Divider } from '@material-ui/core';
-import IntuitiveButton from '../../common-components/IntuitiveButton';
-import { FaFileCsv } from 'react-icons/fa';
 import setAuthToken from '../../utils/setAuthToken';
 import { addNewInventory } from '../../utils/api';
 import EditInventoryForm from '../components/EditInventoryForm';
 import DeleteDialog from '../components/DeleteDialog';
+import InputDetailsForm from '../components/InputDetailsForm';
 
 const useStyles = makeStyles({
   table: {
@@ -110,10 +106,40 @@ function Inventory() {
   useEffect(() => {
     localStorage.setItem('drugsList', JSON.stringify(rows));
   }, [rows]);
+  const formInputDetails = [
+    {
+      name: 'name',
+      id: 'name',
+      label: 'Name'
+    },
+    {
+      name: 'quantity',
+      id: 'quantity',
+      label: 'Quantity'
+    },
+    {
+      name: 'price',
+      id: 'price',
+      label: 'Unit Price'
+    },
+    {
+      name: 'type',
+      id: 'type',
+      label: 'Type'
+    }
+  ];
   return (
     <div>
       <h2 className="text-lg mb-3">Inventory</h2>
-      <Box
+      <InputDetailsForm
+        onSubmit={addInventory}
+        onChange={handleChange}
+        handleCsvChange={handleCsvChange}
+        isLoading={isAddingInventory}
+        formDetails={formInputDetails}
+        btnText="Add to inventory"
+      />
+      {/* <Box
         component={Paper}
         sx={{ mb: 4, padding: 2, display: 'flex', flexDirection: 'column', spacing: 2 }}>
         <form onSubmit={addInventory}>
@@ -164,7 +190,7 @@ function Inventory() {
             </label>
           </div>
         </form>
-      </Box>
+      </Box> */}
       <TableContainer component={Paper}>
         <h2 className="text-lg mb-3">Drugs</h2>
         <Table className={classes.table} aria-label="simple table">

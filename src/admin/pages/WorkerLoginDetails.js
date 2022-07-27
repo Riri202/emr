@@ -9,17 +9,18 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
+// import Box from '@mui/material/Box';
+// import TextField from '@mui/material/TextField';
 // import Button from '@mui/material/Button';
-import { Divider } from '@material-ui/core';
+// import { Divider } from '@material-ui/core';
 import authHeader from '../../redux/features/auth/authHeader';
 import EditWorkerForm from '../components/EditWorkerForm';
 import DeleteDialog from '../components/DeleteDialog';
-import { FaFileCsv } from 'react-icons/fa';
-import IntuitiveButton from '../../common-components/IntuitiveButton';
+// import { FaFileCsv } from 'react-icons/fa';
+// import IntuitiveButton from '../../common-components/IntuitiveButton';
 import { addNewStaff } from '../../utils/api';
 import setAuthToken from '../../utils/setAuthToken';
+import InputDetailsForm from '../components/InputDetailsForm';
 
 const useStyles = makeStyles({
   table: {
@@ -85,6 +86,7 @@ function WorkerLoginDetails() {
       }
     } catch (error) {
       console.log(error);
+      setIsAddingStaff(false);
     }
   };
 
@@ -118,10 +120,41 @@ function WorkerLoginDetails() {
   useEffect(() => {
     getAllStaff();
   }, []);
+
+  const formInputDetails = [
+    {
+      name: 'fullName',
+      id: 'fullname',
+      label: 'Name'
+    },
+    {
+      name: 'username',
+      id: 'username',
+      label: 'Username'
+    },
+    {
+      name: 'password',
+      id: 'password',
+      label: 'Password'
+    },
+    {
+      name: 'role',
+      id: 'role',
+      label: 'Role'
+    }
+  ];
   return (
     <>
       <h2 className="text-lg mb-3">Worker Login Details</h2>
-      <Box
+      <InputDetailsForm
+        onSubmit={addStaff}
+        onChange={handleChange}
+        handleCsvChange={handleCsvChange}
+        isLoading={isAddingStaff}
+        formDetails={formInputDetails}
+        btnText="Add new worker"
+      />
+      {/* <Box
         component={Paper}
         sx={{ mb: 4, padding: 2, display: 'flex', flexDirection: 'column', spacing: 2 }}>
         <form onSubmit={addStaff}>
@@ -172,7 +205,7 @@ function WorkerLoginDetails() {
             </label>
           </div>
         </form>
-      </Box>
+      </Box> */}
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>

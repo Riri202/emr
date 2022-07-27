@@ -9,13 +9,10 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 import Switch from '@material-ui/core/Switch';
 import { Edit, Delete } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
-import { Divider } from '@material-ui/core';
+import InputDetailsForm from '../components/InputDetailsForm';
 
 const useStyles = makeStyles({
   table: {
@@ -99,11 +96,35 @@ function AdminLoginDetails() {
       setRows([inputData]);
     }
   };
-
+  const formInputDetails = [
+    {
+      name: 'fullName',
+      id: 'fullname',
+      label: 'Name'
+    },
+    {
+      name: 'username',
+      id: 'username',
+      label: 'Username'
+    },
+    {
+      name: 'password',
+      id: 'password',
+      label: 'Password'
+    }
+  ];
   return (
     <>
       <h2 className="text-lg mb-3">Admin Login Details</h2>
-      <Box component={Paper} sx={{ mb: 4, padding: 2, display: 'flex', spacing: 2 }}>
+      <InputDetailsForm
+        onSubmit={handleSubmit}
+        onChange={handleChange}
+        handleCsvChange={handleCsvChange}
+        // isLoading={isAddingStaff}
+        formDetails={formInputDetails}
+        btnText="Add new admin"
+      />
+      {/* <Box component={Paper} sx={{ mb: 4, padding: 2, display: 'flex', spacing: 2 }}>
         <form onSubmit={handleSubmit}>
           <TextField
             label="name"
@@ -131,7 +152,7 @@ function AdminLoginDetails() {
         <form>
           <input type={'file'} accept={'.csv'} onChange={handleCsvChange} />
         </form>
-      </Box>
+      </Box> */}
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
