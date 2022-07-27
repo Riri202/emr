@@ -4,7 +4,7 @@ import { Grow, Chip, CircularProgress, Box } from '@mui/material';
 import Button from '@mui/material/Button';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
-function TransformButton({ btnText, isSuccessful, isLoading }) {
+function TransformButton({ btnText, name, id, isSuccessful, isLoading }) {
   // state for changing button color when payment is approved
 
   return (
@@ -12,6 +12,8 @@ function TransformButton({ btnText, isSuccessful, isLoading }) {
       {!isSuccessful ? (
         <Box sx={{ position: 'relative' }}>
           <Button
+            name={name}
+            id={id}
             type="submit"
             disabled={isLoading}
             variant="contained"

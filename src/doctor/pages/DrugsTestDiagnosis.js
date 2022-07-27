@@ -6,7 +6,7 @@ import { Person } from '@mui/icons-material';
 import Paper from '@material-ui/core/Paper';
 import SymptomsCard from '../components/SymptomsCard';
 import DiagnosisCard from '../components/DiagnosisCard';
-import { addNewTest, addPrescription, getAllInventoryItems } from '../../utils/api';
+import { getAllInventoryItems } from '../../utils/api';
 import setAuthToken from '../../utils/setAuthToken';
 import Prescription from '../components/Prescription';
 import LabTest from '../components/LabTest';
@@ -16,39 +16,8 @@ const user = JSON.parse(localStorage.getItem('user'));
 function DrugsTestDiagnosis() {
   const { patientId, sessionId } = useParams();
 
-  const [isLoading, setIsLoading] = useState(false);
   const [drugsList, setDrugsList] = useState([]);
-
-  const [drugInputData, setDrugInputData] = useState({
-    quantity: '',
-    days: '',
-    note: ''
-  });
-  const [testInputData, setTestInputData] = useState({
-    title: '',
-    description: ''
-  });
-
-  const handleDrugFormChange = (e) => {
-    setDrugInputData((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value
-    }));
-  };
-  const { days, quantity, note } = drugInputData;
-
-  const handleTestFormChange = (e) => {
-    setTestInputData((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value
-    }));
-  };
-  const { title, description } = testInputData;
-
-  const getSelectedDrugId = (drug, allDrugs) => {
-    const selectedDrug = allDrugs.find((item) => item.name === drug);
-    return selectedDrug.id;
-  };
+  const [testsList, setTestsList] = useState([]);
 
   const getInventory = async () => {
     const page = 0;
@@ -60,48 +29,19 @@ function DrugsTestDiagnosis() {
       const { data } = await getAllInventoryItems(page, size);
       if (data) {
         const drugs = data.rows.filter((item) => item.type === 'DRUG');
+        const tests = data.rows.filter((item) => item.type === 'TEST');
         setDrugsList(drugs);
+        setTestsList(tests);
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  const onSubmitDrugForm = async (event, drugChoice) => {
-    event.preventDefault();
-    setIsLoading(true);
-    if (user) {
-      setAuthToken(user.token);
-    }
-    try {
-      const drugId = getSelectedDrugId(drugChoice, drugsList);
-      const requestBody = { patientId, sessionId, drugId, quantity, days, note };
-      await addPrescription(requestBody);
-      setIsLoading(false);
-    } catch (error) {
-      console.log(error);
-      setIsLoading(false);
-    }
-  };
-  const onSubmitTestForm = async (event) => {
-    event.preventDefault();
-    setIsLoading(true);
-    if (user) {
-      setAuthToken(user.token);
-    }
-    try {
-      const requestBody = { description, sessionId, title };
-      await addNewTest(requestBody);
-      setIsLoading(false);
-    } catch (error) {
-      console.log(error);
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
     getInventory();
   }, []);
+
   return (
     <div>
       <Nav />
@@ -135,16 +75,8 @@ function DrugsTestDiagnosis() {
                 <h3 className="text-lg mb-3">Drugs and Tests</h3>
               </div>
               <section className="flex flex-col space-y-3">
-                <Prescription
-                  onSubmit={onSubmitDrugForm}
-                  handleChange={handleDrugFormChange}
-                  isLoading={isLoading}
-                />
-                <LabTest
-                  isLoading={isLoading}
-                  handleChange={handleTestFormChange}
-                  onSubmit={onSubmitTestForm}
-                />
+                <Prescription drugsList={drugsList} sessionId={sessionId} patientId={patientId} />
+                <LabTest testsList={testsList} sessionId={sessionId} />
               </section>
             </Paper>
           </div>

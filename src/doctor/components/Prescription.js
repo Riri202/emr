@@ -1,24 +1,98 @@
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Divider } from '@material-ui/core';
-import IntuitiveButton from '../../common-components/IntuitiveButton';
 import DropdownSearch from '../../common-components/DropdownSearch';
 import setAuthToken from '../../utils/setAuthToken';
-import { getAllInventoryItems } from '../../utils/api';
+import { addPrescription } from '../../utils/api';
+import TransformButton from '../../common-components/TransformButton';
 
-// const drugs = JSON.parse(localStorage.getItem('drugsList'));
 const user = JSON.parse(localStorage.getItem('user'));
 
-function Prescription({ onSubmit, handleChange, isLoading }) {
+function PrescriptionForm({ drug, handleChange, drugInputData, sessionId, patientId, drugsList }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccessful, setIsSuccessful] = useState(false);
+
+  const { days, quantity, note } = drugInputData;
+
+  const getSelectedDrugId = (drug, allDrugs) => {
+    const selectedDrug = allDrugs.find((item) => item.name === drug);
+    return selectedDrug.id;
+  };
+  const onSubmitDrugForm = async (event, drugChoice) => {
+    event.preventDefault();
+    setIsLoading(true);
+    if (user) {
+      setAuthToken(user.token);
+    }
+    try {
+      const drugId = getSelectedDrugId(drugChoice, drugsList);
+      const requestBody = { patientId, sessionId, drugId, quantity, days, note };
+      await addPrescription(requestBody);
+      setIsLoading(false);
+      setIsSuccessful(true);
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+      setIsSuccessful(false);
+    }
+  };
+
+  return (
+    <form onSubmit={onSubmitDrugForm}>
+      <li className="flex flex-row justify-evenly mt-2 mb-2">
+        <input type="text" name="drug" readOnly value={drug} disabled={false} />
+        <input
+          type="text"
+          disabled={isSuccessful}
+          name="quantity"
+          onChange={handleChange}
+          placeholder="quantity"
+        />
+        <input
+          type="text"
+          disabled={isSuccessful}
+          name="days"
+          onChange={handleChange}
+          placeholder="No of days"
+        />
+        <input
+          type="text"
+          disabled={isSuccessful}
+          name="note"
+          onChange={handleChange}
+          placeholder="note"
+        />
+        <TransformButton
+          btnText="Add prescription"
+          isSuccessful={isSuccessful}
+          isLoading={isLoading}
+        />
+      </li>
+      <Divider orientation="horizontal" variant="fullWidth" />
+    </form>
+  );
+}
+
+function Prescription({ sessionId, patientId, drugsList }) {
   const [drugChoice, setDrugChoice] = useState([]);
-  const [drugsList, setDrugsList] = useState([]);
+  const [drugInputData, setDrugInputData] = useState({
+    drug: '',
+    quantity: '',
+    days: '',
+    note: ''
+  });
+  const handleDrugFormChange = (e) => {
+    setDrugInputData((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value
+    }));
+  };
 
   // function to handle checkbox change in dropdown button component to get and store value in api or localStorage
   const handleDrugChoice = async (event) => {
-    if (event.target.checked && !drugChoice.length) {
-      setDrugChoice([event.target.value]);
-    } else if (event.target.checked && drugChoice.length > 0) {
-      setDrugChoice([...drugChoice, event.target.value]);
+    if (event.target.checked) {
+      drugChoice.push(event.target.value);
+      setDrugChoice(drugChoice);
     }
     console.log(drugChoice);
     // remove choice from list when you uncheck its checkbox
@@ -34,85 +108,38 @@ function Prescription({ onSubmit, handleChange, isLoading }) {
   //     setDrugChoice(newFormValues);
   //   };
 
-  const getInventory = async () => {
-    const page = 0;
-    const size = 20;
-    if (user) {
-      setAuthToken(user.token);
-    }
-    try {
-      const { data } = await getAllInventoryItems(page, size);
-      if (data) {
-        const drugs = data.rows.filter((item) => item.type === 'DRUG');
-        setDrugsList(drugs);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    getInventory();
-  }, []);
   return (
     <div className="mt-3 ring-2 ring-stone-300 p-4">
-      <div className="flex flex-row justify-between">
-        <h3 className="text-green-600">Drugs</h3>
+      <div className="flex justify-between">
+        <h3 className="text-lg mb-3">Drugs</h3>
         <DropdownSearch
-          btnText="Add drugs"
+          btnText="Add symptoms"
           menuItems={drugsList}
           handleCheckboxChange={handleDrugChoice}
-          isTest={false}
         />
       </div>
-      {drugChoice && drugChoice.length ? (
-        <ol>
-          {drugChoice &&
-            drugChoice.map((choice, index) => {
-              return (
-                <>
-                  <form onSubmit={() => onSubmit(event, drugChoice)}>
-                    <li key={index} className="flex flex-row justify-evenly mt-2 mb-2">
-                      <input type="text" name="drug" value={choice} disabled={true} />
-                      <input
-                        type="number"
-                        placeholder="No of drugs"
-                        name="quantity"
-                        onChange={handleChange}
-                      />
-                      <input
-                        type="number"
-                        placeholder="No of days"
-                        name="days"
-                        onChange={handleChange}
-                      />
-                      <input name="note" onChange={handleChange} placeholder="add a note" />
-                      <span>total tablet</span>
-                      <IntuitiveButton text="Add prescription" isLoading={isLoading} />
-                    </li>
-                    {/* <Button
-                      type="button"
-                      className="p-2 mt-1 text-red-500 ml-3"
-                      onClick={() => removeFormFields(index, testChoice)}>
-                      X
-                    </Button> */}
-                    <Divider orientation="horizontal" variant="fullWidth" />
-                  </form>
-                </>
-              );
-            })}
-        </ol>
-      ) : (
-        //   {drugChoice.length ? (
-        //     <div className="flex justify-center mt-2 mb-2">
-        //       <div className="w-1/2">
-        //       </div>
-        //     </div>
-        //   ) : null}
-        <p className="text-lg mb-3 text-red-500">
-          Select from drug options above to send a prescription
-        </p>
-      )}
+      <div>
+        {drugChoice && drugChoice.length ? (
+          <div>
+            {drugChoice &&
+              drugChoice.map((c, key) => {
+                return (
+                  <PrescriptionForm
+                    key={key}
+                    drug={c}
+                    handleChange={handleDrugFormChange}
+                    drugInputData={drugInputData}
+                    sessionId={sessionId}
+                    patientId={patientId}
+                    drugsList={drugsList}
+                  />
+                );
+              })}
+          </div>
+        ) : (
+          <p className="text-lg mb-3 text-red-500">Select from drug options above</p>
+        )}
+      </div>
     </div>
   );
 }
