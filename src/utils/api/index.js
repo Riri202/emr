@@ -10,6 +10,8 @@ const ReceivedQueuesUrl = '/queue/staff/received';
 const sendQueueUrl = '/queue/add';
 const PrescriptionUrl = '/prescription';
 const SessionUrl = '/session';
+const PrescriptionInSessionUrl = '/prescription/session/';
+const TestsInSessionUrl = '/lab/session/';
 const LabUrl = '/lab';
 const DiagnosisUrl = '/diagnosis';
 const SymptomsUrl = '/symptoms';
@@ -27,6 +29,7 @@ export const sendQueue = (data) => {
 export const getReceivedQueues = (staffId, status) => {
   return httpService.get(ReceivedQueuesUrl, { params: { staffId, status } });
 };
+
 export const addNewPatients = (data) => {
   return httpService.post(PatientUrl, data);
 };
@@ -53,9 +56,15 @@ export const addPrescription = (data) => {
 export const updatePrescription = (data) => {
   return httpService.patch(PrescriptionUrl, data);
 };
+export const getSessionPrescriptions = (sessionId) => {
+  return httpService.get(PrescriptionInSessionUrl + sessionId, { params: { page: 0, size: 10 } });
+};
 
 export const addNewTest = (data) => {
   return httpService.post(LabUrl, data);
+};
+export const getSessionTests = (sessionId) => {
+  return httpService.get(TestsInSessionUrl + sessionId, { params: { page: 0, size: 10 } });
 };
 
 export const getSessions = (page, size) => {
@@ -65,6 +74,7 @@ export const getSessions = (page, size) => {
 export const addNewDiagnosis = (data) => {
   return httpService.post(DiagnosisUrl, data);
 };
+
 export const addNewSymptom = (data) => {
   return httpService.post(SymptomsUrl, data);
 };

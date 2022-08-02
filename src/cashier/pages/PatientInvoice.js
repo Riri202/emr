@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Nav from '../../common-components/Nav';
 import { Grow, Chip, CircularProgress, Box } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
@@ -16,6 +16,11 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@mui/material/Button';
 import DropdownButton from '../../common-components/DropdownButton';
 import ApprovePaymentBtn from '../components/ApprovePaymentBtn';
+import { useParams } from 'react-router';
+import { getSessionPrescriptions, getSessionTests } from '../../utils/api';
+import setAuthToken from '../../utils/setAuthToken';
+
+const user = JSON.parse(localStorage.getItem('user'));
 
 const useStyles = makeStyles({
   table: {
@@ -23,9 +28,61 @@ const useStyles = makeStyles({
   }
 });
 function PatientInvoice() {
+  const { id } = useParams();
+  const [prescription, setPrescription] = useState([]);
+  const [tests, setTests] = useState([]);
+
+  let drugTotal = 0;
+
   const classes = useStyles();
   const headers = ['Item description', 'Qty', 'Rate', 'Amount'];
 
+  const calcTotalAmount = (arr) => {
+    drugTotal = arr
+      .map((drug) => drug.quantity * drug.price)
+      .reduce((prev, curr) => prev + curr, 0);
+    return drugTotal;
+  };
+  const getPrescriptionsInSession = async () => {
+    const sessionId = String(id);
+    if (user) {
+      setAuthToken(user.token);
+    }
+    try {
+      const { data } = await getSessionPrescriptions(sessionId);
+      if (data) {
+        setPrescription(data.Prescriptions);
+        console.log(data);
+        const drugs = prescription.map((item) => item.drug);
+        calcTotalAmount(drugs);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getTestsInSession = async () => {
+    const sessionId = String(id);
+    if (user) {
+      setAuthToken(user.token);
+    }
+    try {
+      const { data } = await getSessionTests(sessionId);
+      if (data) {
+        setTests(data.LabTests);
+        console.log(data);
+        console.log(tests);
+        // const testArr = tests.map((item) => item.drug);
+        // calcTotalAmount(testArr);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getPrescriptionsInSession();
+    getTestsInSession();
+  }, []);
   // get drugs list
   const drugs = JSON.parse(localStorage.getItem('drugsList'));
   // get drugs total amount
@@ -38,6 +95,17 @@ function PatientInvoice() {
       <Nav />
       <div className="p-8">
         <h1>PatientInvoice</h1>
+        {/* {prescription.map((item, key) => {
+          const { drug } = item;
+          return (
+            <>
+              <p key={key}>
+                {drug.name} {drug.price}
+              </p>
+              <p>{drugTotal}</p>
+            </>
+          );
+        })} */}
         <div className="flex space-x-2 mb-3">
           <div className="flex flex-col space-y-1">
             <Avatar className="bg-green-500 mt-1" variant="circular">

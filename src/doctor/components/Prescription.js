@@ -15,17 +15,18 @@ function PrescriptionForm({ drug, handleChange, drugInputData, sessionId, patien
   const { days, quantity, note } = drugInputData;
 
   const getSelectedDrugId = (drug, allDrugs) => {
-    const selectedDrug = allDrugs.find((item) => item.name === drug);
+    const selectedDrug = allDrugs.filter((item) => item.name === drug);
+    console.log(selectedDrug);
     return selectedDrug.id;
   };
-  const onSubmitDrugForm = async (event, drugChoice) => {
+  const onSubmitDrugForm = async (event, drug) => {
     event.preventDefault();
     setIsLoading(true);
     if (user) {
       setAuthToken(user.token);
     }
     try {
-      const drugId = getSelectedDrugId(drugChoice, drugsList);
+      const drugId = getSelectedDrugId(drug, drugsList);
       const requestBody = { patientId, sessionId, drugId, quantity, days, note };
       await addPrescription(requestBody);
       setIsLoading(false);
@@ -90,11 +91,11 @@ function Prescription({ sessionId, patientId, drugsList }) {
 
   // function to handle checkbox change in dropdown button component to get and store value in api or localStorage
   const handleDrugChoice = async (event) => {
-    if (event.target.checked) {
-      drugChoice.push(event.target.value);
-      setDrugChoice(drugChoice);
+    if (event.target.checked && !drugChoice.length) {
+      setDrugChoice([event.target.value]);
+    } else if (event.target.checked && drugChoice.length > 0) {
+      setDrugChoice([...drugChoice, event.target.value]);
     }
-    console.log(drugChoice);
     // remove choice from list when you uncheck its checkbox
     if (!event.target.checked) {
       const filterdArr = drugChoice.filter((c) => c !== event.target.value);
@@ -113,7 +114,7 @@ function Prescription({ sessionId, patientId, drugsList }) {
       <div className="flex justify-between">
         <h3 className="text-lg mb-3">Drugs</h3>
         <DropdownSearch
-          btnText="Add symptoms"
+          btnText="Add drug"
           menuItems={drugsList}
           handleCheckboxChange={handleDrugChoice}
         />
@@ -137,7 +138,9 @@ function Prescription({ sessionId, patientId, drugsList }) {
               })}
           </div>
         ) : (
-          <p className="text-lg mb-3 text-red-500">Select from drug options above</p>
+          <p className="text-lg mb-3 text-red-500">
+            Select from drug options above to add prescription
+          </p>
         )}
       </div>
     </div>

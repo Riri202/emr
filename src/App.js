@@ -15,6 +15,7 @@ import LabHome from './lab/pages/LabHome';
 import XrayHome from './x-ray/pages/XrayHome';
 import LabResults from './lab/pages/LabResults';
 import XrayResults from './x-ray/pages/XrayResults';
+import DoctorPatients from './cashier/pages/DoctorPatients';
 
 function App() {
   return (
@@ -40,7 +41,8 @@ function App() {
 
           {/* cashier route */}
           <Route path="/cashier" element={<CashierHome />} />
-          <Route path="/patient-invoice" element={<PatientInvoice />} />
+          <Route path="/doctor/:uuid" element={<DoctorPatients />} />
+          <Route path="/patient-invoice/:id" element={<PatientInvoice />} />
 
           {/* pharmacist routes */}
           <Route path="/pharmacist" element={<PharmacistHome />} />

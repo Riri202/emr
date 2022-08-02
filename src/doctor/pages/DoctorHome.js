@@ -137,49 +137,51 @@ function DoctorHome() {
           <p className="text-sm mt-[-2px]">Incoming patients</p>
         </section>
       </div>
-      {patientsList ? (
-        <TableContainer component={Paper}>
-          <Table className={classes.table} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                {headers.map((header, key) => {
-                  return (
-                    <TableCell key={key} align="center" className="bg-green-500">
-                      {header}
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-            </TableHead>
-            {/* TODO change this PatientList back to dataFiltered and figure out how to implement search again */}
-            {!patientsList.length ? (
-              <h1 className="text-lg mb-3 text-red-500">Patient is not on the list.</h1>
-            ) : (
-              <TableBody>
-                {patientsList &&
-                  patientsList.map((data, index) => (
-                    <TableRow key={index}>
-                      <TableCell align="center" component="th" scope="row">
-                        {index + 1}
+      <section className="flex flex-row justify-center items-center">
+        {patientsList ? (
+          <TableContainer component={Paper} style={{ width: '90vw' }}>
+            <Table className={classes.table} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  {headers.map((header, key) => {
+                    return (
+                      <TableCell key={key} align="center" className="bg-green-500">
+                        {header}
                       </TableCell>
-                      <TableCell align="center">{data.Patient.id}</TableCell>
-                      <TableCell align="center">
-                        <Link
-                          style={{ textDecoration: 'none' }}
-                          to={`/patient/${data.Patient.uuid}/${data.Patient.name}/${data.session.id}`}>
-                          {data.Patient.name}
-                        </Link>
-                      </TableCell>
-                      <TableCell align="center">{data.Patient.email}</TableCell>
-                      <TableCell align="center">{data.Patient.phoneNumber}</TableCell>
-                      <TableCell align="center">{data.Patient.dob}</TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            )}
-          </Table>
-        </TableContainer>
-      ) : null}
+                    );
+                  })}
+                </TableRow>
+              </TableHead>
+              {/* TODO change this PatientList back to dataFiltered and figure out how to implement search again */}
+              {!patientsList.length ? (
+                <h1 className="text-lg mb-3 text-red-500">Patient is not on the list.</h1>
+              ) : (
+                <TableBody>
+                  {patientsList &&
+                    patientsList.map((data, index) => (
+                      <TableRow key={index}>
+                        <TableCell align="center" component="th" scope="row">
+                          {index + 1}
+                        </TableCell>
+                        <TableCell align="center">{data.Patient.id}</TableCell>
+                        <TableCell align="center">
+                          <Link
+                            style={{ textDecoration: 'none' }}
+                            to={`/patient/${data.Patient.uuid}/${data.Patient.name}/${data.session.id}`}>
+                            {data.Patient.name}
+                          </Link>
+                        </TableCell>
+                        <TableCell align="center">{data.Patient.email}</TableCell>
+                        <TableCell align="center">{data.Patient.phoneNumber}</TableCell>
+                        <TableCell align="center">{data.Patient.dob}</TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              )}
+            </Table>
+          </TableContainer>
+        ) : null}
+      </section>
     </div>
   );
 }
