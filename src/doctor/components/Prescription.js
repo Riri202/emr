@@ -15,19 +15,18 @@ function PrescriptionForm({ drug, handleChange, drugInputData, sessionId, patien
   const { days, quantity, note } = drugInputData;
 
   const getSelectedDrugId = (drug, allDrugs) => {
-    const selectedDrug = allDrugs.filter((item) => item.name === drug);
-    console.log(selectedDrug);
+    const selectedDrug = allDrugs.find((item) => item.name === String(drug));
     return selectedDrug.id;
   };
-  const onSubmitDrugForm = async (event, drug) => {
+  const onSubmitDrugForm = async (event) => {
     event.preventDefault();
     setIsLoading(true);
+    const drugId = getSelectedDrugId(drug, drugsList);
+    const requestBody = { patientId, sessionId, drugId, quantity, days, note };
     if (user) {
       setAuthToken(user.token);
     }
     try {
-      const drugId = getSelectedDrugId(drug, drugsList);
-      const requestBody = { patientId, sessionId, drugId, quantity, days, note };
       await addPrescription(requestBody);
       setIsLoading(false);
       setIsSuccessful(true);

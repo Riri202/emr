@@ -18,11 +18,11 @@ function LabTestForm({ test, handleChange, testInputData, sessionId }) {
   const onSubmitTestForm = async (event) => {
     event.preventDefault();
     setIsLoading(true);
+    const requestBody = { description, sessionId, title };
     if (user) {
       setAuthToken(user.token);
     }
     try {
-      const requestBody = { description, sessionId, title };
       await addNewTest(requestBody);
       setIsLoading(false);
       setIsSuccessful(true);
@@ -66,9 +66,14 @@ function LabTest({ sessionId, testsList }) {
   };
 
   const handleTestChoice = (event) => {
-    if (event.target.checkedh) {
-      testChoice.push(event.target.value);
-      setTestChoice(testChoice);
+    if (event.target.checked && !testChoice.length) {
+      setTestChoice([event.target.value]);
+      setTestInputData((prevState) => ({
+        ...prevState,
+        title: event.target.value
+      }));
+    } else if (event.target.checked && testChoice.length > 0) {
+      setTestChoice([...testChoice, event.target.value]);
       setTestInputData((prevState) => ({
         ...prevState,
         title: event.target.value
@@ -84,9 +89,9 @@ function LabTest({ sessionId, testsList }) {
   return (
     <div className="mt-3 ring-2 ring-stone-300 p-4">
       <div className="flex justify-between">
-        <h3 className="text-lg mb-3">Symptoms</h3>
+        <h3 className="text-lg mb-3">Tests</h3>
         <DropdownSearch
-          btnText="Add symptoms"
+          btnText="Add tests"
           menuItems={testsList}
           handleCheckboxChange={handleTestChoice}
         />
