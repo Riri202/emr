@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import './App.css';
 import AdminNav from './admin/components/AdminNav';
 import Login from './auth/Login';
 import ReceptionistHome from './receptionist/pages/ReceptionistHome';
@@ -19,7 +20,7 @@ import DoctorPatients from './cashier/pages/DoctorPatients';
 
 function App() {
   return (
-    <div className="bg-[#f6f7fa]">
+    <div className="App">
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Login />} />
@@ -36,8 +37,8 @@ function App() {
             // path="/prescription"
             element={<DrugsTestDiagnosis />}
           />
-          <Route path="/history-overview" element={<HistoryOverview />} />
-          <Route path="/history" element={<PatientHistory />} />
+          <Route path="/history-overview/:patientId" element={<HistoryOverview />} />
+          <Route path="/history/:sessionId" element={<PatientHistory />} />
 
           {/* cashier route */}
           <Route path="/cashier" element={<CashierHome />} />

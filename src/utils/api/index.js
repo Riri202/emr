@@ -70,6 +70,9 @@ export const getSessionTests = (sessionId) => {
 export const getSessions = (page, size) => {
   return httpService.get(SessionUrl, { params: { page, size } });
 };
+export const getAllSessionsForPatient = (patientId) => {
+  return httpService.get(SessionUrl + '/' + patientId, { params: { page: 0, size: 5 } });
+};
 
 export const addNewDiagnosis = (data) => {
   return httpService.post(DiagnosisUrl, data);

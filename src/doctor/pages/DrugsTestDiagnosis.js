@@ -55,7 +55,7 @@ function DrugsTestDiagnosis() {
             <h2 className="text-lg mb-3">id: name</h2>
           </div>
           <div className="mb-3">
-            <Link to={'/history-overview'}>View patients history</Link>
+            <Link to={`/history-overview/${patientId}`}>View patients history</Link>
           </div>
         </section>
         <section className="flex space-x-3">

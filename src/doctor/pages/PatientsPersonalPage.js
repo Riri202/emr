@@ -19,7 +19,7 @@ function PatientsPersonalPage() {
   };
   const handlePatientHistoryClick = () => {
     // navigate(`/diagnosis-drugs-test/${id}/${name}`);
-    navigate('/history-overview');
+    navigate(`/history-overview/${patientId}`);
   };
 
   return (
