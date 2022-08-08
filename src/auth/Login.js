@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { CircularProgress } from '@mui/material';
 import { login, reset } from '../redux/features/auth/authSlice';
+import { ADMIN_USER_ROLE } from '../utils/constants';
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -13,65 +14,46 @@ function Login() {
     password: ''
   });
   const { username, password } = formData;
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const { user, isSuccess, isLoading, isError, message } = useSelector((state) => state.auth);
+
+  const loggedInUser = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
     if (isError) {
       alert(message);
     }
-    if (isSuccess || user) {
-      alert('succeessful login');
-      if (user.user.role === 'ADMIN') {
-        navigate('/*');
-      } else if (user.user.role === 'RECEPTIONIST') {
-        navigate('/receptionist');
-      }
-      // switch (user.user.role) {
-      //   case 'ADMIN':
-      //     navigate('/*');
-      //     break;
-      //   case 'RECEPTIONIST':
-      //     navigate('/receptionist');
-      //     break;
-      //   case 'DOCTOR':
-      //     navigate('/doctor');
-      //     break;
-      //   case 'LAB':
-      //     navigate('/lab');
-      //     break;
-      //   case 'CASHIER':
-      //     navigate('/cashier');
-      //     break;
-      //   case 'PHARMACIST':
-      //     navigate('/pharmacist');
-      //     break;
-      //   case 'XRAY':
-      //     navigate('/xray');
-      //     break;
-      // }
-    }
     dispatch(reset());
-  }, [isError, message, navigate, user, isSuccess, dispatch]);
+  }, [isError, message, user, isSuccess, dispatch]);
+
   const onChange = (e) => {
     setFormData((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value
     }));
   };
+
   const handleLogin = (e) => {
     e.preventDefault();
+
     const loginData = { username, password };
     console.log(loginData);
     dispatch(login(loginData));
+
     if (isError) {
       alert(message);
+    } else if (isSuccess) {
+      window.location.reload();
     }
     dispatch(reset());
   };
-  return (
+
+  return user && user.role === ADMIN_USER_ROLE ? (
+    <Navigate to={`/admin//*`} />
+  ) : user ? (
+    <Navigate to={`/${loggedInUser.user.role.toLowerCase()}`} />
+  ) : (
     <div className="flex flex-col items-center justify-center h-screen">
       <div className="w-3/5">
         <h1 className="mb-3">Login</h1>
@@ -101,6 +83,7 @@ function Login() {
           <Box sx={{ position: 'relative' }} fullWidth>
             <Button
               disabled={isLoading}
+              variant="contained"
               type="submit"
               className="p-3 w-full mt-1 bg-green-500 text-[#000]">
               Login

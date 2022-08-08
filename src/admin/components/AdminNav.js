@@ -110,22 +110,22 @@ export default function AdminNav() {
   };
   const handleNavigation = (index) => {
     if (index === 0) {
-      navigate(`/worker-login`);
+      navigate('worker-login');
     }
     if (index === 1) {
-      navigate(`/admin-login`);
+      navigate('admin-login');
     }
     if (index === 2) {
-      navigate(`/inventory`);
+      navigate(`inventory`);
     }
     if (index === 3) {
-      navigate(`/patients-biodata`);
+      navigate(`patients-biodata`);
     }
     if (index === 4) {
-      navigate(`/symptoms`);
+      navigate(`symptoms`);
     }
     if (index === 5) {
-      navigate(`/diagnosis`);
+      navigate(`diagnosis`);
     }
   };
 
@@ -224,13 +224,13 @@ export default function AdminNav() {
           </Box>
         </div>
         <Routes>
-          <Route path="/worker-login" element={<WorkerLoginDetails />} />
-          <Route path="/admin-login" element={<AdminLoginDetails />} />
-          <Route path="/inventory" element={<Inventory />} />
-          <Route path="/patients-biodata" element={<PatientsBiodata />} />
-          <Route path="/patients-biodata/:id/:name" element={<PatientDetails />} />
-          <Route path="/symptoms" element={<Symptoms />} />
-          <Route path="/diagnosis" element={<Diagnosis />} />
+          <Route path="worker-login" element={<WorkerLoginDetails />} />
+          <Route path="admin-login" element={<AdminLoginDetails />} />
+          <Route path="inventory" element={<Inventory />} />
+          <Route path="patients-biodata" element={<PatientsBiodata />} />
+          <Route path="patients-biodata/:id/:name" element={<PatientDetails />} />
+          <Route path="symptoms" element={<Symptoms />} />
+          <Route path="diagnosis" element={<Diagnosis />} />
         </Routes>
       </Box>
     </Box>

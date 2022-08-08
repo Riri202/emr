@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import AdminNav from './admin/components/AdminNav';
 import Login from './auth/Login';
@@ -17,28 +17,45 @@ import XrayHome from './x-ray/pages/XrayHome';
 import LabResults from './lab/pages/LabResults';
 import XrayResults from './x-ray/pages/XrayResults';
 import DoctorPatients from './cashier/pages/DoctorPatients';
+import Unauthorized from './common-components/Unauthorized';
+import ProtectedRoutes from './common-components/ProtectedRoutes';
+import {
+  ADMIN_USER_ROLE,
+  DOCTOR_USER_ROLE,
+  LAB_USER_ROLE,
+  PHARMACIST_USER_ROLE,
+  RECEPTIONIST_USER_ROLE,
+  XRAY_USER_ROLE
+} from './utils/constants';
 
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
+      <Router>
         <Routes>
+          {/* public route */}
           <Route path="/" element={<Login />} />
-          <Route path="/*" element={<AdminNav />} />
 
-          {/* receptionist route */}
-          <Route path="/receptionist" element={<ReceptionistHome />} />
+          {/* TODO wrap routes in admin nav component with protected routes */}
+          <Route element={<ProtectedRoutes allowedRole={ADMIN_USER_ROLE} />}>
+            <Route path="/admin//*" element={<AdminNav />} />
+          </Route>
+
+          <Route element={<ProtectedRoutes allowedRole={RECEPTIONIST_USER_ROLE} />}>
+            <Route path="/receptionist" element={<ReceptionistHome />} />
+          </Route>
 
           {/* doctor routes */}
-          <Route path="/doctor" element={<DoctorHome />} />
-          <Route path="/patient/:patientId/:name/:sessionId" element={<PatientsPersonalPage />} />
-          <Route
-            path="/prescription/:patientId/:name/:sessionId"
-            // path="/prescription"
-            element={<DrugsTestDiagnosis />}
-          />
-          <Route path="/history-overview/:patientId" element={<HistoryOverview />} />
-          <Route path="/history/:sessionId" element={<PatientHistory />} />
+          <Route element={<ProtectedRoutes allowedRole={DOCTOR_USER_ROLE} />}>
+            <Route path="/doctor" element={<DoctorHome />} />
+            <Route path="/patient/:patientId/:name/:sessionId" element={<PatientsPersonalPage />} />
+            <Route
+              path="/prescription/:patientId/:name/:sessionId"
+              element={<DrugsTestDiagnosis />}
+            />
+            <Route path="/history-overview/:patientId" element={<HistoryOverview />} />
+            <Route path="/history/:sessionId" element={<PatientHistory />} />
+          </Route>
 
           {/* cashier route */}
           <Route path="/cashier" element={<CashierHome />} />
@@ -46,20 +63,77 @@ function App() {
           <Route path="/patient-invoice/:id" element={<PatientInvoice />} />
 
           {/* pharmacist routes */}
-          <Route path="/pharmacist" element={<PharmacistHome />} />
-          <Route path="/approved-invoice" element={<PharmacistInvoice />} />
+          <Route element={<ProtectedRoutes allowedRole={PHARMACIST_USER_ROLE} />}>
+            <Route path="/pharmacist" element={<PharmacistHome />} />
+            <Route path="/approved-invoice" element={<PharmacistInvoice />} />
+          </Route>
 
           {/* lab routes */}
-          <Route path="/lab" element={<LabHome />} />
-          <Route path="/lab-results" element={<LabResults />} />
+          <Route element={<ProtectedRoutes allowedRole={LAB_USER_ROLE} />}>
+            <Route path="/lab" element={<LabHome />} />
+            <Route path="/lab-results" element={<LabResults />} />
+          </Route>
 
           {/* x-ray routes */}
-          <Route path="/xray" element={<XrayHome />} />
-          <Route path="/xray-results" element={<XrayResults />} />
+          <Route element={<ProtectedRoutes allowedRole={XRAY_USER_ROLE} />}>
+            <Route path="/xray" element={<XrayHome />} />
+            <Route path="/xray-results" element={<XrayResults />} />
+          </Route>
+
+          <Route path="/unauthorized" element={<Unauthorized />} />
         </Routes>
-      </BrowserRouter>
+      </Router>
     </div>
   );
 }
+// function App() {
+
+//   return (
+//     <div className="App">
+//       <BrowserRouter>
+//         <Routes>
+//           {/* public route */}
+//           <Route path="/" element={<Login />} />
+
+//           <Route element={<ProtectedRoutes allowedRole={ADMIN_USER_ROLE} />}>
+//             <Route path="/admin" element={<AdminNav />} />
+//           </Route>
+
+//           {/* receptionist route */}
+//           <Route path="/receptionist" element={<ReceptionistHome />} />
+
+//           {/* doctor routes */}
+//           <Route path="/doctor" element={<DoctorHome />} />
+//           <Route path="/patient/:patientId/:name/:sessionId" element={<PatientsPersonalPage />} />
+//           <Route
+//             path="/prescription/:patientId/:name/:sessionId"
+//             element={<DrugsTestDiagnosis />}
+//           />
+//           <Route path="/history-overview/:patientId" element={<HistoryOverview />} />
+//           <Route path="/history/:sessionId" element={<PatientHistory />} />
+
+//           {/* cashier route */}
+//           <Route path="/cashier" element={<CashierHome />} />
+//           <Route path="/doctor/:uuid" element={<DoctorPatients />} />
+//           <Route path="/patient-invoice/:id" element={<PatientInvoice />} />
+
+//           {/* pharmacist routes */}
+//           <Route path="/pharmacist" element={<PharmacistHome />} />
+//           <Route path="/approved-invoice" element={<PharmacistInvoice />} />
+
+//           {/* lab routes */}
+//           <Route path="/lab" element={<LabHome />} />
+//           <Route path="/lab-results" element={<LabResults />} />
+
+//           {/* x-ray routes */}
+//           <Route path="/xray" element={<XrayHome />} />
+//           <Route path="/xray-results" element={<XrayResults />} />
+
+//           <Route path="/unauthorized" element={<Unauthorized />} />
+//         </Routes>
+//       </BrowserRouter>
+//     </div>
+//   );
+// }
 
 export default App;
