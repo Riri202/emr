@@ -15,7 +15,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
-// import ListItemButton from '@mui/material/ListItemButton';
 import { ListItemButton } from '@mui/material';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
@@ -23,7 +22,7 @@ import { FaHospitalUser, FaUserNurse } from 'react-icons/fa';
 import { RiAdminLine } from 'react-icons/ri';
 import { MdOutlineInventory, MdSick } from 'react-icons/md';
 
-//admin pages
+//admin routes
 import WorkerLoginDetails from '../pages/WorkerLoginDetails';
 import AdminLoginDetails from '../pages/AdminLoginDetails';
 import Inventory from '../pages/Inventory';
@@ -99,6 +98,8 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     })
   })
 );
+
+const user = JSON.parse(localStorage.getItem('user'));
 
 export default function AdminNav() {
   const theme = useTheme();
@@ -219,7 +220,7 @@ export default function AdminNav() {
               noWrap
               component="div"
               sx={{ mt: -1, mr: 2, justifySelf: 'end' }}>
-              Admin Name
+              Welcome admin {user.user.fullName}
             </Typography>
           </Box>
         </div>

@@ -1,9 +1,9 @@
 // for use in serach boxes
-export const filterData = (query, patientsList) => {
+export const filterData = (query, list) => {
   if (!query) {
-    return patientsList;
+    return list;
   } else {
-    return patientsList.filter((patient) => patient.name.toLowerCase().includes(query));
+    return list.filter((patient) => patient.name.toLowerCase().includes(query));
   }
 };
 

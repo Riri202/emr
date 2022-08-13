@@ -2,6 +2,7 @@
 // /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 // import ListSubheader from '@mui/material/ListSubheader';
+import FolderSharedIcon from '@mui/icons-material/FolderShared';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -13,6 +14,7 @@ import { sendQueue } from '../../utils/api';
 import IntuitiveButton from '../../common-components/IntuitiveButton';
 import DropdownButton from '../../common-components/DropdownButton';
 import setAuthToken from '../../utils/setAuthToken';
+import { Typography, Divider } from '@material-ui/core';
 
 const user = JSON.parse(localStorage.getItem('user'));
 
@@ -52,28 +54,31 @@ const CustomizedListItem = ({ patient, doctorsList }) => {
       console.log(error);
     }
   };
+  const dob = new Date(patient.dob).toDateString();
   return (
     <form onSubmit={() => handleSendToDoctor(event, patient.uuid)}>
       <ListItem button key={patient.id} onClick={handleClick}>
-        <ListItemText primary={patient.name} />
+        <ListItemText primary={<Typography variant="h5">{patient.name}</Typography>} />
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List component="li" disablePadding key={patient.id}>
           <ListItem button>
-            <ListItemIcon>{/* <InsertDriveFileTwoToneIcon /> */}</ListItemIcon>
-            <ListItemText primary={patient.email} />
-            <ListItemText primary={patient.id} />
-            <ListItemText primary={patient.dob} />
-            <ListItemText primary={patient.phoneNumber} />
+            <ListItemIcon>{<FolderSharedIcon />}</ListItemIcon>
+            <ListItemText primary="Email" secondary={patient.email} />
+            <ListItemText primary="ID" secondary={patient.id} />
+            <ListItemText primary="Date of birth" secondary={dob} />
+            <ListItemText primary="Phone number" secondary={patient.phoneNumber} />
           </ListItem>
         </List>
-        <div>
-          <DropdownButton
-            choice={staffName}
-            menuItems={doctorNames}
-            onChange={handleDoctorChoice}
-          />
+        <div className="w-full flex flex-row space-x-6 justify-start mt-3 mb-3">
+          <div className="w-1/2">
+            <DropdownButton
+              choice={staffName}
+              menuItems={doctorNames}
+              onChange={handleDoctorChoice}
+            />
+          </div>
           <IntuitiveButton text="send to doctor" />
         </div>
       </Collapse>
@@ -86,14 +91,17 @@ export default function CollapsibleList({ patientsList, doctorsList, doctorNames
     <div>
       <List component="nav" aria-labelledby="nested-list-subheader">
         {patientsList &&
-          patientsList.map((patient) => {
+          patientsList.map((patient, index) => {
             return (
-              <CustomizedListItem
-                key={patient.id}
-                patient={patient}
-                doctorsList={doctorsList}
-                doctorNames={doctorNames}
-              />
+              <>
+                <CustomizedListItem
+                  key={patient.id}
+                  patient={patient}
+                  doctorsList={doctorsList}
+                  doctorNames={doctorNames}
+                />
+                {index === patientsList.length - 1 ? null : <Divider fullWidth />}
+              </>
             );
           })}
       </List>

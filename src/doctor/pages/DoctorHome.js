@@ -26,29 +26,32 @@ const useStyles = makeStyles({
     minWidth: 650
   }
 });
+
+const headers = ['Index', 'Name', 'Email', 'Phone No', 'DOB'];
 const user = JSON.parse(localStorage.getItem('user'));
+
 function DoctorHome() {
   const classes = useStyles();
-  const headers = ['Index', 'ID', 'Name', 'Email', 'Phone No', 'DOB'];
-  const [isSearching, setIsSearching] = useState(false);
+
   const [searchQuery, setSearchQuery] = useState('');
   const [patientsList, setPatientsList] = useState([]);
-  // const allWorkers = JSON.parse(localStorage.getItem('allWorkers'));
   const [isDoctorAvailable, setIsDoctorAvailable] = useState(
     JSON.parse(localStorage.getItem('isDoctorAvailable')) ?? false
   );
   const [availableDoctors, setAvailableDoctors] = useState(
     JSON.parse(localStorage.getItem('availableDoctors')) ?? []
   );
+
   const filterData = (query, patientsList) => {
     if (!query) {
       return patientsList;
     } else {
       return patientsList
-        .map((row) => row.Patient)
-        .filter((patient) => patient.name.toLowerCase().includes(query));
+        .map((data) => data)
+        .filter((data) => data.Patient.name.toLowerCase().includes(query.toLowerCase()));
     }
   };
+
   const patientsFromReceptionist = async () => {
     const staffId = user.user.uuid;
     if (user) {
@@ -57,7 +60,6 @@ function DoctorHome() {
     try {
       const { data } = await getReceivedQueues(staffId, 'PENDING');
       const patients = data.rows;
-      console.log(data);
       if (data) {
         setPatientsList(patients);
         console.log(patientsList);
@@ -67,15 +69,6 @@ function DoctorHome() {
     }
   };
   const dataFiltered = filterData(searchQuery, patientsList);
-
-  // TODO this list should come from the receptionist so set receptionist send to in localstorage and then get it from here for specific doctor
-  // const patientsList = JSON.parse(localStorage.getItem('patients')) ?? [];
-
-  // const findDoctor = (role, id) => {
-  //   return allWorkers.filter((worker) => worker.role === role && worker.id === id);
-  // };
-  // const thisDoctor = findDoctor('doctor', 4);
-  // console.log(thisDoctor);
 
   // TODO this function will instead make a patch or put request to update the doctors availability on the backend
   const handleCheckboxChange = (event) => {
@@ -119,11 +112,7 @@ function DoctorHome() {
             </div>
           </div>
           <div className="">
-            <PatientSearchBar
-              setIsSearching={setIsSearching}
-              setSearchQuery={setSearchQuery}
-              label="Find a patient"
-            />
+            <PatientSearchBar setSearchQuery={setSearchQuery} label="Find a patient" />
           </div>
         </section>
         <section className="mt-6">
@@ -152,30 +141,34 @@ function DoctorHome() {
                   })}
                 </TableRow>
               </TableHead>
-              {/* TODO change this PatientList back to dataFiltered and figure out how to implement search again */}
               {!patientsList.length ? (
+                <h1 className="text-lg mb-3 text-red-500">Patient list is empty.</h1>
+              ) : !dataFiltered.length ? (
                 <h1 className="text-lg mb-3 text-red-500">Patient is not on the list.</h1>
               ) : (
                 <TableBody>
-                  {patientsList &&
-                    patientsList.map((data, index) => (
-                      <TableRow key={index}>
-                        <TableCell align="center" component="th" scope="row">
-                          {index + 1}
-                        </TableCell>
-                        <TableCell align="center">{data.Patient.id}</TableCell>
-                        <TableCell align="center">
-                          <Link
-                            style={{ textDecoration: 'none' }}
-                            to={`/patient/${data.Patient.uuid}/${data.Patient.name}/${data.session.id}`}>
-                            {data.Patient.name}
-                          </Link>
-                        </TableCell>
-                        <TableCell align="center">{data.Patient.email}</TableCell>
-                        <TableCell align="center">{data.Patient.phoneNumber}</TableCell>
-                        <TableCell align="center">{data.Patient.dob}</TableCell>
-                      </TableRow>
-                    ))}
+                  {dataFiltered &&
+                    dataFiltered.map((data, index) => {
+                      const dob = new Date(data.Patient.dob).toDateString();
+                      return (
+                        <TableRow key={index}>
+                          <TableCell align="center" component="th" scope="row">
+                            {index + 1}
+                          </TableCell>
+                          {/* <TableCell align="center">{data.Patient.id}</TableCell> */}
+                          <TableCell align="center">
+                            <Link
+                              style={{ textDecoration: 'none' }}
+                              to={`/patient/${data.Patient.uuid}/${data.Patient.name}/${data.session.id}`}>
+                              {data.Patient.name}
+                            </Link>
+                          </TableCell>
+                          <TableCell align="center">{data.Patient.email}</TableCell>
+                          <TableCell align="center">{data.Patient.phoneNumber}</TableCell>
+                          <TableCell align="center">{dob}</TableCell>
+                        </TableRow>
+                      );
+                    })}
                 </TableBody>
               )}
             </Table>

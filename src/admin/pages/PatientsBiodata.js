@@ -86,33 +86,6 @@ function PatientsBiodata() {
       setIsAddingPatient(false);
     }
   };
-  // const addPatient = async (e) => {
-  //   e.preventDefault();
-  //   setIsAddingPatient(true);
-  //   const patientFormData = { name, email, phoneNumber, dob };
-
-  //   try {
-  //     const response = await axios({
-  //       method: 'post',
-  //       url: 'https://emr-server.herokuapp.com/patient',
-  //       data: patientFormData,
-  //       headers: authHeader()
-  //     }).then((response) => {
-  //       console.log(response.data.patient);
-  //       if (rows.length > 0) {
-  //         setRows([...rows, response.data.patient]);
-  //       }
-  //       if (rows.length === 0) {
-  //         setRows([response.patient]);
-  //       }
-  //     });
-  //     // return {response.data.patient}
-  //     console.log(response);
-  //     // setIsAddingPatient(false);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
   const getAllPatients = async () => {
     // setIsLoading(true);
     try {
@@ -168,69 +141,13 @@ function PatientsBiodata() {
         btnText="Add new patient"
         isDateRequired={true}
       />
-      {/* <Box
-        component={Paper}
-        sx={{ mb: 4, padding: 2, display: 'flex', flexDirection: 'column', spacing: 2 }}>
-        <form onSubmit={addPatient}>
-          <div className="flex flex-row justify-center space-x-4">
-            <TextField
-              name="name"
-              id="name"
-              label="Name"
-              type="text"
-              onChange={handleChange}
-              variant="standard"
-              sx={{ mr: 3 }}></TextField>
-            <TextField
-              name="email"
-              id="email"
-              label="Email"
-              type="email"
-              onChange={handleChange}
-              variant="standard"
-              sx={{ mr: 3 }}></TextField>
-            <TextField
-              name="phoneNumber"
-              id="phoneNumber"
-              label="Phone No."
-              type="number"
-              onChange={handleChange}
-              variant="standard"
-              sx={{ mr: 3 }}></TextField>
-            <input name="dob" type="date" id="dob" onChange={handleChange} className="p-3" />
-          </div>
-          <div className="flex justify-center mt-2 mb-2"> */}
-      {/* <div className="w-1/2">
-              <IntuitiveButton text="Add new patient" isLoading={isAddingPatient} />
-            </div> */}
-      {/* <Button type="submit" variant="outlined" className="w-1/2 p-3 bg-green-500 text-[#000]">
-              Add new patient
-            </Button>
-          </div>
-        </form>
-        <Divider className="mt-2 mb-2" orientation="horizontal" variant="fullWidth" />
-        <form className="flex flex-row mt-2 justify-center">
-          <div className="p-3 bg-green-500 rounded-md">
-            <label htmlFor="csvFile" className="cursor-pointer">
-              Import a csv files <FaFileCsv className="text-[30px] mb-[-5px]" />
-              <input
-                type={'file'}
-                id="csvFile"
-                accept={'.csv'}
-                onChange={handleCsvChange}
-                className="hidden"
-              />
-            </label>
-          </div>
-        </form>
-      </Box> */}
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
               {headers.map((header, key) => {
                 return (
-                  <TableCell key={key} align="right" className="bg-green-500">
+                  <TableCell key={key} align="center" className="bg-green-500">
                     {header}
                   </TableCell>
                 );
@@ -243,32 +160,31 @@ function PatientsBiodata() {
             </h1>
           ) : (
             <TableBody>
-              {rows.map((row, index) => (
-                <TableRow key={row.name}>
-                  <TableCell component="th" scope="row">
-                    {index + 1}
-                  </TableCell>
-                  <TableCell component="th" scope="row">
-                    {row.id}
-                  </TableCell>
-                  <TableCell align="center">
-                    <Link
-                      style={{ textDecoration: 'none' }}
-                      to={`/patients-biodata/${row.id}/${row.name}`}>
-                      {row.name}
-                    </Link>
-                  </TableCell>
-                  <TableCell align="center">{row.email}</TableCell>
-                  <TableCell align="center">{row.phoneNumber}</TableCell>
-                  <TableCell align="center">{row.dob}</TableCell>
-                  <TableCell align="center">
-                    <EditPatientForm selectedPatient={row} setRows={setRows} rows={rows} />
-                  </TableCell>
-                  <TableCell align="center">
-                    <DeleteDialog id={row.uuid} setRows={setRows} rows={rows} role="patient" />
-                  </TableCell>
-                </TableRow>
-              ))}
+              {rows.map((row, index) => {
+                const dob = new Date(row.dob).toDateString();
+                return (
+                  <TableRow key={row.name}>
+                    <TableCell align="center">{index + 1}</TableCell>
+                    <TableCell align="center">{row.id}</TableCell>
+                    <TableCell align="center">
+                      <Link
+                        style={{ textDecoration: 'none' }}
+                        to={`/patients-biodata/${row.id}/${row.name}`}>
+                        {row.name}
+                      </Link>
+                    </TableCell>
+                    <TableCell align="center">{row.email}</TableCell>
+                    <TableCell align="center">{row.phoneNumber}</TableCell>
+                    <TableCell align="center">{dob}</TableCell>
+                    <TableCell align="center">
+                      <EditPatientForm selectedPatient={row} setRows={setRows} rows={rows} />
+                    </TableCell>
+                    <TableCell align="center">
+                      <DeleteDialog id={row.uuid} setRows={setRows} rows={rows} role="patient" />
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           )}
         </Table>

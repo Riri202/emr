@@ -2,38 +2,20 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Nav from '../../common-components/Nav';
-// import DropdownButton from '../../common-components/DropdownButton';
 import PatientSearchBar from '../../common-components/PatientSearchBar';
 import Box from '@mui/material/Box';
-// import { makeStyles } from '@material-ui/core/styles';
-// import Table from '@material-ui/core/Table';
-// import TableBody from '@material-ui/core/TableBody';
-// import TableCell from '@material-ui/core/TableCell';
-// import TableContainer from '@material-ui/core/TableContainer';
-// import TableHead from '@material-ui/core/TableHead';
-// import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-// import Checkbox from '@mui/material/Checkbox';
-// import { handleCheckboxChange } from '../../utils';
-// import { Chip } from '@mui/material';
 import authHeader from '../../redux/features/auth/authHeader';
 import { getAllStaff } from '../../utils/api';
-// import IntuitiveButton from '../../common-components/IntuitiveButton';
-import { filterData } from '../../utils';
 import CollapsibleList from '../components/CollapsibleList';
 import setAuthToken from '../../utils/setAuthToken';
+import { List, ListItem, ListItemIcon, ListItemText, Typography } from '@material-ui/core';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
-// const useStyles = makeStyles({
-//   table: {
-//     minWidth: 650
-//   }
-// });
-// const headers = ['Index', 'ID', 'Name', 'Select Doctor', 'Send'];
 const user = JSON.parse(localStorage.getItem('user'));
 
 function ReceptionistHome() {
-  // const classes = useStyles();
-  const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   // get patients list from admin
@@ -42,25 +24,20 @@ function ReceptionistHome() {
   const [doctorsList, setDoctorsList] = useState([]);
   // const [staffName, setStaffName] = useState('');
 
-  // to display patients in chips when selected from the table
-  // const [choice, setChoice] = useState([
-  //   {
-  //     value: '',
-  //     id: ''
-  //   }
-  // ]);
-
   const today = new Date();
-  const date = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
+  const date = today.toDateString();
   const time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
 
-  // const filterData = (query, patientsList) => {
-  //   if (!query) {
-  //     return patientsList;
-  //   } else {
-  //     return patientsList.filter((patient) => patient.name.toLowerCase().includes(query));
-  //   }
-  // };
+  const filterData = (query, patientsList) => {
+    if (!query) {
+      return patientsList;
+    } else {
+      return patientsList
+        .map((patient) => patient)
+        .filter((patient) => patient.name.toLowerCase().includes(query.toLowerCase()));
+    }
+  };
+
   const getAvailableDoctors = (allStaff) => {
     const allDoctors = allStaff.rows.filter(
       // TODO this filter should have a condition to also return doctors with available property set to true
@@ -69,15 +46,7 @@ function ReceptionistHome() {
     setDoctorsList([...allDoctors]);
     console.log(doctorsList);
   };
-  // const handleDoctorChoice = (event) => {
-  //   if (event.target.checked) {
-  //     setStaffName(event.target.value);
-  //   }
-  // };
 
-  // const getSelectedDoctorInfo = (name, doctorsList) => {
-  //   return doctorsList.find((doctor) => doctor.name === name);
-  // };
   const getAllPatients = async () => {
     // setIsLoading(true);
     try {
@@ -104,6 +73,8 @@ function ReceptionistHome() {
     }
   };
 
+  const dataFiltered = filterData(searchQuery, patientsList);
+
   const getAllDoctors = async () => {
     const page = 0;
     const size = 20;
@@ -129,61 +100,44 @@ function ReceptionistHome() {
     <div>
       <Nav />
       <Box>
-        <div className="flex flex-row w-screen space-x-5 p-10">
+        <div className="flex flex-row items-start w-screen space-x-10 p-10">
           <div>
-            <h2 className="text-lg mb-3">Receptionist Name</h2>
-            <p>Date: {date}</p>
-            <p>time: {time}</p>
+            <List>
+              <ListItem>
+                <ListItemText
+                  primary={<Typography variant="h6">Receptionist {user.user.fullName}</Typography>}
+                />
+              </ListItem>
+              <ListItem>
+                <ListItemIcon>
+                  <CalendarMonthIcon />
+                </ListItemIcon>
+                <ListItemText primary={date} />
+              </ListItem>
+              <ListItem>
+                <ListItemIcon>
+                  <AccessTimeIcon />
+                </ListItemIcon>
+                <ListItemText primary={time} />
+              </ListItem>
+            </List>
           </div>
           <div className="flex-grow">
-            <PatientSearchBar
-              setIsSearching={setIsSearching}
-              setSearchQuery={setSearchQuery}
-              label="Find a patient"
-            />
+            <PatientSearchBar setSearchQuery={setSearchQuery} label="Find a patient" />
           </div>
         </div>
-        {/* {choice.length ? (
-          <Paper style={{ marginBottom: '8px' }}>
-            <form onSubmit={() => handleSendToDoctor(choice.id)}>
-              <div className="flex flex-row space-x-4  p-5">
-                <span className="text-lg text-red-500">Selected patients</span>
-                <DropdownButton
-                  btnText="Select a doctor"
-                  menuItems={doctorNames}
-                  handleCheckboxChange={handleDoctorChoice}
-                />
-              </div>
-              <div className="flex flex-row space-x-2 p-5 flex-wrap">
-                {choice.map((c, index) => {
-                  return (
-                    <Chip
-                      key={index}
-                      label={c.value}
-                      onDelete={() => console.log('deleted chip')}
-                      variant="outlined"
-                    />
-                  );
-                })}
-              </div>
-              <div className="flex justify-center mt-2 mb-2">
-                <div className="w-1/2">
-                  <IntuitiveButton text="send to doctor" />
-                </div>
-              </div>
-            </form>
-          </Paper>
-        ) : null} */}
 
         <div className="p-20">
-          <p>Incoming Patients</p>
+          <p className="text-lg font-bold">Incoming patients</p>
           <Paper style={{ padding: 15, borderRadius: 16 }}>
             {!patientsList.length ? (
+              <p className="text-lg mb-3 text-red-500">Patient list is empty.</p>
+            ) : !dataFiltered.length ? (
               <p className="text-lg mb-3 text-red-500">Patient is not on the list.</p>
             ) : (
               <div>
-                {patientsList && isSearching ? (
-                  <CollapsibleList patientsList={patientsList} doctorsList={doctorsList} />
+                {dataFiltered ? (
+                  <CollapsibleList patientsList={dataFiltered} doctorsList={doctorsList} />
                 ) : null}
               </div>
             )}
