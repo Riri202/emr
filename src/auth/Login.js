@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Box from '@mui/material/Box';
@@ -7,13 +7,13 @@ import Button from '@mui/material/Button';
 import { CircularProgress } from '@mui/material';
 import { login, reset } from '../redux/features/auth/authSlice';
 import { ADMIN_USER_ROLE } from '../utils/constants';
+import useForm from '../utils/formValidations/useForm';
 
 function Login() {
-  const [formData, setFormData] = useState({
-    username: '',
-    password: ''
-  });
-  const { username, password } = formData;
+  // const [formData, setFormData] = useState({
+  //   username: '',
+  //   password: ''
+  // });
   const dispatch = useDispatch();
 
   const { user, isSuccess, isLoading, isError, message } = useSelector((state) => state.auth);
@@ -27,13 +27,12 @@ function Login() {
     dispatch(reset());
   }, [isError, message, user, isSuccess, dispatch]);
 
-  const onChange = (e) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value
-    }));
-  };
-
+  // const onChange = (e) => {
+  //   setFormData((prevState) => ({
+  //     ...prevState,
+  //     [e.target.name]: e.target.value
+  //   }));
+  // };
   const handleLogin = (e) => {
     e.preventDefault();
 
@@ -48,6 +47,9 @@ function Login() {
     }
     dispatch(reset());
   };
+  const { handleChange, values, errors, handleSubmit } = useForm(handleLogin);
+
+  const { username, password } = values;
 
   return user && user.role === ADMIN_USER_ROLE ? (
     <Navigate to={`/admin//*`} />
@@ -59,25 +61,27 @@ function Login() {
         <h1 className="mb-3">Login</h1>
         <Box
           fullWidth
-          onSubmit={handleLogin}
+          onSubmit={handleSubmit}
           component="form"
           sx={{ display: 'flex', flexDirection: 'column' }}>
           <TextField
             fullWidth
-            required
-            id="filled-required"
+            id="filled-username"
             label="Username"
             name="username"
-            onChange={onChange}
+            onChange={handleChange}
+            error={errors.username}
+            helperText={errors.username}
             sx={{ mb: 2 }}
           />
           <TextField
             fullWidth
-            required
-            id="filled-required"
+            id="filled-password"
             label="Password"
             name="password"
-            onChange={onChange}
+            onChange={handleChange}
+            error={errors.password}
+            helperText={errors.password}
             sx={{ mb: 2 }}
           />
           <Box sx={{ position: 'relative' }} fullWidth>
