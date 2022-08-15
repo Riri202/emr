@@ -21,6 +21,7 @@ import DeleteDialog from '../components/DeleteDialog';
 import { addNewStaff } from '../../utils/api';
 import setAuthToken from '../../utils/setAuthToken';
 import InputDetailsForm from '../components/InputDetailsForm';
+import useForm from '../../utils/formValidations/useForm';
 
 const useStyles = makeStyles({
   table: {
@@ -37,19 +38,19 @@ function WorkerLoginDetails() {
   // const [isLoading, setIsLoading] = useState(false);
   const [isAddingStaff, setIsAddingStaff] = useState(false);
 
-  const [inputData, setInputData] = useState({
-    fullName: '',
-    username: '',
-    password: '',
-    role: ''
-  });
-  const { fullName, username, password, role } = inputData;
-  const handleChange = (e) => {
-    setInputData((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value
-    }));
-  };
+  // const [inputData, setInputData] = useState({
+  //   fullName: '',
+  //   username: '',
+  //   password: '',
+  //   role: ''
+  // });
+  // const { fullName, username, password, role } = inputData;
+  // const handleChange = (e) => {
+  //   setInputData((prevState) => ({
+  //     ...prevState,
+  //     [e.target.name]: e.target.value
+  //   }));
+  // };
 
   const handleCsvChange = (event) => {
     // Passing file data (event.target.files[0]) to parse using Papa.parse
@@ -121,6 +122,10 @@ function WorkerLoginDetails() {
     getAllStaff();
   }, []);
 
+  const { handleChange, values, errors, handleSubmit } = useForm(addStaff);
+
+  const { fullName, username, password, role } = values;
+
   const formInputDetails = [
     {
       name: 'fullName',
@@ -147,11 +152,12 @@ function WorkerLoginDetails() {
     <>
       <h2 className="text-lg mb-3">Worker Login Details</h2>
       <InputDetailsForm
-        onSubmit={addStaff}
+        onSubmit={handleSubmit}
         onChange={handleChange}
         handleCsvChange={handleCsvChange}
         isLoading={isAddingStaff}
         formDetails={formInputDetails}
+        errors={errors}
         btnText="Add new worker"
       />
       {/* <Box

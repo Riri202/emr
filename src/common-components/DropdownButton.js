@@ -10,6 +10,7 @@ export default function DropdownButton({ menuItems, onChange, choice }) {
         fullWidth
         id="outlined-select-doctor"
         select
+        required
         name="select"
         label="select"
         value={choice}

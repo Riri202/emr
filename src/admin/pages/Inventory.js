@@ -11,10 +11,11 @@ import Paper from '@material-ui/core/Paper';
 import { Delete } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
 import setAuthToken from '../../utils/setAuthToken';
-import { addNewInventory } from '../../utils/api';
+import { addNewInventory, getAllInventoryItems } from '../../utils/api';
 import EditInventoryForm from '../components/EditInventoryForm';
 import DeleteDialog from '../components/DeleteDialog';
 import InputDetailsForm from '../components/InputDetailsForm';
+import useForm from '../../utils/formValidations/useForm';
 
 const useStyles = makeStyles({
   table: {
@@ -28,6 +29,7 @@ const user = JSON.parse(localStorage.getItem('user'));
 function Inventory() {
   const classes = useStyles();
   const [isAddingInventory, setIsAddingInventory] = useState(false);
+  const [inventoryList, setInventoryList] = useState([]);
   const [rows, setRows] = useState([
     {
       id: 1,
@@ -51,19 +53,19 @@ function Inventory() {
       type: 'TEST'
     }
   ]);
-  const [inputData, setInputData] = useState({
-    name: '',
-    quantity: '',
-    price: '',
-    type: ''
-  });
-  const { name, quantity, price, type } = inputData;
-  const handleChange = (e) => {
-    setInputData((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value
-    }));
-  };
+  // const [inputData, setInputData] = useState({
+  //   name: '',
+  //   quantity: '',
+  //   price: '',
+  //   type: ''
+  // });
+  // const { name, quantity, price, type } = inputData;
+  // const handleChange = (e) => {
+  //   setInputData((prevState) => ({
+  //     ...prevState,
+  //     [e.target.name]: e.target.value
+  //   }));
+  // };
 
   const handleCsvChange = (event) => {
     // Passing file data (event.target.files[0]) to parse using Papa.parse
@@ -82,6 +84,7 @@ function Inventory() {
       }
     });
   };
+
   const addInventory = async (e) => {
     e.preventDefault();
     setIsAddingInventory(true);
@@ -103,9 +106,31 @@ function Inventory() {
       setIsAddingInventory(false);
     }
   };
+
+  const getInventory = async () => {
+    const page = 0;
+    const size = 20;
+    if (user) {
+      setAuthToken(user.token);
+    }
+    try {
+      const { data } = await getAllInventoryItems(page, size);
+      if (data) {
+        // const drugs = data.rows.filter((item) => item.type === 'DRUG');
+        setInventoryList(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
-    localStorage.setItem('drugsList', JSON.stringify(rows));
-  }, [rows]);
+    getInventory();
+  }, []);
+
+  const { handleChange, values, errors, handleSubmit } = useForm(addInventory);
+
+  const { name, quantity, price, type } = values;
+
   const formInputDetails = [
     {
       name: 'name',
@@ -125,74 +150,23 @@ function Inventory() {
     {
       name: 'type',
       id: 'type',
-      label: 'Type'
+      label: 'DRUG or TEST'
     }
   ];
   return (
     <div>
       <h2 className="text-lg mb-3">Inventory</h2>
       <InputDetailsForm
-        onSubmit={addInventory}
+        onSubmit={handleSubmit}
         onChange={handleChange}
         handleCsvChange={handleCsvChange}
         isLoading={isAddingInventory}
         formDetails={formInputDetails}
+        errors={errors}
         btnText="Add to inventory"
       />
-      {/* <Box
-        component={Paper}
-        sx={{ mb: 4, padding: 2, display: 'flex', flexDirection: 'column', spacing: 2 }}>
-        <form onSubmit={addInventory}>
-          <div className="flex flex-row justify-center space-x-4">
-            <TextField
-              label="name"
-              name="name"
-              onChange={handleChange}
-              variant="standard"
-              sx={{ mr: 3 }}></TextField>
-            <TextField
-              label="quantity"
-              name="quantity"
-              onChange={handleChange}
-              variant="standard"
-              sx={{ mr: 3 }}></TextField>
-            <TextField
-              label="unit price"
-              name="price"
-              onChange={handleChange}
-              variant="standard"
-              sx={{ mr: 3 }}></TextField>
-            <TextField
-              label="type"
-              name="type"
-              onChange={handleChange}
-              variant="standard"
-              sx={{ mr: 3 }}></TextField>
-          </div>
-          <div className="flex justify-center mt-2 mb-2">
-            <div className="w-1/2">
-              <IntuitiveButton text="Add to inventory" isLoading={isAddingInventory} />
-            </div>
-          </div>
-        </form>
-        <Divider className="mt-2 mb-2" orientation="horizontal" variant="fullWidth" />
-        <form className="flex flex-row mt-2 justify-center">
-          <div className="p-3 bg-green-500 rounded-md">
-            <label htmlFor="csvFile" className="cursor-pointer">
-              Import a csv files <FaFileCsv className="text-[30px] mb-[-5px]" />
-              <input
-                type={'file'}
-                id="csvFile"
-                accept={'.csv'}
-                onChange={handleCsvChange}
-                className="hidden"
-              />
-            </label>
-          </div>
-        </form>
-      </Box> */}
       <TableContainer component={Paper}>
-        <h2 className="text-lg mb-3">Drugs</h2>
+        <h2 className="text-lg mb-3 pl-3">Drugs</h2>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -206,27 +180,34 @@ function Inventory() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows
-              .filter((row) => row.type === 'DRUG')
-              .map((row, index) => (
-                <TableRow key={row.name}>
-                  <TableCell align="center">{index + 1}</TableCell>
-                  <TableCell align="center">{row.name}</TableCell>
-                  <TableCell align="center">{row.quantity}</TableCell>
-                  <TableCell align="center">{row.price}</TableCell>
-                  <TableCell align="center">
-                    <EditInventoryForm selectedItem={row} setRows={setRows} rows={rows} />
-                  </TableCell>
-                  <TableCell align="center">
-                    <DeleteDialog id={row.id} setRows={setRows} rows={rows} role="staff" />
-                  </TableCell>
-                </TableRow>
-              ))}
+            {!inventoryList.length ? (
+              <p className="text-lg mb-3 pl-3 text-red-500">
+                Drugs list is empty. Enter details above to add to list
+              </p>
+            ) : (
+              inventoryList &&
+              inventoryList.rows
+                .filter((row) => row.type === 'DRUG')
+                .map((row, index) => (
+                  <TableRow key={row.name}>
+                    <TableCell align="center">{index + 1}</TableCell>
+                    <TableCell align="center">{row.name}</TableCell>
+                    <TableCell align="center">{row.quantity}</TableCell>
+                    <TableCell align="center">{row.price}</TableCell>
+                    <TableCell align="center">
+                      <EditInventoryForm selectedItem={row} setRows={setRows} rows={rows} />
+                    </TableCell>
+                    <TableCell align="center">
+                      <DeleteDialog id={row.id} setRows={setRows} rows={rows} role="staff" />
+                    </TableCell>
+                  </TableRow>
+                ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>
       <TableContainer component={Paper} style={{ marginTop: 5 }}>
-        <h2 className="text-lg mb-3">Tests</h2>
+        <h2 className="text-lg mb-3 pl-3">Tests</h2>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -240,24 +221,31 @@ function Inventory() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows
-              .filter((row) => row.type === 'TEST')
-              .map((row, index) => (
-                <TableRow key={row.name}>
-                  <TableCell align="center">{index + 1}</TableCell>
-                  <TableCell align="center">{row.name}</TableCell>
-                  <TableCell align="center">{row.quantity}</TableCell>
-                  <TableCell align="center">{row.price}</TableCell>
-                  <TableCell align="center">
-                    <EditInventoryForm selectedItem={row} setRows={setRows} rows={rows} />
-                  </TableCell>
-                  <TableCell align="center">
-                    <IconButton>
-                      <Delete />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
+            {!inventoryList.length ? (
+              <p className="text-lg mb-3 pl-3 text-red-500">
+                Tests list is empty. Enter details above to add to list
+              </p>
+            ) : (
+              inventoryList &&
+              inventoryList.rows
+                .filter((row) => row.type === 'TEST')
+                .map((row, index) => (
+                  <TableRow key={row.title}>
+                    <TableCell align="center">{index + 1}</TableCell>
+                    <TableCell align="center">{row.title}</TableCell>
+                    <TableCell align="center">{row.quantity}</TableCell>
+                    <TableCell align="center">{row.price}</TableCell>
+                    <TableCell align="center">
+                      <EditInventoryForm selectedItem={row} setRows={setRows} rows={rows} />
+                    </TableCell>
+                    <TableCell align="center">
+                      <IconButton>
+                        <Delete />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>

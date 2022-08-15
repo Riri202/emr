@@ -33,9 +33,7 @@ function Login() {
   //     [e.target.name]: e.target.value
   //   }));
   // };
-  const handleLogin = (e) => {
-    e.preventDefault();
-
+  const handleLogin = () => {
     const loginData = { username, password };
     console.log(loginData);
     dispatch(login(loginData));
@@ -70,7 +68,7 @@ function Login() {
             label="Username"
             name="username"
             onChange={handleChange}
-            error={errors.username}
+            error={errors.username ? true : false}
             helperText={errors.username}
             sx={{ mb: 2 }}
           />
@@ -80,7 +78,7 @@ function Login() {
             label="Password"
             name="password"
             onChange={handleChange}
-            error={errors.password}
+            error={errors.password ? true : false}
             helperText={errors.password}
             sx={{ mb: 2 }}
           />

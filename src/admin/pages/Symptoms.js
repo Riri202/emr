@@ -12,6 +12,7 @@ import { Edit } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
 import DeleteDialog from '../components/DeleteDialog';
 import InputDetailsForm from '../components/InputDetailsForm';
+import useForm from '../../utils/formValidations/useForm';
 
 const useStyles = makeStyles({
   table: {
@@ -25,16 +26,16 @@ function Symptoms() {
   const classes = useStyles();
   const [isAddingSymptom, setIsAddingSymptom] = useState(false);
   const [rows, setRows] = useState(JSON.parse(localStorage.getItem('symptomsRows')) ?? []);
-  const [inputData, setInputData] = useState({
-    id: '',
-    symptom: ''
-  });
-  const handleChange = (e) => {
-    setInputData((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value
-    }));
-  };
+  // const [inputData, setInputData] = useState({
+  //   id: '',
+  //   symptom: ''
+  // });
+  // const handleChange = (e) => {
+  //   setInputData((prevState) => ({
+  //     ...prevState,
+  //     [e.target.name]: e.target.value
+  //   }));
+  // };
   const handleCsvChange = (event) => {
     // Passing file data (event.target.files[0]) to parse using Papa.parse
     Papa.parse(event.target.files[0], {
@@ -52,8 +53,9 @@ function Symptoms() {
       }
     });
   };
-  const handleSubmit = (e) => {
+  const addSymptom = (e) => {
     e.preventDefault();
+    const inputData = { id, symptom };
     setIsAddingSymptom(true);
     if (rows.length > 0) {
       setRows([...rows, inputData]);
@@ -68,6 +70,11 @@ function Symptoms() {
   useEffect(() => {
     localStorage.setItem('symptomsRows', JSON.stringify(rows));
   }, [rows]);
+
+  const { handleChange, values, errors, handleSubmit } = useForm(addSymptom);
+
+  const { id, symptom } = values;
+
   const formInputDetails = [
     {
       // Name might change depending on what is in the backend
@@ -90,37 +97,17 @@ function Symptoms() {
         handleCsvChange={handleCsvChange}
         isLoading={isAddingSymptom}
         formDetails={formInputDetails}
+        errors={errors}
         btnText="Add symptom"
       />
-      {/* <Box component={Paper} sx={{ mb: 4, padding: 2, display: 'flex', spacing: 2 }}>
-        <form onSubmit={handleSubmit}>
-          <TextField
-            name="symptom"
-            onChange={handleChange}
-            variant="standard"
-            sx={{ mr: 3 }}></TextField>
-          <TextField
-            name="id"
-            onChange={handleChange}
-            variant="standard"
-            sx={{ mr: 3 }}></TextField>
-          <Button type="submit" className="p-3 mt-1 bg-green-500 text-[#000] mr-3">
-            Add new symptom
-          </Button>
-        </form>
-        <Divider orientation="vertical" variant="middle" flexItem />
-        <form>
-          <input type={'file'} accept={'.csv'} onChange={handleCsvChange} />
-        </form>
-      </Box> */}
       <TableContainer component={Paper}>
-        <h2 className="text-lg mb-3">Symptoms List</h2>
+        <h2 className="text-lg mb-3 pl-3">Symptoms List</h2>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
               {headers.map((header, key) => {
                 return (
-                  <TableCell key={key} align="right" className="bg-green-500">
+                  <TableCell key={key} align="center" className="bg-green-500">
                     {header}
                   </TableCell>
                 );
@@ -128,9 +115,9 @@ function Symptoms() {
             </TableRow>
           </TableHead>
           {rows.length === 0 ? (
-            <h1 className="text-lg mb-3 text-red-500">
+            <p className="text-lg mb-3 text-red-500 pl-3">
               Symptoms list is empty. Add new symptoms above
-            </h1>
+            </p>
           ) : (
             <TableBody>
               {rows.map((row, index) => (

@@ -11,7 +11,7 @@ const useForm = (callback) => {
         if (value.length <= 3) {
           setErrors({
             ...errors,
-            name: 'name at least have 3 letters'
+            name: 'name should be at least 3 letters'
           });
         } else {
           let newObj = omit(errors, 'name');
@@ -20,7 +20,12 @@ const useForm = (callback) => {
         break;
 
       case 'email':
-        if (
+        if (!value.length) {
+          setErrors({
+            ...errors,
+            email: 'required'
+          });
+        } else if (
           !new RegExp(
             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
           ).test(value)
@@ -36,7 +41,7 @@ const useForm = (callback) => {
         break;
 
       case 'phoneNumber':
-        if (value.length !== 11) {
+        if (value.length <= 10) {
           setErrors({
             ...errors,
             phoneNumber: 'Invalid phone number, must be 11 characters'
@@ -48,10 +53,10 @@ const useForm = (callback) => {
         break;
 
       case 'dob':
-        if (value.length === 0) {
+        if (!value) {
           setErrors({
             ...errors,
-            dob: 'Select date of birth'
+            dob: 'required*'
           });
         } else {
           let newObj = omit(errors, 'dob');
@@ -63,7 +68,7 @@ const useForm = (callback) => {
         if (value.length === 0) {
           setErrors({
             ...errors,
-            fullName: 'Must not be empty, Enter name.'
+            fullName: 'required*'
           });
         } else {
           let newObj = omit(errors, 'fullName');
@@ -98,7 +103,7 @@ const useForm = (callback) => {
         if (value.length === 0) {
           setErrors({
             ...errors,
-            price: 'Price cannot be empty'
+            price: 'required*'
           });
         } else {
           let newObj = omit(errors, 'price');
@@ -110,7 +115,7 @@ const useForm = (callback) => {
         if (value.length === 0) {
           setErrors({
             ...errors,
-            quantity: 'quantity cannot be empty'
+            quantity: 'required*'
           });
         } else {
           let newObj = omit(errors, 'quantity');
@@ -119,7 +124,12 @@ const useForm = (callback) => {
         break;
 
       case 'type':
-        if (!new RegExp(/^[A-Z]*$/).test(value)) {
+        if (!value.length) {
+          setErrors({
+            ...errors,
+            type: 'required'
+          });
+        } else if (!new RegExp(/^[A-Z]*$/).test(value)) {
           setErrors({
             ...errors,
             type: 'type should be in uppercase'
@@ -131,7 +141,12 @@ const useForm = (callback) => {
         break;
 
       case 'role':
-        if (!new RegExp(/^[A-Z]*$/).test(value)) {
+        if (!value.length) {
+          setErrors({
+            ...errors,
+            role: 'required'
+          });
+        } else if (!new RegExp(/^[A-Z]*$/).test(value)) {
           setErrors({
             ...errors,
             role: 'role should be in uppercase'
@@ -146,7 +161,7 @@ const useForm = (callback) => {
         if (value.length === 0) {
           setErrors({
             ...errors,
-            diagnosis: 'This field cannot be empty'
+            diagnosis: 'required*'
           });
         } else {
           let newObj = omit(errors, 'diagnosis');
@@ -158,22 +173,10 @@ const useForm = (callback) => {
         if (value.length === 0) {
           setErrors({
             ...errors,
-            symptom: 'This field cannot be empty'
+            symptom: 'required*'
           });
         } else {
           let newObj = omit(errors, 'symptom');
-          setErrors(newObj);
-        }
-        break;
-
-      case 'select':
-        if (!value) {
-          setErrors({
-            ...errors,
-            select: 'Please select an option'
-          });
-        } else {
-          let newObj = omit(errors, 'select');
           setErrors(newObj);
         }
         break;
@@ -203,7 +206,7 @@ const useForm = (callback) => {
     if (Object.keys(errors).length === 0 && Object.keys(values).length !== 0) {
       callback();
     } else {
-      alert('There is an Error!');
+      alert('There is an Error! Check that all required details are correctly inputed.');
     }
   };
 

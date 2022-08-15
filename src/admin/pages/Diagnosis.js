@@ -17,6 +17,7 @@ import IconButton from '@mui/material/IconButton';
 import DeleteDialog from '../components/DeleteDialog';
 import { Divider } from '@material-ui/core';
 import InputDetailsForm from '../components/InputDetailsForm';
+import useForm from '../../utils/formValidations/useForm';
 
 const useStyles = makeStyles({
   table: {
@@ -29,17 +30,17 @@ function Diagnosis() {
   const headers = ['No', 'Diagnosis', 'Edit', 'Delete'];
   const [isAddingDiagnosis, setIsAddingDiagnosis] = useState(false);
   const [rows, setRows] = useState(JSON.parse(localStorage.getItem('diagnosisRows')) ?? []);
-  const [inputData, setInputData] = useState({
-    id: '',
-    diagnosis: ''
-  });
-  const { id, diagnosis } = inputData;
-  const handleChange = (e) => {
-    setInputData((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value
-    }));
-  };
+  // const [inputData, setInputData] = useState({
+  //   id: '',
+  //   diagnosis: ''
+  // });
+  // const { id, diagnosis } = inputData;
+  // const handleChange = (e) => {
+  //   setInputData((prevState) => ({
+  //     ...prevState,
+  //     [e.target.name]: e.target.value
+  //   }));
+  // };
   const handleCsvChange = (event) => {
     // Passing file data (event.target.files[0]) to parse using Papa.parse
     Papa.parse(event.target.files[0], {
@@ -61,8 +62,9 @@ function Diagnosis() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const addDiagnosis = (e) => {
     e.preventDefault();
+    const inputData = { id, diagnosis };
     setIsAddingDiagnosis(true);
     if (rows.length > 0) {
       setRows([...rows, inputData]);
@@ -77,6 +79,10 @@ function Diagnosis() {
   useEffect(() => {
     localStorage.setItem('diagnosisRows', JSON.stringify(rows));
   }, [rows]);
+
+  const { handleChange, values, errors, handleSubmit } = useForm(addDiagnosis);
+
+  const { id, diagnosis } = values;
   const formInputDetails = [
     {
       // Name might change depending on what is in the backend
@@ -99,37 +105,17 @@ function Diagnosis() {
         handleCsvChange={handleCsvChange}
         isLoading={isAddingDiagnosis}
         formDetails={formInputDetails}
+        errors={errors}
         btnText="Add diagnosis"
       />
-      {/* <Box component={Paper} sx={{ mb: 4, padding: 2, display: 'flex', spacing: 2 }}>
-        <form onSubmit={handleSubmit}>
-          <TextField
-            name="diagnosis"
-            onChange={handleChange}
-            variant="standard"
-            sx={{ mr: 3 }}></TextField>
-          <TextField
-            name="id"
-            onChange={handleChange}
-            variant="standard"
-            sx={{ mr: 3 }}></TextField>
-          <Button type="submit" className="p-3 mt-1 bg-green-500 text-[#000] mr-3">
-            Add new diagnosis
-          </Button>
-        </form>
-        <Divider orientation="vertical" variant="middle" flexItem />
-        <form>
-          <input type={'file'} accept={'.csv'} onChange={handleCsvChange} />
-        </form>
-      </Box> */}
       <TableContainer component={Paper}>
-        <h2 className="text-lg mb-3">Diagnoses List</h2>
+        <h2 className="text-lg mb-3 pl-3">Diagnoses List</h2>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
               {headers.map((header, index) => {
                 return (
-                  <TableCell key={index} align="right" className="bg-green-500">
+                  <TableCell key={index} align="center" className="bg-green-500">
                     {header}
                   </TableCell>
                 );
@@ -137,21 +123,21 @@ function Diagnosis() {
             </TableRow>
           </TableHead>
           {rows.length === 0 ? (
-            <h1 className="text-lg mb-3 text-red-500">
+            <p className="text-lg mb-3 pl-3 text-red-500">
               Diagnoses list is empty. Add new diagnosis above
-            </h1>
+            </p>
           ) : (
             <TableBody>
               {rows.map((row, index) => (
                 <TableRow key={index}>
-                  <TableCell align="right">{index + 1}</TableCell>
-                  <TableCell align="right">{row.diagnosis}</TableCell>
-                  <TableCell align="right">
+                  <TableCell align="center">{index + 1}</TableCell>
+                  <TableCell align="center">{row.diagnosis}</TableCell>
+                  <TableCell align="center">
                     <IconButton className="outline-none">
                       <Edit />
                     </IconButton>
                   </TableCell>
-                  <TableCell align="right">
+                  <TableCell align="center">
                     <DeleteDialog id={row.id} setRows={setRows} rows={rows} />
                   </TableCell>
                 </TableRow>

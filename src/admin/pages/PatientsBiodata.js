@@ -16,6 +16,7 @@ import EditPatientForm from '../components/EditPatientForm';
 import InputDetailsForm from '../components/InputDetailsForm';
 import { addNewPatients } from '../../utils/api';
 import setAuthToken from '../../utils/setAuthToken';
+import useForm from '../../utils/formValidations/useForm';
 
 const useStyles = makeStyles({
   table: {
@@ -30,20 +31,20 @@ function PatientsBiodata() {
   const classes = useStyles();
   const [rows, setRows] = useState([]);
   const [isAddingPatient, setIsAddingPatient] = useState(false);
-  const [inputData, setInputData] = useState({
-    name: '',
-    email: '',
-    phoneNumber: '',
-    dob: ''
-  });
-  const { name, email, phoneNumber, dob } = inputData;
+  // const [inputData, setInputData] = useState({
+  //   name: '',
+  //   email: '',
+  //   phoneNumber: '',
+  //   dob: ''
+  // });
+  // const { name, email, phoneNumber, dob } = inputData;
 
-  const handleChange = (e) => {
-    setInputData((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value
-    }));
-  };
+  // const handleChange = (e) => {
+  //   setInputData((prevState) => ({
+  //     ...prevState,
+  //     [e.target.name]: e.target.value
+  //   }));
+  // };
 
   const handleCsvChange = (event) => {
     // Passing file data (event.target.files[0]) to parse using Papa.parse
@@ -112,6 +113,11 @@ function PatientsBiodata() {
   useEffect(() => {
     getAllPatients();
   }, []);
+
+  const { handleChange, values, errors, handleSubmit } = useForm(addPatient);
+
+  const { name, email, phoneNumber, dob } = values;
+
   const formInputDetails = [
     {
       name: 'name',
@@ -133,11 +139,12 @@ function PatientsBiodata() {
     <div>
       <h2 className="text-lg mb-3">Patients Biodata</h2>
       <InputDetailsForm
-        onSubmit={addPatient}
+        onSubmit={handleSubmit}
         onChange={handleChange}
         handleCsvChange={handleCsvChange}
         isLoading={isAddingPatient}
         formDetails={formInputDetails}
+        errors={errors}
         btnText="Add new patient"
         isDateRequired={true}
       />
@@ -155,9 +162,9 @@ function PatientsBiodata() {
             </TableRow>
           </TableHead>
           {rows.length === 0 ? (
-            <h1 className="text-lg mb-3 text-red-500">
+            <p className="text-lg mb-3 pl-3 text-red-500">
               Patients list is empty. Add new Patients above
-            </h1>
+            </p>
           ) : (
             <TableBody>
               {rows.map((row, index) => {

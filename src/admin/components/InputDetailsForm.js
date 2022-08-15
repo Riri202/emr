@@ -11,7 +11,8 @@ function InputDetailsForm({
   isLoading,
   formDetails,
   btnText,
-  isDateRequired
+  isDateRequired,
+  errors
 }) {
   return (
     <div>
@@ -35,6 +36,8 @@ function InputDetailsForm({
                   variant="standard"
                   onChange={onChange}
                   id={detail.id}
+                  error={errors[`${detail.name}`] ? true : false}
+                  helperText={errors[`${detail.name}`]}
                   sx={{ mr: 3 }}
                 />
               );
