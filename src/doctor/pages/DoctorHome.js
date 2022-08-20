@@ -20,6 +20,7 @@ import Paper from '@material-ui/core/Paper';
 // import PatientsPersonalPage from './PatientsPersonalPage';
 import { getReceivedQueues } from '../../utils/api';
 import setAuthToken from '../../utils/setAuthToken';
+import { useCurrentUser } from '../../utils/hooks';
 
 const useStyles = makeStyles({
   table: {
@@ -28,10 +29,11 @@ const useStyles = makeStyles({
 });
 
 const headers = ['Index', 'Name', 'Email', 'Phone No', 'DOB'];
-const user = JSON.parse(localStorage.getItem('user'));
+// const user = JSON.parse(localStorage.getItem('user'));
 
 function DoctorHome() {
   const classes = useStyles();
+  const user = useCurrentUser();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [patientsList, setPatientsList] = useState([]);
@@ -85,6 +87,7 @@ function DoctorHome() {
       setAvailableDoctors(availableDoctors.filter((doc) => doc !== user.user.fullName));
     }
   };
+
   useEffect(() => {
     localStorage.setItem('availableDoctors', JSON.stringify(availableDoctors));
   }, [availableDoctors]);

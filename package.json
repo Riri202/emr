@@ -10,7 +10,6 @@
     "@material-ui/utils": "^4.11.3",
     "@mui/core": "^5.0.0-alpha.54",
     "@mui/icons-material": "^5.8.0",
-    "@mui/lab": "^5.0.0-alpha.84",
     "@mui/material": "^5.8.1",
     "@mui/styles": "^5.8.0",
     "@reduxjs/toolkit": "^1.8.3",

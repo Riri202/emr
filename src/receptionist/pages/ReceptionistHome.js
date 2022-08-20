@@ -12,11 +12,13 @@ import setAuthToken from '../../utils/setAuthToken';
 import { List, ListItem, ListItemIcon, ListItemText, Typography } from '@material-ui/core';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import { useCurrentUser } from '../../utils/hooks';
 
-const user = JSON.parse(localStorage.getItem('user'));
+// const user = JSON.parse(localStorage.getItem('user'));
 
 function ReceptionistHome() {
   const [searchQuery, setSearchQuery] = useState('');
+  const user = useCurrentUser();
 
   // get patients list from admin
   const [patientsList, setPatientsList] = useState([]);
