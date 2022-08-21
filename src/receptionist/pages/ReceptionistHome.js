@@ -54,31 +54,6 @@ function ReceptionistHome() {
     console.log(doctorsList);
   };
 
-  // const getAllPatients = async () => {
-  //   // setIsLoading(true);
-  //   try {
-  //     const response = await axios({
-  //       method: 'get',
-  //       url: 'https://emr-server.herokuapp.com/patient',
-  //       params: {
-  //         page: 0,
-  //         size: 20
-  //       },
-  //       headers: authHeader()
-  //     }).then((response) => {
-  //       console.log(response);
-  //       if (response.data.rows.length) {
-  //         setPatientsList(response.data.rows);
-  //         filterData(searchQuery, patientsList);
-  //         console.log(patientsList);
-  //       }
-  //       // setIsLoading(false);
-  //     });
-  //     console.log(response);
-  //   } catch (error) {
-  //     toast.error(error.message);
-  //   }
-  // };
   const getPatients = async () => {
     setIsLoading(true);
     const page = 0;

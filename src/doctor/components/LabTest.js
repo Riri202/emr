@@ -1,15 +1,19 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import { Divider } from '@material-ui/core';
 import DropdownSearch from '../../common-components/DropdownSearch';
 import setAuthToken from '../../utils/setAuthToken';
 import { addNewTest } from '../../utils/api';
 import TransformButton from '../../common-components/TransformButton';
+import { useCurrentUser } from '../../utils/hooks';
 
 // const drugs = JSON.parse(localStorage.getItem('drugsList'));
-const user = JSON.parse(localStorage.getItem('user'));
+// const user = JSON.parse(localStorage.getItem('user'));
 
 function LabTestForm({ test, handleChange, testInputData, sessionId }) {
+  const user = useCurrentUser();
+
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccessful, setIsSuccessful] = useState(false);
 
@@ -27,7 +31,7 @@ function LabTestForm({ test, handleChange, testInputData, sessionId }) {
       setIsLoading(false);
       setIsSuccessful(true);
     } catch (error) {
-      console.log(error);
+      toast.error(error.messsage);
       setIsLoading(false);
       setIsSuccessful(false);
     }
@@ -44,9 +48,8 @@ function LabTestForm({ test, handleChange, testInputData, sessionId }) {
           onChange={handleChange}
           placeholder="description"
         />
-        <TransformButton btnText="Add symptoms" isSuccessful={isSuccessful} isLoading={isLoading} />
+        <TransformButton btnText="Add test" isSuccessful={isSuccessful} isLoading={isLoading} />
       </li>
-      <Divider orientation="horizontal" variant="fullWidth" />
     </form>
   );
 }
@@ -100,15 +103,20 @@ function LabTest({ sessionId, testsList }) {
         {testChoice && testChoice.length ? (
           <div>
             {testChoice &&
-              testChoice.map((c, key) => {
+              testChoice.map((c, index) => {
                 return (
-                  <LabTestForm
-                    key={key}
-                    test={c}
-                    handleChange={handleTestFormChange}
-                    inputData={testInputData}
-                    sessionId={sessionId}
-                  />
+                  <>
+                    <LabTestForm
+                      key={c}
+                      test={c}
+                      handleChange={handleTestFormChange}
+                      inputData={testInputData}
+                      sessionId={sessionId}
+                    />
+                    {index === testChoice.length - 1 ? null : (
+                      <Divider orientation="horizontal" variant="fullWidth" />
+                    )}
+                  </>
                 );
               })}
           </div>

@@ -1,15 +1,19 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import Paper from '@material-ui/core/Paper';
 import { Divider } from '@material-ui/core';
 import DropdownSearch from '../../common-components/DropdownSearch';
 import setAuthToken from '../../utils/setAuthToken';
 import { addNewDiagnosis } from '../../utils/api';
 import TransformButton from '../../common-components/TransformButton';
+import { useCurrentUser } from '../../utils/hooks';
 
-const user = JSON.parse(localStorage.getItem('user'));
+// const user = JSON.parse(localStorage.getItem('user'));
 
 function DiagnosisForm({ diagnosis, handleChange, inputData, sessionId, patientId }) {
+  const user = useCurrentUser();
+
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccessful, setIsSuccessful] = useState(false);
   const { title, description } = inputData;
@@ -26,7 +30,7 @@ function DiagnosisForm({ diagnosis, handleChange, inputData, sessionId, patientI
       setIsLoading(false);
       setIsSuccessful(true);
     } catch (error) {
-      console.log(error);
+      toast.error(error);
       setIsLoading(false);
       setIsSuccessful(false);
     }
@@ -43,9 +47,12 @@ function DiagnosisForm({ diagnosis, handleChange, inputData, sessionId, patientI
           onChange={handleChange}
           placeholder="description"
         />
-        <TransformButton btnText="Add symptoms" isSuccessful={isSuccessful} isLoading={isLoading} />
+        <TransformButton
+          btnText="Add diagnosis"
+          isSuccessful={isSuccessful}
+          isLoading={isLoading}
+        />
       </li>
-      <Divider orientation="horizontal" variant="fullWidth" />
     </form>
   );
 }
@@ -91,16 +98,21 @@ function DiagnosisCard({ sessionId, patientId }) {
         {choice && choice.length ? (
           <div>
             {choice &&
-              choice.map((c, key) => {
+              choice.map((c, index) => {
                 return (
-                  <DiagnosisForm
-                    key={key}
-                    diagnosis={c}
-                    handleChange={handleChange}
-                    inputData={inputData}
-                    sessionId={sessionId}
-                    patientId={patientId}
-                  />
+                  <>
+                    <DiagnosisForm
+                      key={c}
+                      diagnosis={c}
+                      handleChange={handleChange}
+                      inputData={inputData}
+                      sessionId={sessionId}
+                      patientId={patientId}
+                    />
+                    {index === choice.length - 1 ? null : (
+                      <Divider orientation="horizontal" variant="fullWidth" />
+                    )}
+                  </>
                 );
               })}
           </div>

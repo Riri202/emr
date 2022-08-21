@@ -2,10 +2,11 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Nav from '../../common-components/Nav';
 import { useParams } from 'react-router-dom';
-import Avatar from '@mui/material/Avatar';
-import { Person, Add } from '@mui/icons-material';
+import { Add, Sick } from '@mui/icons-material';
 import Paper from '@material-ui/core/Paper';
 import Button from '@mui/material/Button';
+import { Icon } from '@material-ui/core';
+import SpeedDialTooltipOpen from '../../common-components/SpeedDial';
 
 function PatientsPersonalPage() {
   let { patientId, name, sessionId } = useParams();
@@ -23,20 +24,21 @@ function PatientsPersonalPage() {
   };
 
   return (
-    <div className="h-screen">
+    <div className="">
       <Nav />
       <div className="p-10">
         <section>
-          <h1>PatientsPersonalPage</h1>
-          <div className="flex space-x-3">
-            <Avatar className="bg-orange-500 mt-1" variant="circular">
-              <Person />
-            </Avatar>
-            <h2 className="text-lg mb-3">
-              {patientId}: {name}
-            </h2>
+          {/* <h1>Patients Personal Page</h1> */}
+          <div className="flex space-x-3 items-center mb-3">
+            <Icon>
+              <Sick />
+            </Icon>
+            <h1 className="text-lg mb-3">{name}</h1>
           </div>
         </section>
+        <div>
+          <SpeedDialTooltipOpen />
+        </div>
         <section className="flex space-x-6">
           <Paper className="p-5 flex-1">
             <h3>Patients Information and Biodata</h3>

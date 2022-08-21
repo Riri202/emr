@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 // /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-// import ListSubheader from '@mui/material/ListSubheader';
+import { toast } from 'react-toastify';
 import FolderSharedIcon from '@mui/icons-material/FolderShared';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -15,12 +15,17 @@ import IntuitiveButton from '../../common-components/IntuitiveButton';
 import DropdownButton from '../../common-components/DropdownButton';
 import setAuthToken from '../../utils/setAuthToken';
 import { Typography, Divider } from '@material-ui/core';
+import { useCurrentUser } from '../../utils/hooks';
 
-const user = JSON.parse(localStorage.getItem('user'));
+// const user = JSON.parse(localStorage.getItem('user'));
 
 const CustomizedListItem = ({ patient, doctorsList }) => {
+  const user = useCurrentUser();
+
   const [open, setOpen] = useState(false);
   const [staffName, setStaffName] = useState('');
+  const [isSending, setIsSending] = useState(false);
+
   const handleClick = () => {
     setOpen(!open);
   };
@@ -37,8 +42,10 @@ const CustomizedListItem = ({ patient, doctorsList }) => {
   const getSelectedDoctorInfo = (name, doctorsList) => {
     return doctorsList.find((doctor) => doctor.fullName === name);
   };
+
   const handleSendToDoctor = async (event, patientId) => {
     event.preventDefault();
+    setIsSending(true);
     const doctor = getSelectedDoctorInfo(staffName, doctorsList);
     const toStaffId = doctor.uuid;
     const requestData = { patientId, toStaffId };
@@ -48,13 +55,16 @@ const CustomizedListItem = ({ patient, doctorsList }) => {
     }
 
     try {
-      const { data } = await sendQueue(requestData);
-      console.log(data);
+      await sendQueue(requestData);
+      setIsSending(false);
+      toast.success('Patient succesfully sent to doctor');
     } catch (error) {
-      console.log(error);
+      setIsSending(false);
+      toast.error(error.message);
     }
   };
   const dob = new Date(patient.dob).toDateString();
+
   return (
     <form onSubmit={() => handleSendToDoctor(event, patient.uuid)}>
       <ListItem button key={patient.id} onClick={handleClick}>
@@ -79,7 +89,7 @@ const CustomizedListItem = ({ patient, doctorsList }) => {
               onChange={handleDoctorChoice}
             />
           </div>
-          <IntuitiveButton text="send to doctor" />
+          <IntuitiveButton text="send to doctor" isLoading={isSending} />
         </div>
       </Collapse>
     </form>
@@ -100,7 +110,9 @@ export default function CollapsibleList({ patientsList, doctorsList, doctorNames
                   doctorsList={doctorsList}
                   doctorNames={doctorNames}
                 />
-                {index === patientsList.length - 1 ? null : <Divider fullWidth />}
+                {index === patientsList.length - 1 ? null : (
+                  <Divider orientation="horizontal" variant="fullWidth" />
+                )}
               </>
             );
           })}

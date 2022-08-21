@@ -80,7 +80,6 @@ function WorkerLoginDetails() {
         setRows([data]);
       }
     } catch (error) {
-      console.log(error);
       setIsAddingStaff(false);
       toast.error(error.message);
     }

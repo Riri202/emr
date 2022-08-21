@@ -1,14 +1,18 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import { Divider } from '@material-ui/core';
 import DropdownSearch from '../../common-components/DropdownSearch';
 import setAuthToken from '../../utils/setAuthToken';
 import { addPrescription } from '../../utils/api';
 import TransformButton from '../../common-components/TransformButton';
+import { useCurrentUser } from '../../utils/hooks';
 
-const user = JSON.parse(localStorage.getItem('user'));
+// const user = JSON.parse(localStorage.getItem('user'));
 
 function PrescriptionForm({ drug, handleChange, drugInputData, sessionId, patientId, drugsList }) {
+  const user = useCurrentUser();
+
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccessful, setIsSuccessful] = useState(false);
 
@@ -31,7 +35,7 @@ function PrescriptionForm({ drug, handleChange, drugInputData, sessionId, patien
       setIsLoading(false);
       setIsSuccessful(true);
     } catch (error) {
-      console.log(error);
+      toast.error(error);
       setIsLoading(false);
       setIsSuccessful(false);
     }
@@ -47,6 +51,7 @@ function PrescriptionForm({ drug, handleChange, drugInputData, sessionId, patien
           name="quantity"
           onChange={handleChange}
           placeholder="quantity"
+          required
         />
         <input
           type="text"
@@ -54,6 +59,7 @@ function PrescriptionForm({ drug, handleChange, drugInputData, sessionId, patien
           name="days"
           onChange={handleChange}
           placeholder="No of days"
+          required
         />
         <input
           type="text"
@@ -68,7 +74,6 @@ function PrescriptionForm({ drug, handleChange, drugInputData, sessionId, patien
           isLoading={isLoading}
         />
       </li>
-      <Divider orientation="horizontal" variant="fullWidth" />
     </form>
   );
 }
@@ -122,17 +127,22 @@ function Prescription({ sessionId, patientId, drugsList }) {
         {drugChoice && drugChoice.length ? (
           <div>
             {drugChoice &&
-              drugChoice.map((c, key) => {
+              drugChoice.map((c, index) => {
                 return (
-                  <PrescriptionForm
-                    key={key}
-                    drug={c}
-                    handleChange={handleDrugFormChange}
-                    drugInputData={drugInputData}
-                    sessionId={sessionId}
-                    patientId={patientId}
-                    drugsList={drugsList}
-                  />
+                  <>
+                    <PrescriptionForm
+                      key={c}
+                      drug={c}
+                      handleChange={handleDrugFormChange}
+                      drugInputData={drugInputData}
+                      sessionId={sessionId}
+                      patientId={patientId}
+                      drugsList={drugsList}
+                    />
+                    {index === drugChoice.length - 1 ? null : (
+                      <Divider orientation="horizontal" variant="fullWidth" />
+                    )}
+                  </>
                 );
               })}
           </div>

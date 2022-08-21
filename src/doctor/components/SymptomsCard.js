@@ -1,13 +1,15 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import Paper from '@material-ui/core/Paper';
 import { Divider } from '@material-ui/core';
 import DropdownSearch from '../../common-components/DropdownSearch';
 import setAuthToken from '../../utils/setAuthToken';
 import { addNewSymptom } from '../../utils/api';
 import TransformButton from '../../common-components/TransformButton';
+import { useCurrentUser } from '../../utils/hooks';
 
-const user = JSON.parse(localStorage.getItem('user'));
+// const user = JSON.parse(localStorage.getItem('user'));
 
 // function SymptomsCard({ sessionId, patientId }) {
 //   const drugs = JSON.parse(localStorage.getItem('drugsList'));
@@ -120,6 +122,8 @@ const user = JSON.parse(localStorage.getItem('user'));
 // export default SymptomsCard;
 
 function SymptomsForm({ symptom, handleChange, inputData, sessionId, patientId }) {
+  const user = useCurrentUser();
+
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccessful, setIsSuccessful] = useState(false);
 
@@ -137,9 +141,9 @@ function SymptomsForm({ symptom, handleChange, inputData, sessionId, patientId }
       setIsLoading(false);
       setIsSuccessful(true);
     } catch (error) {
-      console.log(error);
       setIsLoading(false);
       setIsSuccessful(false);
+      toast.error(error.message);
     }
   };
 
@@ -156,7 +160,6 @@ function SymptomsForm({ symptom, handleChange, inputData, sessionId, patientId }
         />
         <TransformButton btnText="Add symptoms" isSuccessful={isSuccessful} isLoading={isLoading} />
       </li>
-      <Divider orientation="horizontal" variant="fullWidth" />
     </form>
   );
 }
@@ -204,16 +207,21 @@ export default function SymptomCard({ sessionId, patientId }) {
         {choice && choice.length ? (
           <div>
             {choice &&
-              choice.map((c, key) => {
+              choice.map((c, index) => {
                 return (
-                  <SymptomsForm
-                    key={key}
-                    symptom={c}
-                    handleChange={handleChange}
-                    inputData={inputData}
-                    sessionId={sessionId}
-                    patientId={patientId}
-                  />
+                  <>
+                    <SymptomsForm
+                      key={c}
+                      symptom={c}
+                      handleChange={handleChange}
+                      inputData={inputData}
+                      sessionId={sessionId}
+                      patientId={patientId}
+                    />
+                    {index === choice.length - 1 ? null : (
+                      <Divider orientation="horizontal" variant="fullWidth" />
+                    )}
+                  </>
                 );
               })}
           </div>

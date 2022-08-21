@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Nav from '../../common-components/Nav';
+import { toast } from 'react-toastify';
 import { Link, useParams } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
 import List from '@mui/material/List';
@@ -10,12 +11,16 @@ import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
 import { getAllSessionsForPatient } from '../../utils/api';
 import setAuthToken from '../../utils/setAuthToken';
+import { useCurrentUser } from '../../utils/hooks';
 
-const user = JSON.parse(localStorage.getItem('user'));
+// const user = JSON.parse(localStorage.getItem('user'));
 
 function HistoryOverview() {
   // const [isSearching, setIsSearching] = useState(false);
   // const [searchQuery, setSearchQuery] = useState('');
+
+  const user = useCurrentUser();
+
   const [historyList, setHistoryList] = useState([]);
   let { patientId } = useParams();
 
@@ -32,7 +37,7 @@ function HistoryOverview() {
         console.log(historyList);
       }
     } catch (error) {
-      console.log(error);
+      toast.error(error.message);
     }
   };
 

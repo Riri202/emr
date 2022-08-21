@@ -21,7 +21,7 @@ import Unauthorized from './common-components/Unauthorized';
 import ProtectedRoutes from './common-components/ProtectedRoutes';
 import {
   ADMIN_USER_ROLE,
-  DOCTOR_USER_ROLE,
+  // DOCTOR_USER_ROLE,
   LAB_USER_ROLE,
   PHARMACIST_USER_ROLE,
   RECEPTIONIST_USER_ROLE,
@@ -46,16 +46,16 @@ function App() {
           </Route>
 
           {/* doctor routes */}
-          <Route element={<ProtectedRoutes allowedRole={DOCTOR_USER_ROLE} />}>
-            <Route path="/doctor" element={<DoctorHome />} />
-            <Route path="/patient/:patientId/:name/:sessionId" element={<PatientsPersonalPage />} />
-            <Route
-              path="/prescription/:patientId/:name/:sessionId"
-              element={<DrugsTestDiagnosis />}
-            />
-            <Route path="/history-overview/:patientId" element={<HistoryOverview />} />
-            <Route path="/history/:sessionId" element={<PatientHistory />} />
-          </Route>
+          {/* <Route element={<ProtectedRoutes allowedRole={DOCTOR_USER_ROLE} />}> */}
+          <Route path="/doctor" element={<DoctorHome />} />
+          <Route path="/patient/:patientId/:name/:sessionId" element={<PatientsPersonalPage />} />
+          <Route
+            path="/prescription/:patientId/:name/:sessionId"
+            element={<DrugsTestDiagnosis />}
+          />
+          <Route path="/history-overview/:patientId" element={<HistoryOverview />} />
+          <Route path="/history/:sessionId" element={<PatientHistory />} />
+          {/* </Route> */}
 
           {/* cashier route */}
           <Route path="/cashier" element={<CashierHome />} />
