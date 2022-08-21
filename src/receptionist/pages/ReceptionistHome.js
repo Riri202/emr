@@ -1,15 +1,21 @@
 /* eslint-disable react/jsx-key */
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { toast } from 'react-toastify';
 import Nav from '../../common-components/Nav';
 import PatientSearchBar from '../../common-components/PatientSearchBar';
 import Box from '@mui/material/Box';
 import Paper from '@material-ui/core/Paper';
-import authHeader from '../../redux/features/auth/authHeader';
-import { getAllStaff } from '../../utils/api';
+import { getAllPatients, getAllStaff } from '../../utils/api';
 import CollapsibleList from '../components/CollapsibleList';
 import setAuthToken from '../../utils/setAuthToken';
-import { List, ListItem, ListItemIcon, ListItemText, Typography } from '@material-ui/core';
+import {
+  CircularProgress,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Typography
+} from '@material-ui/core';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { useCurrentUser } from '../../utils/hooks';
@@ -20,10 +26,9 @@ function ReceptionistHome() {
   const [searchQuery, setSearchQuery] = useState('');
   const user = useCurrentUser();
 
-  // get patients list from admin
   const [patientsList, setPatientsList] = useState([]);
-  // get doctors list from admin
   const [doctorsList, setDoctorsList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   // const [staffName, setStaffName] = useState('');
 
   const today = new Date();
@@ -49,29 +54,47 @@ function ReceptionistHome() {
     console.log(doctorsList);
   };
 
-  const getAllPatients = async () => {
-    // setIsLoading(true);
+  // const getAllPatients = async () => {
+  //   // setIsLoading(true);
+  //   try {
+  //     const response = await axios({
+  //       method: 'get',
+  //       url: 'https://emr-server.herokuapp.com/patient',
+  //       params: {
+  //         page: 0,
+  //         size: 20
+  //       },
+  //       headers: authHeader()
+  //     }).then((response) => {
+  //       console.log(response);
+  //       if (response.data.rows.length) {
+  //         setPatientsList(response.data.rows);
+  //         filterData(searchQuery, patientsList);
+  //         console.log(patientsList);
+  //       }
+  //       // setIsLoading(false);
+  //     });
+  //     console.log(response);
+  //   } catch (error) {
+  //     toast.error(error.message);
+  //   }
+  // };
+  const getPatients = async () => {
+    setIsLoading(true);
+    const page = 0;
+    const size = 20;
+    if (user) {
+      setAuthToken(user.token);
+    }
     try {
-      const response = await axios({
-        method: 'get',
-        url: 'https://emr-server.herokuapp.com/patient',
-        params: {
-          page: 0,
-          size: 20
-        },
-        headers: authHeader()
-      }).then((response) => {
-        console.log(response);
-        if (response.data.rows.length) {
-          setPatientsList(response.data.rows);
-          filterData(searchQuery, patientsList);
-          console.log(patientsList);
-        }
-        // setIsLoading(false);
-      });
-      console.log(response);
+      const { data } = await getAllPatients(page, size);
+      setIsLoading(false);
+      if (data) {
+        setPatientsList(data.rows);
+      }
     } catch (error) {
-      console.log(error);
+      setIsLoading(false);
+      toast.error('an error occured');
     }
   };
 
@@ -94,7 +117,7 @@ function ReceptionistHome() {
   };
 
   useEffect(() => {
-    getAllPatients();
+    getPatients();
     getAllDoctors();
   }, []);
 
@@ -132,7 +155,9 @@ function ReceptionistHome() {
         <div className="p-20">
           <p className="text-lg font-bold">Incoming patients</p>
           <Paper style={{ padding: 15, borderRadius: 16 }}>
-            {!patientsList.length ? (
+            {isLoading ? (
+              <CircularProgress size={30} />
+            ) : !patientsList.length ? (
               <p className="text-lg mb-3 text-red-500">Patient list is empty.</p>
             ) : !dataFiltered.length ? (
               <p className="text-lg mb-3 text-red-500">Patient is not on the list.</p>

@@ -1,8 +1,11 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import axios from 'axios';
-import authHeader from '../../redux/features/auth/authHeader';
+import { toast } from 'react-toastify';
+import { updateStaff } from '../../utils/api';
+import setAuthToken from '../../utils/setAuthToken';
 import EditForm from './EditForm';
+
+const user = JSON.parse(localStorage.getItem('user'));
 
 export default function EditWorkerForm({ selectedWorker, setRows, rows }) {
   const [open, setOpen] = useState(false);
@@ -40,25 +43,39 @@ export default function EditWorkerForm({ selectedWorker, setRows, rows }) {
     e.preventDefault();
     setIsLoading(true);
     const uuid = selectedWorker.uuid;
-    console.log(uuid);
     const staffFormData = { fullName, username, password, role, uuid };
 
+    // try {
+    //   await axios({
+    //     method: 'patch',
+    //     url: 'https://emr-server.herokuapp.com/staff',
+    //     data: staffFormData,
+    //     headers: authHeader()
+    //   }).then((response) => {
+    //     console.log(response);
+    //     updatedStaff(uuid, inputData);
+    //     setIsLoading(false);
+    //     setOpen(false);
+    //     toast.success('Staff details succesfully edited');
+    //   });
+    //   // TODO maybe return response or find out something else you can do with it
+    // } catch (error) {
+    //   console.log(error);
+    //   toast.error(error.response.statusText);
+    // }
+
+    if (user) {
+      setAuthToken(user.token);
+    }
     try {
-      const response = await axios({
-        method: 'patch',
-        url: 'https://emr-server.herokuapp.com/staff',
-        data: staffFormData,
-        headers: authHeader()
-      }).then((response) => {
-        console.log(response);
-        updatedStaff(uuid, inputData);
-        setIsLoading(false);
-        setOpen(false);
-      });
-      // TODO maybe return response or find out something else you can do with it
-      console.log(response);
+      const { data } = await updateStaff(staffFormData);
+      updatedStaff(uuid, inputData);
+      setIsLoading(false);
+      setOpen(false);
+      toast.success(data.message);
     } catch (error) {
-      console.log(error);
+      setIsLoading(false);
+      toast.error(error.response.statusText);
     }
   };
   const formDetails = [

@@ -22,6 +22,9 @@ export const addNewStaff = (data) => {
 export const getAllStaff = (page, size) => {
   return httpService.get(StaffUrl, { params: { page, size } });
 };
+export const updateStaff = (data) => {
+  return httpService.patch(StaffUrl, data);
+};
 
 export const sendQueue = (data) => {
   return httpService.post(sendQueueUrl, data);

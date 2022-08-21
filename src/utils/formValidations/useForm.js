@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { omit } from 'lodash';
+import { toast } from 'react-toastify';
 
 const useForm = (callback) => {
   const [values, setValues] = useState({});
@@ -206,7 +207,7 @@ const useForm = (callback) => {
     if (Object.keys(errors).length === 0 && Object.keys(values).length !== 0) {
       callback();
     } else {
-      alert('There is an Error! Check that all required details are correctly inputed.');
+      toast.error('There is an Error! Check that all required details are correctly inputed.');
     }
   };
 

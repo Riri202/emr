@@ -1,11 +1,10 @@
 /* eslint-disable react/prop-types */
 import * as React from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
-// import DialogContent from '@mui/material/DialogContent';
-// import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -25,30 +24,35 @@ export default function DeleteDialog({ id, rows, setRows, role }) {
     setOpen(false);
   };
   const deletedItem = (id, rows) => {
-    const filteredRows = rows.filter((row) => row.uuid !== id || row.id !== id);
-    setRows(filteredRows);
+    if (role === 'patient' || role === 'staff') {
+      const filteredRows = rows.filter((row) => row.uuid !== id);
+      setRows(filteredRows);
+    } else if (role === 'inventory') {
+      const filteredRows = rows.filter((row) => row.id !== id);
+      setRows(filteredRows);
+    }
   };
 
   const handleDelete = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    const formData = { id };
+    // const formData = { id };
 
     try {
-      const response = await axios({
+      await axios({
         method: 'delete',
         url: `https://emr-server.herokuapp.com/${role}/${id}`,
-        params: formData,
+        // params: formData,
         headers: authHeader()
       }).then((response) => {
         console.log(response);
         deletedItem(id, rows);
         setIsLoading(false);
+        toast.success(response.data.message);
       });
-      // TODO maybe return response or find out something else you can do with it
-      console.log(response);
     } catch (error) {
-      console.log(error);
+      setIsLoading(false);
+      toast.error(error.message);
     }
   };
 
@@ -72,13 +76,6 @@ export default function DeleteDialog({ id, rows, setRows, role }) {
               <div className="w-1/2">
                 <IntuitiveButton text="Yes" isLoading={isLoading} />
               </div>
-              {/* <Button
-                onClick={() => handleRowDelete(id, rows)}
-                color="primary"
-                variant="outlined"
-                className="w-1/2 p-3 mt-1 bg-green-500 text-[#000]">
-                Yes
-              </Button> */}
             </Box>
           </DialogActions>
         </form>

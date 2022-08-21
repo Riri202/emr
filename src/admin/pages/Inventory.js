@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
+import { toast } from 'react-toastify';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -8,14 +9,13 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import { Delete } from '@mui/icons-material';
-import IconButton from '@mui/material/IconButton';
 import setAuthToken from '../../utils/setAuthToken';
 import { addNewInventory, getAllInventoryItems } from '../../utils/api';
 import EditInventoryForm from '../components/EditInventoryForm';
 import DeleteDialog from '../components/DeleteDialog';
 import InputDetailsForm from '../components/InputDetailsForm';
 import useForm from '../../utils/formValidations/useForm';
+import { CircularProgress } from '@material-ui/core';
 
 const useStyles = makeStyles({
   table: {
@@ -28,31 +28,10 @@ const user = JSON.parse(localStorage.getItem('user'));
 
 function Inventory() {
   const classes = useStyles();
+  const [isLoading, setIsLoading] = useState(false);
   const [isAddingInventory, setIsAddingInventory] = useState(false);
   const [inventoryList, setInventoryList] = useState([]);
-  const [rows, setRows] = useState([
-    {
-      id: 1,
-      name: 'Panadol',
-      quantity: 3,
-      price: 35,
-      type: 'DRUG'
-    },
-    {
-      id: 2,
-      name: 'Ampiclox',
-      quantity: 3,
-      price: 13,
-      type: 'DRUG'
-    },
-    {
-      id: 3,
-      name: 'Sphygomanometer',
-      quantity: 6,
-      price: 45,
-      type: 'TEST'
-    }
-  ]);
+  // const [rows, setRows] = useState([]);
   // const [inputData, setInputData] = useState({
   //   name: '',
   //   quantity: '',
@@ -74,19 +53,18 @@ function Inventory() {
       skipEmptyLines: true,
       complete: function (results) {
         // console.log(results.data);
-        if (rows.length === 0) {
-          rows.push(...results.data);
-          console.log(rows);
-        } else if (rows.length > 0) {
-          rows.push(...results.data);
-          console.log(rows);
+        if (inventoryList.length === 0) {
+          inventoryList.push(...results.data);
+          console.log(inventoryList);
+        } else if (inventoryList.length > 0) {
+          inventoryList.push(...results.data);
+          console.log(inventoryList);
         }
       }
     });
   };
 
-  const addInventory = async (e) => {
-    e.preventDefault();
+  const addInventory = async () => {
     setIsAddingInventory(true);
     const inventoryFormData = { name, quantity, price, type };
     if (user) {
@@ -95,19 +73,21 @@ function Inventory() {
     try {
       const { data } = await addNewInventory(inventoryFormData);
       setIsAddingInventory(false);
-      if (rows.length > 0) {
-        setRows([...rows, data]);
+      toast.success('Item added successfully');
+      if (inventoryList.length > 0) {
+        setInventoryList([...inventoryList, data]);
       }
-      if (rows.length === 0) {
-        setRows([data]);
+      if (inventoryList.length === 0) {
+        setInventoryList([data]);
       }
     } catch (error) {
-      console.log(error);
       setIsAddingInventory(false);
+      toast.error(error.message);
     }
   };
 
   const getInventory = async () => {
+    setIsLoading(true);
     const page = 0;
     const size = 20;
     if (user) {
@@ -115,12 +95,14 @@ function Inventory() {
     }
     try {
       const { data } = await getAllInventoryItems(page, size);
+      setIsLoading(false);
       if (data) {
         // const drugs = data.rows.filter((item) => item.type === 'DRUG');
-        setInventoryList(data);
+        setInventoryList(data.rows);
       }
     } catch (error) {
-      console.log(error);
+      setIsLoading(false);
+      toast.error('An error occured');
     }
   };
   useEffect(() => {
@@ -180,13 +162,15 @@ function Inventory() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {!inventoryList.length ? (
+            {isLoading ? (
+              <CircularProgress size={30} />
+            ) : !inventoryList.length ? (
               <p className="text-lg mb-3 pl-3 text-red-500">
                 Drugs list is empty. Enter details above to add to list
               </p>
             ) : (
               inventoryList &&
-              inventoryList.rows
+              inventoryList
                 .filter((row) => row.type === 'DRUG')
                 .map((row, index) => (
                   <TableRow key={row.name}>
@@ -195,10 +179,19 @@ function Inventory() {
                     <TableCell align="center">{row.quantity}</TableCell>
                     <TableCell align="center">{row.price}</TableCell>
                     <TableCell align="center">
-                      <EditInventoryForm selectedItem={row} setRows={setRows} rows={rows} />
+                      <EditInventoryForm
+                        selectedItem={row}
+                        setRows={setInventoryList}
+                        rows={inventoryList}
+                      />
                     </TableCell>
                     <TableCell align="center">
-                      <DeleteDialog id={row.id} setRows={setRows} rows={rows} role="staff" />
+                      <DeleteDialog
+                        id={row.id}
+                        setRows={setInventoryList}
+                        rows={inventoryList}
+                        role="inventory"
+                      />
                     </TableCell>
                   </TableRow>
                 ))
@@ -221,27 +214,36 @@ function Inventory() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {!inventoryList.length ? (
+            {isLoading ? (
+              <CircularProgress size={30} />
+            ) : !inventoryList.length ? (
               <p className="text-lg mb-3 pl-3 text-red-500">
                 Tests list is empty. Enter details above to add to list
               </p>
             ) : (
               inventoryList &&
-              inventoryList.rows
+              inventoryList
                 .filter((row) => row.type === 'TEST')
                 .map((row, index) => (
-                  <TableRow key={row.title}>
+                  <TableRow key={row.name}>
                     <TableCell align="center">{index + 1}</TableCell>
-                    <TableCell align="center">{row.title}</TableCell>
+                    <TableCell align="center">{row.name}</TableCell>
                     <TableCell align="center">{row.quantity}</TableCell>
                     <TableCell align="center">{row.price}</TableCell>
                     <TableCell align="center">
-                      <EditInventoryForm selectedItem={row} setRows={setRows} rows={rows} />
+                      <EditInventoryForm
+                        selectedItem={row}
+                        setRows={setInventoryList}
+                        rows={inventoryList}
+                      />
                     </TableCell>
                     <TableCell align="center">
-                      <IconButton>
-                        <Delete />
-                      </IconButton>
+                      <DeleteDialog
+                        id={row.id}
+                        setRows={setInventoryList}
+                        rows={inventoryList}
+                        role="inventory"
+                      />
                     </TableCell>
                   </TableRow>
                 ))

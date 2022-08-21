@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import EditForm from './EditForm';
+import { toast } from 'react-toastify';
 import { updatePatient } from '../../utils/api';
 import setAuthToken from '../../utils/setAuthToken';
 
@@ -41,20 +42,19 @@ export default function EditWorkerForm({ selectedPatient, setRows, rows }) {
     e.preventDefault();
     setIsLoading(true);
     const uuid = selectedPatient.uuid;
-    console.log(uuid);
     const patientFormData = { name, email, phoneNumber, dob, uuid };
-    setAuthToken(user);
-
+    if (user) {
+      setAuthToken(user.token);
+    }
     try {
-      const data = await updatePatient(patientFormData);
-      updatedPatient(uuid, data);
-      setIsLoading(false);
-      setOpen(false);
+      const { data } = await updatePatient(patientFormData);
       updatedPatient(uuid, inputData);
       setIsLoading(false);
       setOpen(false);
+      toast.success(data.message);
     } catch (error) {
-      console.log(error);
+      setIsLoading(false);
+      toast.error(error.response.data.message);
     }
   };
   const formDetails = [

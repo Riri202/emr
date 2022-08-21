@@ -25,7 +25,6 @@ export const login = createAsyncThunk(`${API_URL}/auth/login`, async (userData, 
     }
     return { user: data };
   } catch (error) {
-    console.log('an error occured');
     const message =
       (error.response && error.response.data && error.response.data.message) ||
       error.message ||

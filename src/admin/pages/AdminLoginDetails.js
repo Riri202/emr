@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -12,6 +13,7 @@ import { Edit, Delete } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
 import setAuthToken from '../../utils/setAuthToken';
 import { getAllStaff } from '../../utils/api';
+import { CircularProgress } from '@material-ui/core';
 // import InputDetailsForm from '../components/InputDetailsForm';
 
 const useStyles = makeStyles({
@@ -26,14 +28,15 @@ const headers = ['Name', 'Username', 'Role', 'Access', 'Edit', 'Delete'];
 function AdminLoginDetails() {
   const classes = useStyles();
   const [adminList, setAdminList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const getAdmins = (allStaff) => {
     const allAdmins = allStaff.rows.filter((staff) => staff.role === 'ADMIN');
     setAdminList([...allAdmins]);
-    console.log(adminList);
   };
 
   const getAllAdmins = async () => {
+    setIsLoading(true);
     const page = 0;
     const size = 20;
     if (user) {
@@ -41,11 +44,13 @@ function AdminLoginDetails() {
     }
     try {
       const { data } = await getAllStaff(page, size);
+      setIsLoading(false);
       if (data) {
         getAdmins(data);
       }
     } catch (error) {
-      console.log(error);
+      setIsLoading(false);
+      toast.error('an error occured');
     }
   };
 
@@ -94,9 +99,11 @@ function AdminLoginDetails() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {!adminList.length ? (
-              <p className="text-lg mb-3 text-red-500">
-                Admin list is empty. Add new admiin in worker login details page.
+            {isLoading ? (
+              <CircularProgress size={30} />
+            ) : !adminList.length ? (
+              <p className="text-lg pl-3 mb-3 text-red-500">
+                Admin list is empty. Add new admin in worker login details page.
               </p>
             ) : (
               adminList.map((row, key) => (

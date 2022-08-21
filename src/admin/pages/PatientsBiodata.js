@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
+import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -10,13 +11,12 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import DeleteDialog from '../components/DeleteDialog';
-import authHeader from '../../redux/features/auth/authHeader';
-import axios from 'axios';
 import EditPatientForm from '../components/EditPatientForm';
 import InputDetailsForm from '../components/InputDetailsForm';
-import { addNewPatients } from '../../utils/api';
+import { addNewPatients, getAllPatients } from '../../utils/api';
 import setAuthToken from '../../utils/setAuthToken';
 import useForm from '../../utils/formValidations/useForm';
+import { CircularProgress } from '@material-ui/core';
 
 const useStyles = makeStyles({
   table: {
@@ -31,6 +31,7 @@ function PatientsBiodata() {
   const classes = useStyles();
   const [rows, setRows] = useState([]);
   const [isAddingPatient, setIsAddingPatient] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   // const [inputData, setInputData] = useState({
   //   name: '',
   //   email: '',
@@ -66,8 +67,7 @@ function PatientsBiodata() {
       }
     });
   };
-  const addPatient = async (e) => {
-    e.preventDefault();
+  const addPatient = async () => {
     setIsAddingPatient(true);
     const patientFormData = { name, email, phoneNumber, dob };
     if (user) {
@@ -75,7 +75,9 @@ function PatientsBiodata() {
     }
     try {
       const { data } = await addNewPatients(patientFormData);
+      console.log(data);
       setIsAddingPatient(false);
+      toast.success('Item added successfully');
       if (rows.length > 0) {
         setRows([...rows, data]);
       }
@@ -83,35 +85,54 @@ function PatientsBiodata() {
         setRows([data]);
       }
     } catch (error) {
-      console.log(error);
       setIsAddingPatient(false);
+      toast.error(error.message);
     }
   };
-  const getAllPatients = async () => {
-    // setIsLoading(true);
+  // const getAllPatients = async () => {
+  //   // setIsLoading(true);
+  //   try {
+  //     const response = await axios({
+  //       method: 'get',
+  //       url: 'https://emr-server.herokuapp.com/patient',
+  //       params: {
+  //         page: 0,
+  //         size: 20
+  //       },
+  //       headers: authHeader()
+  //     }).then((response) => {
+  //       console.log(response);
+  //       if (response.data.rows.length) {
+  //         setRows(response.data.rows);
+  //       }
+  //       // setIsLoading(false);
+  //     });
+  //     console.log(response);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+  const getPatients = async () => {
+    setIsLoading(true);
+    const page = 0;
+    const size = 20;
+    if (user) {
+      setAuthToken(user.token);
+    }
     try {
-      const response = await axios({
-        method: 'get',
-        url: 'https://emr-server.herokuapp.com/patient',
-        params: {
-          page: 0,
-          size: 20
-        },
-        headers: authHeader()
-      }).then((response) => {
-        console.log(response);
-        if (response.data.rows.length) {
-          setRows(response.data.rows);
-        }
-        // setIsLoading(false);
-      });
-      console.log(response);
+      const { data } = await getAllPatients(page, size);
+      setIsLoading(false);
+      if (data) {
+        setRows(data.rows);
+      }
     } catch (error) {
-      console.log(error);
+      setIsLoading(false);
+      toast.error('an error occured');
     }
   };
+
   useEffect(() => {
-    getAllPatients();
+    getPatients();
   }, []);
 
   const { handleChange, values, errors, handleSubmit } = useForm(addPatient);
@@ -135,6 +156,7 @@ function PatientsBiodata() {
       label: 'Phone No.'
     }
   ];
+
   return (
     <div>
       <h2 className="text-lg mb-3">Patients Biodata</h2>
@@ -161,7 +183,9 @@ function PatientsBiodata() {
               })}
             </TableRow>
           </TableHead>
-          {rows.length === 0 ? (
+          {isLoading ? (
+            <CircularProgress size={30} />
+          ) : !rows.length ? (
             <p className="text-lg mb-3 pl-3 text-red-500">
               Patients list is empty. Add new Patients above
             </p>

@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import setAuthToken from '../../utils/setAuthToken';
 import { updateInventory } from '../../utils/api';
 import EditForm from './EditForm';
@@ -42,16 +43,19 @@ export default function EditInventoryForm({ selectedItem, setRows, rows }) {
     setIsLoading(true);
     const id = selectedItem.id;
     const InventoryFormData = { id, name, price, quantity, type };
-    setAuthToken(user);
-
+    if (user) {
+      setAuthToken(user.token);
+    }
     try {
       const data = await updateInventory(InventoryFormData);
       updatedInventory(id, data);
       setIsLoading(false);
       setOpen(false);
+      toast.success('Inventory item edited successfully');
     } catch (error) {
-      console.log(error);
       setIsLoading(false);
+      console.log(error);
+      toast.error(error.message);
     }
   };
   const formDetails = [

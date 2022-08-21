@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -25,24 +26,6 @@ function Login() {
   const [isLoading, setIsLoading] = useState(false);
 
   // const loggedInUser = JSON.parse(localStorage.getItem('user'));
-
-  const handleLogin = () => {
-    setIsLoading(true);
-    const loginData = { username, password };
-    dispatch(login(loginData));
-
-    if (isError) {
-      alert(message);
-    } else if (isSuccess) {
-      window.location.reload();
-    }
-    setIsLoading(false);
-    dispatch(reset());
-  };
-  const { handleChange, values, errors, handleSubmit } = useForm(handleLogin);
-
-  const { username, password } = values;
-
   const handleRoleBasedRouting = (user) => {
     if (user) {
       const userRole = user.user.role;
@@ -70,9 +53,26 @@ function Login() {
     }
   };
 
+  const handleLogin = () => {
+    setIsLoading(true);
+    const loginData = { username, password };
+    dispatch(login(loginData));
+    // TODO change if/else to try/catch and see if loading will work with intuitive button
+    if (isError) {
+      toast.error(message);
+    } else if (isSuccess) {
+      handleRoleBasedRouting(user);
+    }
+    dispatch(reset());
+    setIsLoading(false);
+  };
+  const { handleChange, values, errors, handleSubmit } = useForm(handleLogin);
+
+  const { username, password } = values;
+
   useEffect(() => {
     if (isError) {
-      alert(message);
+      toast.error(message);
     }
     dispatch(reset());
   }, [isError, message, user, isSuccess, dispatch]);
