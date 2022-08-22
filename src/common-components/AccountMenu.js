@@ -42,8 +42,8 @@ export default function AccountMenu() {
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}>
-        <Avatar className="bg-green-500 mt-1" variant="circular">
-          <Person />
+        <Avatar sx={{ bgcolor: '#fff', mt: 1 }} variant="circular">
+          <Person sx={{ color: '#48bb78' }} />
         </Avatar>
       </Button>
       <Menu

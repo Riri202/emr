@@ -1,15 +1,21 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router';
+import { ADMIN_USER_ROLE } from '../utils/constants';
 import { useCurrentUser } from '../utils/hooks';
+import Nav from './Nav';
 
 function ProtectedRoutes({ allowedRole }) {
   const user = useCurrentUser();
   const location = useLocation();
   // const loggedInUser = JSON.parse(localStorage.getItem('user'));
+  const isAdmin = user.user.role === ADMIN_USER_ROLE;
 
   return user && user.user.role === allowedRole ? (
-    <Outlet />
+    <>
+      {!isAdmin ? <Nav /> : null}
+      <Outlet />
+    </>
   ) : user && user.user.role !== allowedRole ? (
     <Navigate to={'/unauthorized'} state={{ from: location }} replace />
   ) : (

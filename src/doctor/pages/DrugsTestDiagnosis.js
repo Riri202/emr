@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { Link, useParams } from 'react-router-dom';
 import Nav from '../../common-components/Nav';
 import Avatar from '@mui/material/Avatar';
@@ -10,11 +11,13 @@ import { getAllInventoryItems } from '../../utils/api';
 import setAuthToken from '../../utils/setAuthToken';
 import Prescription from '../components/Prescription';
 import LabTest from '../components/LabTest';
+import { useCurrentUser } from '../../utils/hooks';
 
-const user = JSON.parse(localStorage.getItem('user'));
+// const user = JSON.parse(localStorage.getItem('user'));
 
 function DrugsTestDiagnosis() {
   const { patientId, sessionId } = useParams();
+  const user = useCurrentUser();
 
   const [drugsList, setDrugsList] = useState([]);
   const [testsList, setTestsList] = useState([]);
@@ -34,7 +37,7 @@ function DrugsTestDiagnosis() {
         setTestsList(tests);
       }
     } catch (error) {
-      console.log(error);
+      toast.error(error.message);
     }
   };
 
