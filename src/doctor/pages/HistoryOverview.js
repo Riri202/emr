@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Nav from '../../common-components/Nav';
+// import Nav from '../../common-components/Nav';
 import { toast } from 'react-toastify';
 import { Link, useParams } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
@@ -46,8 +46,8 @@ function HistoryOverview() {
   }, []);
   return (
     <div>
-      <Nav />
-      <div className="p-8">
+      {/* <Nav /> */}
+      <div className="pb-8 px-10">
         <h1>Patients History</h1>
         <Paper>
           <List>

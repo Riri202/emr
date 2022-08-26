@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-key */
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import Nav from '../../common-components/Nav';
+// import Nav from '../../common-components/Nav';
 import PatientSearchBar from '../../common-components/PatientSearchBar';
 import Box from '@mui/material/Box';
 import Paper from '@material-ui/core/Paper';
@@ -98,7 +98,7 @@ function ReceptionistHome() {
 
   return (
     <div>
-      <Nav />
+      {/* <Nav /> */}
       <Box>
         <div className="flex flex-row items-start w-screen space-x-10 p-10">
           <div>

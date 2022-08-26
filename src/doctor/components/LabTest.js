@@ -11,13 +11,13 @@ import { useCurrentUser } from '../../utils/hooks';
 // const drugs = JSON.parse(localStorage.getItem('drugsList'));
 // const user = JSON.parse(localStorage.getItem('user'));
 
-function LabTestForm({ test, handleChange, testInputData, sessionId }) {
+function LabTestForm({ test, handleChange, inputData, sessionId }) {
   const user = useCurrentUser();
 
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccessful, setIsSuccessful] = useState(false);
 
-  const { title, description } = testInputData;
+  const { title, description } = inputData;
 
   const onSubmitTestForm = async (event) => {
     event.preventDefault();
@@ -71,16 +71,17 @@ function LabTest({ sessionId, testsList }) {
   const handleTestChoice = (event) => {
     if (event.target.checked && !testChoice.length) {
       setTestChoice([event.target.value]);
-      setTestInputData((prevState) => ({
-        ...prevState,
-        title: event.target.value
-      }));
+
+      // setTestInputData((prevState) => ({
+      //   ...prevState,
+      //   title: event.target.value
+      // }));
     } else if (event.target.checked && testChoice.length > 0) {
       setTestChoice([...testChoice, event.target.value]);
-      setTestInputData((prevState) => ({
-        ...prevState,
-        title: event.target.value
-      }));
+      // setTestInputData((prevState) => ({
+      //   ...prevState,
+      //   title: event.target.value
+      // }));
     }
     // remove choice from list when you uncheck its checkbox
     if (!event.target.checked) {

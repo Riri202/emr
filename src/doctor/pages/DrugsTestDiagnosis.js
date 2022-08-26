@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { Link, useParams } from 'react-router-dom';
-import Nav from '../../common-components/Nav';
 import Avatar from '@mui/material/Avatar';
 import { Person } from '@mui/icons-material';
 import Paper from '@material-ui/core/Paper';
@@ -47,8 +46,7 @@ function DrugsTestDiagnosis() {
 
   return (
     <div>
-      <Nav />
-      <div className="p-10">
+      <div className="px-10 pb-8">
         <section>
           <h1>Symptoms, Diagnosis, Drugs and Tests</h1>
           <div className="flex space-x-3">

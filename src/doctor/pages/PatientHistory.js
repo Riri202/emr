@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 // import Carousel from 'react-material-ui-carousel';
 import { Paper } from '@mui/material';
 // import Avatar from '@mui/material/Avatar';
-import Nav from '../../common-components/Nav';
+// import Nav from '../../common-components/Nav';
 // import { ArrowForward, ArrowBack, Person } from '@mui/icons-material';
 import { getSessionPrescriptions, getSessionTests } from '../../utils/api';
 import setAuthToken from '../../utils/setAuthToken';
@@ -55,8 +55,8 @@ function PatientHistory() {
 
   return (
     <>
-      <Nav />
-      <div className="p-10">
+      {/* <Nav /> */}
+      <div className="px-10 pb-8">
         <h1 className="">Patient History</h1>
         <Paper>
           <PrescriptionHistory />
