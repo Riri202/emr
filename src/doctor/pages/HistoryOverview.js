@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// import Nav from '../../common-components/Nav';
 import { toast } from 'react-toastify';
 import { Link, useParams } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
@@ -46,12 +45,11 @@ function HistoryOverview() {
   }, []);
   return (
     <div>
-      {/* <Nav /> */}
       <div className="pb-8 px-10">
         <h1>Patients History</h1>
         <Paper>
           <List>
-            {historyList.map((history) => {
+            {historyList.map((history, index) => {
               const { createdAt, id } = history;
               const sessionId = id;
               const month = new Date(createdAt).toLocaleString('default', { month: 'long' });
@@ -67,7 +65,9 @@ function HistoryOverview() {
                     </ListItemAvatar>
                     <ListItemText primary={month} secondary={date} />
                   </ListItem>
-                  <Divider />
+                  {index !== historyList.length - 1 ? (
+                    <Divider variant="fullWidth" orientation="horizontal" />
+                  ) : null}
                 </>
               );
             })}

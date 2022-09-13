@@ -16,6 +16,7 @@ import DeleteDialog from '../components/DeleteDialog';
 import InputDetailsForm from '../components/InputDetailsForm';
 import useForm from '../../utils/formValidations/useForm';
 import { CircularProgress } from '@material-ui/core';
+import { useCurrentUser } from '../../utils/hooks';
 
 const useStyles = makeStyles({
   table: {
@@ -24,9 +25,10 @@ const useStyles = makeStyles({
 });
 
 const headers = ['No', 'Name', 'Quantity', 'Unit Price (#)', 'Edit', 'Delete'];
-const user = JSON.parse(localStorage.getItem('user'));
 
 function Inventory() {
+  const user = useCurrentUser();
+
   const classes = useStyles();
   const [isLoading, setIsLoading] = useState(false);
   const [isAddingInventory, setIsAddingInventory] = useState(false);

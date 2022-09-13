@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Nav from '../../common-components/Nav';
+// import Nav from '../../common-components/Nav';
 import Avatar from '@mui/material/Avatar';
 import { Person } from '@mui/icons-material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -38,7 +38,7 @@ function PharmacistInvoice() {
 
   return (
     <>
-      <Nav />
+      {/* <Nav /> */}
       <div className="p-8">
         <h1>PatientInvoice</h1>
         <div className="flex space-x-2 mb-3">

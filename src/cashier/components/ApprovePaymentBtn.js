@@ -26,9 +26,10 @@ function ApprovePaymentBtn({ amount }) {
       {!isPaymentApproved ? (
         <Box sx={{ position: 'relative' }}>
           <Button
+            variant="contained"
             disabled={isLoading}
             onClick={handleApprovePayment}
-            className="p-2 mt-1 bg-green-500 text-[#000] ml-3">
+            className="p-3 mt-1 bg-green-500 text-[#000] ml-3">
             Approve payment of&nbsp;
             <span> &#8358;</span>
             {amount}

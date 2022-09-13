@@ -16,16 +16,19 @@ function DiagnosisForm({ diagnosis, handleChange, inputData, sessionId, patientI
 
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccessful, setIsSuccessful] = useState(false);
-  const { title, description } = inputData;
+  const { description } = inputData;
 
   const onSubmitForm = async (event) => {
     event.preventDefault();
     setIsLoading(true);
+    const title = diagnosis;
+
+    const requestBody = { description, sessionId, patientId, title };
+
     if (user) {
       setAuthToken(user.token);
     }
     try {
-      const requestBody = { description, sessionId, patientId, title };
       await addNewDiagnosis(requestBody);
       setIsLoading(false);
       setIsSuccessful(true);

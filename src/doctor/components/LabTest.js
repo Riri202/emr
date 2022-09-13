@@ -17,11 +17,12 @@ function LabTestForm({ test, handleChange, inputData, sessionId }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccessful, setIsSuccessful] = useState(false);
 
-  const { title, description } = inputData;
+  const { description } = inputData;
 
   const onSubmitTestForm = async (event) => {
     event.preventDefault();
     setIsLoading(true);
+    const title = test;
     const requestBody = { description, sessionId, title };
     if (user) {
       setAuthToken(user.token);

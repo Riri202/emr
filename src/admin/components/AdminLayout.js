@@ -31,6 +31,7 @@ import PatientDetails from '../pages/Patients';
 import Symptoms from '../pages/Symptoms';
 import Diagnosis from '../pages/Diagnosis';
 import AccountMenu from '../../common-components/AccountMenu';
+import { useCurrentUser } from '../../utils/hooks';
 
 const drawerWidth = 240;
 
@@ -99,9 +100,9 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   })
 );
 
-const user = JSON.parse(localStorage.getItem('user'));
+export default function AdminLayout() {
+  const user = useCurrentUser();
 
-export default function AdminNav() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   let navigate = useNavigate();
@@ -114,7 +115,7 @@ export default function AdminNav() {
       navigate('worker-login');
     }
     if (index === 1) {
-      navigate('admin-login');
+      navigate(`admin-login`);
     }
     if (index === 2) {
       navigate(`inventory`);
@@ -137,7 +138,7 @@ export default function AdminNav() {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open} style={{ background: '#48bb78' }}>
+      <AppBar position="fixed" open={open} style={{ background: 'rgb(34 197 94)' }}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -150,9 +151,10 @@ export default function AdminNav() {
             }}>
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
+          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             EMR
           </Typography>
+          <AccountMenu />
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
@@ -197,7 +199,6 @@ export default function AdminNav() {
                     <MdSick />
                   )}
                 </ListItemIcon>
-                {/* <span>{text}</span> */}
                 <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
@@ -207,12 +208,6 @@ export default function AdminNav() {
       <Box sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
         <div className="mb-3">
-          <Box sx={{ display: 'flex' }}>
-            <Box sx={{ flexGrow: 1 }} />
-            <Box>
-              <AccountMenu />
-            </Box>
-          </Box>
           <Box sx={{ display: 'flex' }}>
             <Box sx={{ flexGrow: 1 }} />
             <Typography

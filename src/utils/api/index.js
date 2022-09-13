@@ -1,7 +1,4 @@
-// import axios from 'axios';
-// import authHeader from '../../redux/features/auth/authHeader';
 import httpService from '../axios';
-// import { API_URL } from '../constants';
 
 const StaffUrl = '/staff';
 const InventoryUrl = '/inventory';
@@ -22,8 +19,14 @@ export const addNewStaff = (data) => {
 export const getAllStaff = (page, size) => {
   return httpService.get(StaffUrl, { params: { page, size } });
 };
+export const getSingleStaff = (uuid) => {
+  return httpService.get(StaffUrl + '/' + uuid);
+};
 export const updateStaff = (data) => {
   return httpService.patch(StaffUrl, data);
+};
+export const updateStaffStatus = (uuid, status) => {
+  return httpService.put(StaffUrl + '/status/' + uuid + '/' + status);
 };
 
 export const sendQueue = (data) => {

@@ -8,7 +8,7 @@ import AccountMenu from './AccountMenu';
 function Nav() {
   return (
     <div>
-      <AppBar position="sticky" style={{ background: '#48bb78' }}>
+      <AppBar position="sticky" style={{ background: 'rgb(34 197 94)' }}>
         <Toolbar>
           <Typography variant="h6" noWrap component="div">
             EMR

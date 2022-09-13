@@ -8,12 +8,13 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import Switch from '@material-ui/core/Switch';
 import { Edit, Delete } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
 import setAuthToken from '../../utils/setAuthToken';
 import { getAllStaff } from '../../utils/api';
 import { CircularProgress } from '@material-ui/core';
+import { useCurrentUser } from '../../utils/hooks';
+import SwitchButton from '../../common-components/SwitchButton';
 // import InputDetailsForm from '../components/InputDetailsForm';
 
 const useStyles = makeStyles({
@@ -21,11 +22,12 @@ const useStyles = makeStyles({
     minWidth: 650
   }
 });
-const user = JSON.parse(localStorage.getItem('user'));
 
 const headers = ['Name', 'Username', 'Role', 'Access', 'Edit', 'Delete'];
 
 function AdminLoginDetails() {
+  const user = useCurrentUser();
+
   const classes = useStyles();
   const [adminList, setAdminList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -57,34 +59,9 @@ function AdminLoginDetails() {
   useEffect(() => {
     getAllAdmins();
   }, []);
-  // const formInputDetails = [
-  //   {
-  //     name: 'fullName',
-  //     id: 'fullname',
-  //     label: 'Name'
-  //   },
-  //   {
-  //     name: 'username',
-  //     id: 'username',
-  //     label: 'Username'
-  //   },
-  //   {
-  //     name: 'password',
-  //     id: 'password',
-  //     label: 'Password'
-  //   }
-  // ];
   return (
     <>
       <h2 className="text-lg mb-3">EMR Admins</h2>
-      {/* <InputDetailsForm
-        onSubmit={handleSubmit}
-        onChange={handleChange}
-        handleCsvChange={handleCsvChange}
-        // isLoading={isAddingStaff}
-        formDetails={formInputDetails}
-        btnText="Add new admin"
-      /> */}
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
@@ -112,7 +89,7 @@ function AdminLoginDetails() {
                   <TableCell align="center">{row.username}</TableCell>
                   <TableCell align="center">{row.role}</TableCell>
                   <TableCell align="center">
-                    <Switch defaultChecked />
+                    <SwitchButton id={row.uuid} user={user} />
                   </TableCell>
                   <TableCell align="center">
                     <IconButton className="outline-none">

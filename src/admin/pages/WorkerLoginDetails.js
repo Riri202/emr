@@ -16,6 +16,7 @@ import setAuthToken from '../../utils/setAuthToken';
 import InputDetailsForm from '../components/InputDetailsForm';
 import useForm from '../../utils/formValidations/useForm';
 import { CircularProgress } from '@material-ui/core';
+import { useCurrentUser } from '../../utils/hooks';
 
 const useStyles = makeStyles({
   table: {
@@ -24,9 +25,10 @@ const useStyles = makeStyles({
 });
 
 const headers = ['Name', 'Username', 'Role', 'Shift start', 'Shift end', 'Edit', 'Delete'];
-const user = JSON.parse(localStorage.getItem('user'));
 
 function WorkerLoginDetails() {
+  const user = useCurrentUser();
+
   const classes = useStyles();
   const [rows, setRows] = useState([]);
   const [isLoading, setIsLoading] = useState(false);

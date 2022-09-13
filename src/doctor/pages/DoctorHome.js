@@ -6,7 +6,6 @@ import Checkbox from '@mui/material/Checkbox';
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import { Person } from '@mui/icons-material';
-import Nav from '../../common-components/Nav';
 import PatientSearchBar from '../../common-components/PatientSearchBar';
 import { FaUserMd } from 'react-icons/fa';
 import { makeStyles } from '@material-ui/core/styles';
@@ -101,7 +100,6 @@ function DoctorHome() {
   }, []);
   return (
     <div>
-      <Nav />
       <div className="p-8">
         <section className="flex justify-between">
           <div>

@@ -43,7 +43,7 @@ export default function AccountMenu() {
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}>
         <Avatar sx={{ bgcolor: '#fff', mt: 1 }} variant="circular">
-          <Person sx={{ color: '#48bb78' }} />
+          <Person sx={{ color: 'rgb(34 197 94)' }} />
         </Avatar>
       </Button>
       <Menu

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
-import Nav from '../../common-components/Nav';
+// import Nav from '../../common-components/Nav';
 import { Person } from '@mui/icons-material';
 import Paper from '@material-ui/core/Paper';
 
@@ -11,7 +11,7 @@ function XrayHome() {
 
   return (
     <>
-      <Nav />
+      {/* <Nav /> */}
       <div className="p-8">
         <h1>x-ray Home</h1>
         <div className="flex space-x-2 mb-3">

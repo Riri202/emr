@@ -17,6 +17,7 @@ import { addNewPatients, getAllPatients } from '../../utils/api';
 import setAuthToken from '../../utils/setAuthToken';
 import useForm from '../../utils/formValidations/useForm';
 import { CircularProgress } from '@material-ui/core';
+import { useCurrentUser } from '../../utils/hooks';
 
 const useStyles = makeStyles({
   table: {
@@ -25,9 +26,10 @@ const useStyles = makeStyles({
 });
 
 const headers = ['Index', 'ID', 'Name', 'Email', 'Phone No', 'DOB', 'Edit', 'Delete'];
-const user = JSON.parse(localStorage.getItem('user'));
 
 function PatientsBiodata() {
+  const user = useCurrentUser();
+
   const classes = useStyles();
   const [rows, setRows] = useState([]);
   const [isAddingPatient, setIsAddingPatient] = useState(false);

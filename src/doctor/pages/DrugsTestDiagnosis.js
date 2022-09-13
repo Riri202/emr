@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { Link, useParams } from 'react-router-dom';
-import Avatar from '@mui/material/Avatar';
-import { Person } from '@mui/icons-material';
+import { useParams } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
 import SymptomsCard from '../components/SymptomsCard';
 import DiagnosisCard from '../components/DiagnosisCard';
@@ -11,8 +9,6 @@ import setAuthToken from '../../utils/setAuthToken';
 import Prescription from '../components/Prescription';
 import LabTest from '../components/LabTest';
 import { useCurrentUser } from '../../utils/hooks';
-
-// const user = JSON.parse(localStorage.getItem('user'));
 
 function DrugsTestDiagnosis() {
   const { patientId, sessionId } = useParams();
@@ -47,18 +43,8 @@ function DrugsTestDiagnosis() {
   return (
     <div>
       <div className="px-10 pb-8">
-        <section>
-          <h1>Symptoms, Diagnosis, Drugs and Tests</h1>
-          <div className="flex space-x-3">
-            <Avatar className="bg-orange-500 mt-1" variant="circular">
-              <Person />
-            </Avatar>
-            <h2 className="text-lg mb-3">id: name</h2>
-          </div>
-          <div className="mb-3">
-            <Link to={`/history-overview/${patientId}`}>View patients history</Link>
-          </div>
-        </section>
+        <h1>Prescription</h1>
+
         <section className="flex space-x-3">
           <div className="w-1/2">
             <SymptomsCard sessionId={sessionId} patientId={patientId} />

@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import Nav from '../../common-components/Nav';
 import { useParams } from 'react-router-dom';
 import { Sick } from '@mui/icons-material';
 import { Icon } from '@material-ui/core';
@@ -46,7 +45,6 @@ function PatientsPersonalPage() {
 
   return (
     <div className="">
-      <Nav />
       <div className="p-10">
         <section className="flex justify-between items-center mb-6">
           <div className="flex space-x-3 items-center">
