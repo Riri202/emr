@@ -3,15 +3,18 @@ import React from 'react';
 
 import { Button, Box, CircularProgress } from '@mui/material';
 
-export default function IntuitiveButton({ text, isLoading }) {
+export default function IntuitiveButton({ onClick, text, isLoading }) {
   return (
     <div>
       <Box sx={{ position: 'relative' }}>
         <Button
           type="submit"
+          onClick={onClick}
           variant="contained"
           disabled={isLoading}
-          className="w-full p-3 mt-1 bg-green-500 text-[#000]">
+          style={{ width: '100%', padding: 12, backgroundColor: 'rgb(34 197 94)', color: '#000' }}
+          // className="w-full p-3 mt-1 bg-green-500 text-[#000]"
+        >
           {text}
         </Button>
         {isLoading && (

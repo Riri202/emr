@@ -25,7 +25,8 @@ import {
   LAB_USER_ROLE,
   PHARMACIST_USER_ROLE,
   RECEPTIONIST_USER_ROLE,
-  XRAY_USER_ROLE
+  XRAY_USER_ROLE,
+  CASHIER_USER_ROLE
 } from './utils/constants';
 
 function App() {
@@ -58,9 +59,11 @@ function App() {
           </Route>
 
           {/* cashier route */}
-          <Route path="/cashier" element={<CashierHome />} />
-          <Route path="/doctor/:uuid" element={<DoctorPatients />} />
-          <Route path="/patient-invoice/:id" element={<PatientInvoice />} />
+          <Route element={<ProtectedRoutes allowedRole={CASHIER_USER_ROLE} />}>
+            <Route path="/cashier" element={<CashierHome />} />
+            <Route path="/doctor/:uuid" element={<DoctorPatients />} />
+            <Route path="/patient-invoice/:sessionId/:patientId" element={<PatientInvoice />} />
+          </Route>
 
           {/* pharmacist routes */}
           <Route element={<ProtectedRoutes allowedRole={PHARMACIST_USER_ROLE} />}>

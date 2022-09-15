@@ -7,6 +7,7 @@ import Link from '@mui/material/Link';
 function LinkTab(props) {
   return (
     <Tab
+      style={{ marginRight: 10 }}
       component={Link}
       onClick={(event) => {
         event.preventDefault();

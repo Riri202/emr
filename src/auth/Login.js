@@ -13,7 +13,8 @@ import {
   LAB_USER_ROLE,
   PHARMACIST_USER_ROLE,
   RECEPTIONIST_USER_ROLE,
-  XRAY_USER_ROLE
+  XRAY_USER_ROLE,
+  CASHIER_USER_ROLE
 } from '../utils/constants';
 import useForm from '../utils/formValidations/useForm';
 import IntuitiveButton from '../common-components/IntuitiveButton';
@@ -48,7 +49,11 @@ function Login() {
         case PHARMACIST_USER_ROLE:
           navigate(`/pharmacist`);
           break;
+        case CASHIER_USER_ROLE:
+          navigate(`/cashier`);
+          break;
       }
+      dispatch(reset());
       navigate(0);
     }
   };
@@ -58,13 +63,12 @@ function Login() {
     const loginData = { username, password };
     dispatch(login(loginData));
     // TODO change if/else to try/catch and see if loading will work with intuitive button
-    if (isError) {
-      toast.error(message);
-    } else if (isSuccess) {
+    try {
+      setIsLoading(false);
       handleRoleBasedRouting(user);
+    } catch (error) {
+      console.log(error);
     }
-    dispatch(reset());
-    setIsLoading(false);
   };
   const { handleChange, values, errors, handleSubmit } = useForm(handleLogin);
 

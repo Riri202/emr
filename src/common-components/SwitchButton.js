@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { CircularProgress } from '@material-ui/core';
 import { useEffect, useState } from 'react';
@@ -78,9 +79,9 @@ function SwitchButton({ id, user }) {
       ) : (
         <label className="toggle">
           <input
-            onChange={handleChange}
+            // onChange={handleChange}
             className="toggle-checkbox"
-            checked={isAllowed}
+            // checked={isAllowed}
             type="checkbox"
           />
           <div className="toggle-switch"></div>

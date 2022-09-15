@@ -28,13 +28,7 @@ export default function AccountMenu() {
     dispatch(logout());
     navigate('/');
   };
-  // useEffect(() => {
-  //   if (user === null) {
-  //     // TODO this is how you will redirect a user if they are not the correct role
-  //     alert('succeessful logout');
-  //     navigate('/');
-  //   }
-  // }, [user]);
+
   return (
     <div>
       <Button
@@ -59,10 +53,11 @@ export default function AccountMenu() {
             filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
             mt: 1.5,
             '& .MuiAvatar-root': {
-              width: 32,
-              height: 32,
+              width: 50,
+              height: 50,
               ml: -0.5,
-              mr: 1
+              mr: 1,
+              p: 10
             },
             '&:before': {
               content: '""',

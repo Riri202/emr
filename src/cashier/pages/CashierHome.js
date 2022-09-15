@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Nav from '../../common-components/Nav';
 import Avatar from '@mui/material/Avatar';
 import { Person } from '@mui/icons-material';
 import Paper from '@material-ui/core/Paper';
 import { getAllStaff } from '../../utils/api';
 import setAuthToken from '../../utils/setAuthToken';
-
-const user = JSON.parse(localStorage.getItem('user'));
+import { useCurrentUser } from '../../utils/hooks';
 
 function CashierHome() {
   // get list of patients
   // const patientsList = JSON.parse(localStorage.getItem('patients'));
+  const user = useCurrentUser();
   const [doctors, setDoctors] = useState([]);
 
   const getAvailableDoctors = (allStaff) => {
@@ -40,7 +39,6 @@ function CashierHome() {
   }, []);
   return (
     <>
-      <Nav />
       <div className="p-8">
         <h1>Cashier Home</h1>
         <div className="flex space-x-2 mb-3">
@@ -50,12 +48,12 @@ function CashierHome() {
             </Avatar>
             <p className="text-xs">Cashier</p>
           </div>
-          <h2 className="text-xl">Rose Odewuyi </h2>
+          <h2 className="text-xl"> {user.user.fullName}</h2>
         </div>
 
         <section>
           <Paper sx={{ width: '70vw' }} className="p-4">
-            <h3>Incoming patients</h3>
+            <p className="text-xl font-bold">Doctors with incoming patients</p>
             <ol>
               {doctors.map((doctor, key) => {
                 return (
@@ -66,15 +64,6 @@ function CashierHome() {
                   </li>
                 );
               })}
-              {/* {doctors.map((patient, key) => {
-                return (
-                  <li key={key}>
-                    <Link to={'/patient-invoice'} style={{ textDecoration: 'none' }}>
-                      {patient.id} {patient.name}
-                    </Link>
-                  </li>
-                );
-              })} */}
             </ol>
           </Paper>
         </section>

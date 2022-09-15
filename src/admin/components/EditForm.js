@@ -31,8 +31,8 @@ function EditForm({
         <form onSubmit={onSubmit} className="w-full">
           <DialogTitle>Edit {titleText}</DialogTitle>
           <DialogContent>
-            <DialogContentText>Edit details below</DialogContentText>
-            <div className="flex flex-col space-y-2">
+            <DialogContentText style={{ marginBottom: 5 }}>Edit details below</DialogContentText>
+            <div className="flex flex-col space-y-4">
               {formDetails.map((detail, key) => {
                 return (
                   <TextField
@@ -45,6 +45,8 @@ function EditForm({
                     variant="outlined"
                     onChange={handleChange}
                     defaultValue={detail.defaultValue}
+                    multiline={true}
+                    rows={2}
                   />
                 );
               })}
@@ -56,7 +58,19 @@ function EditForm({
           <DialogActions>
             <Button
               onClick={handleClose}
-              className="pt-2 pb-2 pl-4 pr-4 mt-1 bg-green-500 text-[#000] self-end">
+              variant="contained"
+              style={{
+                width: '30%',
+                paddingTop: 8,
+                paddingBottom: 8,
+                paddingLeft: 16,
+                paddingRight: 16,
+                backgroundColor: 'rgb(34 197 94)',
+                color: '#000',
+                justifySelf: 'self-end'
+              }}
+              // className="pt-2 pb-2 pl-4 pr-4 mt-1 bg-green-500 text-[#000] self-end"
+            >
               Cancel
             </Button>
           </DialogActions>

@@ -8,7 +8,7 @@ export default function DropdownButton({ menuItems, onChange, choice }) {
     <div>
       <TextField
         fullWidth
-        id="outlined-select-doctor"
+        id="outlined-select-staff"
         select
         required
         name="select"

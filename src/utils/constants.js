@@ -1,4 +1,4 @@
-export const API_URL = 'https://emr-server.herokuapp.com';
+export const API_URL = 'http://localhost:3111';
 
 export const ADMIN_USER_ROLE = 'ADMIN';
 export const RECEPTIONIST_USER_ROLE = 'RECEPTIONIST';

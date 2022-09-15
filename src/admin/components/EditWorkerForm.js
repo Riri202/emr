@@ -2,14 +2,14 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { updateStaff } from '../../utils/api';
+import { useCurrentUser } from '../../utils/hooks';
 import setAuthToken from '../../utils/setAuthToken';
 import EditForm from './EditForm';
-
-const user = JSON.parse(localStorage.getItem('user'));
 
 export default function EditWorkerForm({ selectedWorker, setRows, rows }) {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const user = useCurrentUser();
 
   // eslint-disable-next-line no-unused-vars
   const [inputData, setInputData] = useState({

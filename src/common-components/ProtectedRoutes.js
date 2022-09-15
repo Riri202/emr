@@ -8,7 +8,6 @@ import Nav from './Nav';
 function ProtectedRoutes({ allowedRole }) {
   const user = useCurrentUser();
   const location = useLocation();
-  // const loggedInUser = JSON.parse(localStorage.getItem('user'));
   const isAdmin = user.user.role === ADMIN_USER_ROLE;
 
   return user && user.user.role === allowedRole ? (

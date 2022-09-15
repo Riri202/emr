@@ -36,18 +36,16 @@ export default function DeleteDialog({ id, rows, setRows, role }) {
   const handleDelete = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    // const formData = { id };
 
     try {
       await axios({
         method: 'delete',
         url: `https://emr-server.herokuapp.com/${role}/${id}`,
-        // params: formData,
         headers: authHeader()
       }).then((response) => {
-        console.log(response);
         deletedItem(id, rows);
         setIsLoading(false);
+        setOpen(false);
         toast.success(response.data.message);
       });
     } catch (error) {

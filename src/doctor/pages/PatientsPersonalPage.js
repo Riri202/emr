@@ -46,7 +46,7 @@ function PatientsPersonalPage() {
   return (
     <div className="">
       <div className="p-10">
-        <section className="flex justify-between items-center mb-6">
+        <section className="flex space-x-9 items-center mb-6">
           <div className="flex space-x-3 items-center">
             <Icon className="mt-[-5px]">
               <Sick />

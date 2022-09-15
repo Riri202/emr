@@ -12,6 +12,7 @@ const TestsInSessionUrl = '/lab/session/';
 const LabUrl = '/lab';
 const DiagnosisUrl = '/diagnosis';
 const SymptomsUrl = '/symptoms';
+const ApprovePaymentUrl = '/approve';
 
 export const addNewStaff = (data) => {
   return httpService.post(StaffUrl, data);
@@ -86,4 +87,8 @@ export const addNewDiagnosis = (data) => {
 
 export const addNewSymptom = (data) => {
   return httpService.post(SymptomsUrl, data);
+};
+
+export const approvePayment = (data) => {
+  return httpService.post(ApprovePaymentUrl, data);
 };

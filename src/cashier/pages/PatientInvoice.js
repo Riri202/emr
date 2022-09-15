@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import Nav from '../../common-components/Nav';
 import Avatar from '@mui/material/Avatar';
 import { Person } from '@mui/icons-material';
 import { makeStyles } from '@material-ui/core/styles';
@@ -16,8 +15,7 @@ import { useParams } from 'react-router';
 import { getSessionPrescriptions, getSessionTests } from '../../utils/api';
 import setAuthToken from '../../utils/setAuthToken';
 import ApprovePayment from '../components/ApprovePayment';
-
-const user = JSON.parse(localStorage.getItem('user'));
+import { useCurrentUser } from '../../utils/hooks';
 
 const useStyles = makeStyles({
   table: {
@@ -25,7 +23,9 @@ const useStyles = makeStyles({
   }
 });
 function PatientInvoice() {
-  const { id } = useParams();
+  const user = useCurrentUser();
+
+  const { sessionId, patientId } = useParams();
   const [prescription, setPrescription] = useState([]);
   const [tests, setTests] = useState([]);
 
@@ -50,7 +50,6 @@ function PatientInvoice() {
     );
   };
   const getPrescriptionsInSession = async () => {
-    const sessionId = String(id);
     if (user) {
       setAuthToken(user.token);
     }
@@ -67,7 +66,6 @@ function PatientInvoice() {
     }
   };
   const getTestsInSession = async () => {
-    const sessionId = String(id);
     if (user) {
       setAuthToken(user.token);
     }
@@ -85,7 +83,6 @@ function PatientInvoice() {
     }
   };
   const grandTotal = calcTotalAmount(prescription);
-
   useEffect(() => {
     getPrescriptionsInSession();
     getTestsInSession();
@@ -93,9 +90,8 @@ function PatientInvoice() {
 
   return (
     <>
-      <Nav />
       <div className="p-8">
-        <h1>PatientInvoice</h1>
+        <h1>Patient Invoice</h1>
         <div className="flex space-x-2 mb-3">
           <div className="flex flex-col space-y-1">
             <Avatar className="bg-green-500 mt-1" variant="circular">
@@ -103,7 +99,7 @@ function PatientInvoice() {
             </Avatar>
             <p className="text-xs">Cashier</p>
           </div>
-          <h2 className="text-xl">Rose Odewuyi </h2>
+          <h2 className="text-xl">{user.user.fullName} </h2>
         </div>
         <section className="flex flex-col space-y-3">
           <Paper className="flex flex-col items-center flex-1 px-3">
@@ -148,8 +144,13 @@ function PatientInvoice() {
               Grand Total:&nbsp; <span>&#8358;</span> {grandTotal.toLocaleString()}
             </p>
           </Paper>
-          <div className="w-full flex self-end">
-            <ApprovePayment user={user} />
+          <div className="w-1/3 flex self-end">
+            <ApprovePayment
+              user={user}
+              amount={grandTotal}
+              sessionId={sessionId}
+              patientId={patientId}
+            />
           </div>
         </section>
       </div>

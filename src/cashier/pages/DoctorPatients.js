@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import Nav from '../../common-components/Nav';
 import Avatar from '@mui/material/Avatar';
 import { Person } from '@mui/icons-material';
 import Paper from '@material-ui/core/Paper';
 import { getReceivedQueues } from '../../utils/api';
 import setAuthToken from '../../utils/setAuthToken';
-
-const user = JSON.parse(localStorage.getItem('user'));
+import { useCurrentUser } from '../../utils/hooks';
 
 function DoctorPatients() {
+  const user = useCurrentUser();
+
   const { uuid } = useParams();
   const [patientsList, setPatientsList] = useState([]);
 
@@ -35,7 +35,6 @@ function DoctorPatients() {
   }, []);
   return (
     <>
-      <Nav />
       <div className="p-8">
         <h1>Cashier Home</h1>
         <div className="flex space-x-2 mb-3">
@@ -50,13 +49,14 @@ function DoctorPatients() {
 
         <section>
           <Paper sx={{ width: '70vw' }} className="p-4">
-            <h3>Incoming patients</h3>
+            <p className="text-xl font-bold">Incoming patients</p>
             <ol>
               {patientsList.map((data, key) => {
+                const { session, Patient } = data;
                 return (
                   <li key={key}>
                     <Link
-                      to={`/patient-invoice/${data.session.id}`}
+                      to={`/patient-invoice/${session.id}/${Patient.id}`}
                       style={{ textDecoration: 'none' }}>
                       {data.Patient.name}
                     </Link>
