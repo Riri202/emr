@@ -59,7 +59,7 @@ function CashierHome() {
                 return (
                   <li key={key}>
                     <Link to={`/doctor/${doctor.uuid}`} style={{ textDecoration: 'none' }}>
-                      {doctor.fullName}
+                      Dr. {doctor.fullName}
                     </Link>
                   </li>
                 );

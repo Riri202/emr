@@ -22,6 +22,16 @@ const useStyles = makeStyles({
     minWidth: 650
   }
 });
+const drugHeaders = [
+  'Index',
+  'Name',
+  'Quantity prescribed',
+  'Dosage period',
+  'Price',
+  'Note',
+  'Amount'
+];
+const testHeaders = ['Index', 'Title', 'Description'];
 function PatientInvoice() {
   const user = useCurrentUser();
 
@@ -30,15 +40,6 @@ function PatientInvoice() {
   const [tests, setTests] = useState([]);
 
   const classes = useStyles();
-  const headers = [
-    'Index',
-    'Name',
-    'Quantity prescribed',
-    'Dosage period',
-    'Price',
-    'Note',
-    'Amount'
-  ];
 
   let total;
   const calcTotalAmount = (prescription) => {
@@ -103,12 +104,12 @@ function PatientInvoice() {
         </div>
         <section className="flex flex-col space-y-3">
           <Paper className="flex flex-col items-center flex-1 px-3">
-            <h3>Drugs and Test</h3>
+            <h3>Drugs</h3>
             <TableContainer component={Paper}>
               <Table className={classes.table}>
                 <TableHead>
                   <TableRow>
-                    {headers.map((header, key) => {
+                    {drugHeaders.map((header, key) => {
                       return (
                         <TableCell key={key} align="center" className="bg-green-500">
                           {header}
@@ -118,25 +119,66 @@ function PatientInvoice() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {prescription.map((item, index) => {
-                    const { drug, note, id, quantity, days } = item;
-                    const total = quantity * drug.price;
-                    return (
-                      <TableRow key={id}>
-                        <TableCell align="center">{index + 1}</TableCell>
-                        <TableCell align="center">{drug.name}</TableCell>
-                        <TableCell align="center">{quantity}</TableCell>
-                        <TableCell align="center">{days} days</TableCell>
-                        <TableCell align="center">
-                          <span>&#8358;</span> {drug.price}
+                  {prescription && !prescription.length ? (
+                    <p className="text-lg pl-3 mb-3 text-red-500">No drugs in this invoice</p>
+                  ) : (
+                    prescription.map((item, index) => {
+                      const { drug, note, id, quantity, days } = item;
+                      const total = quantity * drug.price;
+                      return (
+                        <TableRow key={id}>
+                          <TableCell align="center">{index + 1}</TableCell>
+                          <TableCell align="center">{drug.name}</TableCell>
+                          <TableCell align="center">{quantity}</TableCell>
+                          <TableCell align="center">{days} days</TableCell>
+                          <TableCell align="center">
+                            <span>&#8358;</span> {drug.price}
+                          </TableCell>
+                          <TableCell align="center">{note}</TableCell>
+                          <TableCell align="center">
+                            <span>&#8358;</span> {total.toLocaleString()}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <p className="flex self-end text-lg font-bold">
+              Grand Total:&nbsp; <span>&#8358;</span> {grandTotal.toLocaleString()}
+            </p>
+          </Paper>
+          <Paper className="flex mt-4 flex-col items-center flex-1 px-3">
+            <h3>Tests</h3>
+            <TableContainer component={Paper}>
+              <Table className={classes.table}>
+                <TableHead>
+                  <TableRow>
+                    {testHeaders.map((header, key) => {
+                      return (
+                        <TableCell key={key} align="center" className="bg-green-500">
+                          {header}
                         </TableCell>
-                        <TableCell align="center">{note}</TableCell>
-                        <TableCell align="center">
-                          <span>&#8358;</span> {total.toLocaleString()}
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
+                      );
+                    })}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {tests && !tests.length ? (
+                    <p className="text-lg pl-3 mb-3 text-red-500">No tests in this invoice</p>
+                  ) : (
+                    tests.map((test, index) => {
+                      const { title, description, id } = test;
+                      return (
+                        <TableRow key={id}>
+                          <TableCell align="center">{index + 1}</TableCell>
+                          <TableCell align="center">{title}</TableCell>
+                          <TableCell align="center">{description}</TableCell>
+                        </TableRow>
+                      );
+                    })
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -150,6 +192,7 @@ function PatientInvoice() {
               amount={grandTotal}
               sessionId={sessionId}
               patientId={patientId}
+              cashierId={237}
             />
           </div>
         </section>

@@ -63,14 +63,13 @@ function DoctorHome() {
       const patients = data.rows;
       if (data) {
         setPatientsList(patients);
-        console.log(patientsList);
       }
     } catch (error) {
       console.log(error);
     }
   };
   const dataFiltered = filterData(searchQuery, patientsList);
-
+  console.log(dataFiltered);
   // TODO this function will instead make a patch or put request to update the doctors availability on the backend
   const handleCheckboxChange = (event) => {
     if (event.target.checked) {

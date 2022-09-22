@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import { Person } from '@mui/icons-material';
@@ -10,38 +9,29 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import { toast } from 'react-toastify';
 import { useCurrentUser } from '../../utils/hooks';
 import { useParams } from 'react-router';
 import setAuthToken from '../../utils/setAuthToken';
 import { getApprovedPaymentsForPatient } from '../../utils/api';
-import { toast } from 'react-toastify';
 import { CircularProgress } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles({
   table: {
     minWidth: 650
   }
 });
-const drugHeaders = [
-  'Index',
-  'Name',
-  'Quantity prescribed',
-  'Dosage period',
-  'Price',
-  'Note',
-  'Amount'
-];
-const testHeaders = ['Index', 'Title', 'Description'];
-function PharmacistInvoice() {
+
+const headers = ['Index', 'Title', 'Description'];
+
+function LabTests() {
+  const classes = useStyles();
   const user = useCurrentUser();
   const { patientId } = useParams();
 
   const [rows, setRows] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
-  const classes = useStyles();
-
-  // get drugs total amount
 
   const getPatientsApprovedInvoice = async () => {
     setIsLoading(true);
@@ -64,8 +54,10 @@ function PharmacistInvoice() {
   useEffect(() => {
     getPatientsApprovedInvoice();
   }, []);
+
   return (
     <>
+      {/* <Nav /> */}
       <div className="p-8">
         <h1>Patient Invoice</h1>
         <div className="flex space-x-2 mb-3">
@@ -73,70 +65,18 @@ function PharmacistInvoice() {
             <Avatar className="bg-green-500 mt-1" variant="circular">
               <Person />
             </Avatar>
-            <p className="text-xs">Pharmacist</p>
+            <p className="text-xs">Lab staff</p>
           </div>
           <h2 className="text-xl">{user.user.fullName} </h2>
         </div>
         <section>
-          <Paper className="flex flex-col items-center flex-1 px-3">
-            <h3>Drugs</h3>
-            <TableContainer component={Paper}>
-              <Table className={classes.table}>
-                <TableHead>
-                  <TableRow>
-                    {drugHeaders.map((header, key) => {
-                      return (
-                        <TableCell key={key} align="center" className="bg-green-500">
-                          {header}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {isLoading ? (
-                    <CircularProgress size={30} />
-                  ) : rows && rows.prescriptions && !rows.prescriptions.length ? (
-                    <p className="text-lg pl-3 mb-3 text-red-500">No drugs in this invoice.</p>
-                  ) : (
-                    rows &&
-                    rows.prescriptions &&
-                    rows.prescriptions.map((prescription, index) => {
-                      const { days, quantity, note } = prescription;
-                      return (
-                        <TableRow key={index}>
-                          <TableCell align="center">{index + 1}</TableCell>
-                          <TableCell align="center"></TableCell>
-                          <TableCell align="center">{quantity}</TableCell>
-                          <TableCell align="center">{days} days</TableCell>
-                          <TableCell align="center">
-                            <span>&#8358;</span>
-                          </TableCell>
-                          <TableCell align="center">{note}</TableCell>
-                          <TableCell align="center">
-                            <span>&#8358;</span>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <p className="flex self-end text-lg font-bold">
-              Grand Total:&nbsp; <span>&#8358;</span>
-            </p>
-          </Paper>
-        </section>
-
-        <section className="mt-5">
           <Paper className="flex flex-col items-center flex-1 px-3">
             <h3>Tests</h3>
             <TableContainer component={Paper}>
               <Table className={classes.table}>
                 <TableHead>
                   <TableRow>
-                    {testHeaders.map((header, key) => {
+                    {headers.map((header, key) => {
                       return (
                         <TableCell key={key} align="center" className="bg-green-500">
                           {header}
@@ -154,13 +94,19 @@ function PharmacistInvoice() {
                     rows &&
                     rows.tests &&
                     rows.tests.map((test, index) => {
-                      const { title, description } = test;
+                      const { title, description, id } = test;
                       return (
-                        <TableRow key={index}>
-                          <TableCell align="center">{index + 1}</TableCell>
-                          <TableCell align="center">{title}</TableCell>
-                          <TableCell align="center">{description}</TableCell>
-                        </TableRow>
+                        <Link
+                          className="hover:bg-slate-400"
+                          key={id}
+                          to={`/lab-results/${id}/${title}/${description}`}
+                          style={{ textDecoration: 'none' }}>
+                          <TableRow>
+                            <TableCell align="center">{index + 1}</TableCell>
+                            <TableCell align="center">{title}</TableCell>
+                            <TableCell align="center">{description}</TableCell>
+                          </TableRow>
+                        </Link>
                       );
                     })
                   )}
@@ -177,4 +123,4 @@ function PharmacistInvoice() {
   );
 }
 
-export default PharmacistInvoice;
+export default LabTests;

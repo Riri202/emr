@@ -45,25 +45,6 @@ export default function EditWorkerForm({ selectedWorker, setRows, rows }) {
     const uuid = selectedWorker.uuid;
     const staffFormData = { fullName, username, password, role, uuid };
 
-    // try {
-    //   await axios({
-    //     method: 'patch',
-    //     url: 'https://emr-server.herokuapp.com/staff',
-    //     data: staffFormData,
-    //     headers: authHeader()
-    //   }).then((response) => {
-    //     console.log(response);
-    //     updatedStaff(uuid, inputData);
-    //     setIsLoading(false);
-    //     setOpen(false);
-    //     toast.success('Staff details succesfully edited');
-    //   });
-    //   // TODO maybe return response or find out something else you can do with it
-    // } catch (error) {
-    //   console.log(error);
-    //   toast.error(error.response.statusText);
-    // }
-
     if (user) {
       setAuthToken(user.token);
     }

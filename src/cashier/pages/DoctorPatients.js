@@ -1,33 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Avatar from '@mui/material/Avatar';
 import { Person } from '@mui/icons-material';
 import Paper from '@material-ui/core/Paper';
 import { getReceivedQueues } from '../../utils/api';
 import setAuthToken from '../../utils/setAuthToken';
 import { useCurrentUser } from '../../utils/hooks';
+import { CircularProgress } from '@material-ui/core';
 
 function DoctorPatients() {
   const user = useCurrentUser();
 
   const { uuid } = useParams();
   const [patientsList, setPatientsList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const patientsFromDoctor = async () => {
+    setIsLoading(true);
     const staffId = uuid;
     if (user) {
       setAuthToken(user.token);
     }
     try {
       const { data } = await getReceivedQueues(staffId, 'PENDING');
-      const patients = data.rows;
-      console.log(data);
+      setIsLoading(false);
       if (data) {
+        const patients = data.rows;
         setPatientsList(patients);
         console.log(patientsList);
       }
     } catch (error) {
-      console.log(error);
+      toast.error('an error occured');
     }
   };
   useEffect(() => {
@@ -44,25 +48,33 @@ function DoctorPatients() {
             </Avatar>
             <p className="text-xs">Cashier</p>
           </div>
-          <h2 className="text-xl">Rose Odewuyi </h2>
+          <h2 className="text-xl">{user.user.fullName} </h2>
         </div>
 
         <section>
           <Paper sx={{ width: '70vw' }} className="p-4">
             <p className="text-xl font-bold">Incoming patients</p>
             <ol>
-              {patientsList.map((data, key) => {
-                const { session, Patient } = data;
-                return (
-                  <li key={key}>
-                    <Link
-                      to={`/patient-invoice/${session.id}/${Patient.id}`}
-                      style={{ textDecoration: 'none' }}>
-                      {data.Patient.name}
-                    </Link>
-                  </li>
-                );
-              })}
+              {isLoading ? (
+                <CircularProgress size={30} />
+              ) : !patientsList.length ? (
+                <p className="text-lg pl-3 mb-3 text-red-500">
+                  No incoming patients for this doctor.
+                </p>
+              ) : (
+                patientsList.map((data, key) => {
+                  const { session, Patient } = data;
+                  return (
+                    <li key={key}>
+                      <Link
+                        to={`/patient-invoice/${session.id}/${Patient.id}`}
+                        style={{ textDecoration: 'none' }}>
+                        {data.Patient.name}
+                      </Link>
+                    </li>
+                  );
+                })
+              )}
             </ol>
           </Paper>
         </section>

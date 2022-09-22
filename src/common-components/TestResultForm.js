@@ -1,167 +1,32 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect } from 'react';
-import { Grow, Chip, CircularProgress, Box, TextField } from '@mui/material';
-import Paper from '@material-ui/core/Paper';
-import Button from '@mui/material/Button';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import DropdownButton from './DropdownButton';
+import { TextField } from '@material-ui/core';
+import IntuitiveButton from './IntuitiveButton';
 
-function TestResultForm({ showForm, role }) {
-  // state for changing button color when payment is approved
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [testResults, setTestResults] = useState(
-    JSON.parse(localStorage.getItem('testResults')) ?? []
-  );
-
-  const [formValues, setFormValues] = useState([
-    {
-      id: '',
-      testName: '',
-      testResult: ''
-    }
-  ]);
-  const [choice, setChoice] = useState([]);
-
-  const handleChoice = (event) => {
-    setChoice([event.target.value]);
-  };
-
-  let handleChange = (i, e) => {
-    let newFormValues = [...formValues];
-    newFormValues[i][e.target.name] = e.target.value;
-    setFormValues(newFormValues);
-  };
-  let addFormFields = () => {
-    setFormValues([
-      ...formValues,
-      {
-        id: '',
-        testName: '',
-        testResult: ''
-      }
-    ]);
-  };
-
-  let removeFormFields = (i) => {
-    let newFormValues = [...formValues];
-    newFormValues.splice(i, 1);
-    setFormValues(newFormValues);
-  };
-
-  const handleSubmit = () => {
-    event.preventDefault();
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      setIsSubmitted(true);
-      if (!testResults.length) {
-        setTestResults([formValues]);
-      }
-      if (testResults.length) {
-        setTestResults([...testResults, formValues]);
-      }
-    }, 6000);
-  };
-
-  // persist data in local storage
-  useEffect(() => {
-    localStorage.removeItem('testResults', JSON.stringify(testResults));
-    console.log(testResults);
-  }, [testResults]);
+function TestResultForm({ role, handleChange, handleSubmit, isLoading }) {
   return (
-    <>
-      {showForm && (
-        <>
-          <Paper className="flex flex-col items-center flex-1 mt-5">
-            <h3>{role} Test Results</h3>
-            <form onSubmit={handleSubmit} className="p-3">
-              {formValues.map((element, index) => (
-                <div className="flex flex-row space-x-4 mt-2 mb-2" key={index}>
-                  <TextField
-                    onChange={(e) => handleChange(index, e)}
-                    name="testName"
-                    size="small"
-                    label="test name"
-                    variant="outlined"
-                  />
-                  <TextField
-                    onChange={(e) => handleChange(index, e)}
-                    name="testResult"
-                    size="small"
-                    label="test result"
-                    variant="outlined"
-                  />
-                  {index && !isSubmitted ? (
-                    <Button
-                      type="button"
-                      disabled={isLoading}
-                      className="p-2 mt-1 bg-red-500 text-[#000] ml-3"
-                      onClick={() => removeFormFields(index)}>
-                      Remove
-                    </Button>
-                  ) : null}
-                </div>
-              ))}
-              <div>
-                {!isSubmitted ? (
-                  <Box sx={{ position: 'relative' }}>
-                    <Button
-                      type="button"
-                      disabled={isLoading}
-                      onClick={() => addFormFields()}
-                      className="p-2 mt-1 bg-green-500 text-[#000] ml-3">
-                      Add
-                    </Button>
-                    <Button
-                      type="sumbit"
-                      disabled={isLoading}
-                      onClick={handleSubmit}
-                      className="p-2 mt-1 bg-green-500 text-[#000] ml-3">
-                      submit
-                    </Button>
-                    {isLoading && (
-                      <CircularProgress
-                        color="success"
-                        size={24}
-                        sx={{
-                          position: 'absolute',
-                          top: '50%',
-                          left: '50%',
-                          zIndex: 1,
-                          marginTop: '-12px',
-                          marginLeft: '-12px'
-                        }}
-                      />
-                    )}
-                  </Box>
-                ) : (
-                  <>
-                    <Grow in={isSubmitted}>
-                      <div className="flex flex-col">
-                        <Chip
-                          label={`you have submitted ${role.toLowerCase()} test results`}
-                          icon={<CheckCircleIcon />}
-                          color="success"
-                        />
-                        <Box className="flex justify-end mt-3 bg-[#f6f7fa] p-1">
-                          <DropdownButton
-                            choice={choice}
-                            onChange={handleChange}
-                            menuItems={['dr. Stark', 'Dr Drake Remurray']}
-                          />
-                        </Box>
-                      </div>
-                    </Grow>
-                  </>
-                )}
-              </div>
-            </form>
-          </Paper>
-        </>
-      )}
-    </>
+    <form onSubmit={handleSubmit} className="w-1/2">
+      <div className="flex flex-col space-y-3">
+        <TextField
+          onChange={handleChange}
+          fullWidth
+          required
+          variant="outlined"
+          label="Test result"
+          name="result"
+        />
+        <TextField
+          onChange={handleChange}
+          required
+          fullWidth
+          multiline
+          rows={2}
+          variant="outlined"
+          label="Result description"
+          name="resultDescription"
+        />
+        <IntuitiveButton isLoading={isLoading} text={`Add ${role} Test Result`} />
+      </div>
+    </form>
   );
 }
 

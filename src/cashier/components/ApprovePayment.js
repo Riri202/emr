@@ -6,14 +6,12 @@ import { approvePayment } from '../../utils/api';
 import setAuthToken from '../../utils/setAuthToken';
 import { toast } from 'react-toastify';
 
-function ApprovePayment({ user, amount, sessionId, patientId }) {
+function ApprovePayment({ user, amount, sessionId, patientId, cashierId }) {
   // eslint-disable-next-line no-unused-vars
   const [isSending, setIsSending] = useState(false);
-
   const approvePaymentByCashier = async () => {
     setIsSending(true);
-    const requestData = { amount, sessionId, patientId };
-    console.log(requestData);
+    const requestData = { amount, sessionId, patientId, cashierId };
     if (user) {
       setAuthToken(user.token);
     }

@@ -14,7 +14,7 @@ import PharmacistHome from './pharmacist/pages/PharmacistHome';
 import PharmacistInvoice from './pharmacist/pages/PharmacistInvoice';
 import LabHome from './lab/pages/LabHome';
 import XrayHome from './x-ray/pages/XrayHome';
-import LabResults from './lab/pages/LabResults';
+import LabTests from './lab/pages/LabTests';
 import XrayResults from './x-ray/pages/XrayResults';
 import DoctorPatients from './cashier/pages/DoctorPatients';
 import Unauthorized from './common-components/Unauthorized';
@@ -28,6 +28,7 @@ import {
   XRAY_USER_ROLE,
   CASHIER_USER_ROLE
 } from './utils/constants';
+import LabResults from './lab/pages/LabResults';
 
 function App() {
   return (
@@ -68,13 +69,14 @@ function App() {
           {/* pharmacist routes */}
           <Route element={<ProtectedRoutes allowedRole={PHARMACIST_USER_ROLE} />}>
             <Route path="/pharmacist" element={<PharmacistHome />} />
-            <Route path="/approved-invoice" element={<PharmacistInvoice />} />
+            <Route path="/approved-invoice/:patientId" element={<PharmacistInvoice />} />
           </Route>
 
           {/* lab routes */}
           <Route element={<ProtectedRoutes allowedRole={LAB_USER_ROLE} />}>
             <Route path="/lab" element={<LabHome />} />
-            <Route path="/lab-results" element={<LabResults />} />
+            <Route path="/lab-tests/:patientId" element={<LabTests />} />
+            <Route path="/lab-results/:testId/:testTitle/:testDesc" element={<LabResults />} />
           </Route>
 
           {/* x-ray routes */}

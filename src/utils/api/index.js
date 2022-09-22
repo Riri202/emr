@@ -70,6 +70,9 @@ export const getSessionPrescriptions = (sessionId) => {
 export const addNewTest = (data) => {
   return httpService.post(LabUrl, data);
 };
+export const addLabTestResult = (data) => {
+  return httpService.patch(LabUrl, data);
+};
 export const getSessionTests = (sessionId) => {
   return httpService.get(TestsInSessionUrl + sessionId, { params: { page: 0, size: 10 } });
 };
@@ -91,4 +94,10 @@ export const addNewSymptom = (data) => {
 
 export const approvePayment = (data) => {
   return httpService.post(ApprovePaymentUrl, data);
+};
+export const getApprovedPayments = () => {
+  return httpService.get(ApprovePaymentUrl);
+};
+export const getApprovedPaymentsForPatient = (patientId) => {
+  return httpService.get(ApprovePaymentUrl + '/' + patientId);
 };
