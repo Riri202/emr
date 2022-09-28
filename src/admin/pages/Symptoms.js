@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Papa from 'papaparse';
+import { toast } from 'react-toastify';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -13,6 +14,9 @@ import IconButton from '@mui/material/IconButton';
 import DeleteDialog from '../components/DeleteDialog';
 import InputDetailsForm from '../components/InputDetailsForm';
 import useForm from '../../utils/formValidations/useForm';
+import setAuthToken from '../../utils/setAuthToken';
+import { useCurrentUser } from '../../utils/hooks';
+import { addToSymptomList, getSymptomsList } from '../../utils/api';
 
 const useStyles = makeStyles({
   table: {
@@ -24,8 +28,12 @@ const headers = ['No', 'Symptom', 'Edit', 'Delete'];
 
 function Symptoms() {
   const classes = useStyles();
+  const user = useCurrentUser();
+
   const [isAddingSymptom, setIsAddingSymptom] = useState(false);
-  const [rows, setRows] = useState(JSON.parse(localStorage.getItem('symptomsRows')) ?? []);
+  const [rows, setRows] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   // const [inputData, setInputData] = useState({
   //   id: '',
   //   symptom: ''
@@ -53,39 +61,59 @@ function Symptoms() {
       }
     });
   };
-  const addSymptom = (e) => {
-    e.preventDefault();
-    const inputData = { id, symptom };
+  const addSymptom = async () => {
     setIsAddingSymptom(true);
-    if (rows.length > 0) {
-      setRows([...rows, inputData]);
+    const requestData = { name };
+    if (user) {
+      setAuthToken(user.token);
     }
-    if (rows.length === 0) {
-      setRows([inputData]);
+    try {
+      const { data } = await addToSymptomList(requestData);
+      setIsAddingSymptom(false);
+      toast.success('Item added successfully');
+      if (rows.length) {
+        setRows([...rows, data]);
+      }
+      if (!rows.length) {
+        setRows([data]);
+      }
+    } catch (error) {
+      setIsAddingSymptom(false);
+      toast.error(error.message);
     }
-    console.log(rows);
-    setIsAddingSymptom(false);
   };
-  // persist data in local storage
-  useEffect(() => {
-    localStorage.setItem('symptomsRows', JSON.stringify(rows));
-  }, [rows]);
 
+  const getSymptoms = async () => {
+    setIsLoading(true);
+    const page = 0;
+    const size = 20;
+    if (user) {
+      setAuthToken(user.token);
+    }
+    try {
+      const { data } = await getSymptomsList(page, size);
+      setIsLoading(false);
+      if (data) {
+        setRows(data.rows);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error);
+      toast.error('an error occured');
+    }
+  };
+
+  useEffect(() => {
+    getSymptoms();
+  }, []);
   const { handleChange, values, errors, handleSubmit } = useForm(addSymptom);
 
-  const { id, symptom } = values;
+  const { name } = values;
 
   const formInputDetails = [
     {
-      // Name might change depending on what is in the backend
-      name: 'symptom',
-      id: 'symptom',
+      name: 'name',
       label: 'Symptom'
-    },
-    {
-      name: 'id',
-      id: 'id',
-      label: 'ID'
     }
   ];
   return (
@@ -114,22 +142,26 @@ function Symptoms() {
               })}
             </TableRow>
           </TableHead>
-          {rows.length === 0 ? (
-            <p className="text-lg mb-3 text-red-500 pl-3">
-              Symptoms list is empty. Add new symptoms above
-            </p>
+          {!isLoading && !rows.length ? (
+            <tbody>
+              <tr>
+                <td className="text-lg pl-3 mb-3 text-red-500">
+                  Symptoms list is empty. Add new symptoms above
+                </td>
+              </tr>
+            </tbody>
           ) : (
             <TableBody>
               {rows.map((row, index) => (
                 <TableRow key={index}>
-                  <TableCell align="right">{index + 1}</TableCell>
-                  <TableCell align="right">{row.symptom}</TableCell>
-                  <TableCell align="right">
+                  <TableCell align="center">{index + 1}</TableCell>
+                  <TableCell align="center">{row.name}</TableCell>
+                  <TableCell align="center">
                     <IconButton className="outline-none">
                       <Edit />
                     </IconButton>
                   </TableCell>
-                  <TableCell align="right">
+                  <TableCell align="center">
                     <DeleteDialog id={row.id} setRows={setRows} rows={rows} />
                   </TableCell>
                 </TableRow>

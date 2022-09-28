@@ -12,7 +12,7 @@ const useForm = (callback) => {
         if (value.length <= 3) {
           setErrors({
             ...errors,
-            name: 'name should be at least 3 letters'
+            name: 'should be at least 3 characters'
           });
         } else {
           let newObj = omit(errors, 'name');
@@ -206,6 +206,7 @@ const useForm = (callback) => {
 
     if (Object.keys(errors).length === 0 && Object.keys(values).length !== 0) {
       callback();
+      event.target.reset();
     } else {
       toast.error('There is an Error! Check that all required details are correctly inputed.');
     }

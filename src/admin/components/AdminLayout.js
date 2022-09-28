@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Routes, Route } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
+// import { Routes, Route } from 'react-router-dom';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -23,13 +23,13 @@ import { RiAdminLine } from 'react-icons/ri';
 import { MdOutlineInventory, MdSick } from 'react-icons/md';
 
 //admin routes
-import WorkerLoginDetails from '../pages/WorkerLoginDetails';
-import AdminLoginDetails from '../pages/AdminLoginDetails';
-import Inventory from '../pages/Inventory';
-import PatientsBiodata from '../pages/PatientsBiodata';
-import PatientDetails from '../pages/Patients';
-import Symptoms from '../pages/Symptoms';
-import Diagnosis from '../pages/Diagnosis';
+// import WorkerLoginDetails from '../pages/WorkerLoginDetails';
+// import AdminLoginDetails from '../pages/AdminLoginDetails';
+// import Inventory from '../pages/Inventory';
+// import PatientsBiodata from '../pages/PatientsBiodata';
+// import PatientDetails from '../pages/Patients';
+// import Symptoms from '../pages/Symptoms';
+// import Diagnosis from '../pages/Diagnosis';
 import AccountMenu from '../../common-components/AccountMenu';
 import { useCurrentUser } from '../../utils/hooks';
 
@@ -112,22 +112,22 @@ export default function AdminLayout() {
   };
   const handleNavigation = (index) => {
     if (index === 0) {
-      navigate('worker-login');
+      navigate('/admin/worker-login');
     }
     if (index === 1) {
-      navigate(`admin-login`);
+      navigate(`/admin/admin-login`);
     }
     if (index === 2) {
-      navigate(`inventory`);
+      navigate(`/admin/inventory`);
     }
     if (index === 3) {
-      navigate(`patients-biodata`);
+      navigate(`/admin/patients-biodata`);
     }
     if (index === 4) {
-      navigate(`symptoms`);
+      navigate(`/admin/symptoms`);
     }
     if (index === 5) {
-      navigate(`diagnosis`);
+      navigate(`/admin/diagnosis`);
     }
   };
 
@@ -219,15 +219,18 @@ export default function AdminLayout() {
             </Typography>
           </Box>
         </div>
-        <Routes>
-          <Route path="worker-login" element={<WorkerLoginDetails />} />
-          <Route path="admin-login" element={<AdminLoginDetails />} />
-          <Route path="inventory" element={<Inventory />} />
-          <Route path="patients-biodata" element={<PatientsBiodata />} />
-          <Route path="patients-biodata/:id/:name" element={<PatientDetails />} />
-          <Route path="symptoms" element={<Symptoms />} />
-          <Route path="diagnosis" element={<Diagnosis />} />
-        </Routes>
+        <div>
+          <Outlet />
+        </div>
+        {/* <Routes>
+          <Route path="/worker-login" element={<WorkerLoginDetails />} />
+          <Route path="/admin-login" element={<AdminLoginDetails />} />
+          <Route path="/inventory" element={<Inventory />} />
+          <Route path="/patients-biodata" element={<PatientsBiodata />} />
+          <Route path="/patients-biodata/:id/:name" element={<PatientDetails />} />
+          <Route path="/symptoms" element={<Symptoms />} />
+          <Route path="/diagnosis" element={<Diagnosis />} />
+        </Routes> */}
       </Box>
     </Box>
   );

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Box, TextField, Divider, Paper } from '@material-ui/core';
-import React from 'react';
+import React, { useRef } from 'react';
 import { FaFileCsv } from 'react-icons/fa';
 import IntuitiveButton from '../../common-components/IntuitiveButton';
 
@@ -14,6 +14,8 @@ function InputDetailsForm({
   isDateRequired,
   errors
 }) {
+  const inputRef = useRef(null);
+
   return (
     <div>
       <Box
@@ -35,6 +37,7 @@ function InputDetailsForm({
                   label={detail.label}
                   variant="standard"
                   onChange={onChange}
+                  ref={inputRef}
                   id={detail.id}
                   error={errors[`${detail.name}`] ? true : false}
                   helperText={errors[`${detail.name}`]}

@@ -119,7 +119,7 @@ function WorkerLoginDetails() {
     {
       name: 'fullName',
       id: 'fullname',
-      label: 'Name'
+      label: 'fullname'
     },
     {
       name: 'username',
@@ -149,50 +149,58 @@ function WorkerLoginDetails() {
         errors={errors}
         btnText="Add new worker"
       />
-      <TableContainer component={Paper}>
-        <Table className={classes.table} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              {headers.map((header, key) => {
-                return (
-                  <TableCell key={key} align="center" className="bg-green-500">
-                    {header}
-                  </TableCell>
-                );
-              })}
-            </TableRow>
-          </TableHead>
-          {isLoading ? (
-            <CircularProgress size={30} />
-          ) : !rows.length ? (
-            <p className="text-lg pl-3 mb-3 text-red-500">
-              Staff list is empty. Enter staff details above to add to list
-            </p>
-          ) : (
-            <TableBody>
-              {rows.map((row, key) => (
-                <TableRow key={key}>
-                  <TableCell align="center">{row.fullName}</TableCell>
-                  <TableCell align="center">{row.username}</TableCell>
-                  <TableCell align="center">{row.role}</TableCell>
-                  <TableCell align="center">
-                    <input type="time" />
-                  </TableCell>
-                  <TableCell align="center">
-                    <input type="time" />
-                  </TableCell>
-                  <TableCell align="center">
-                    <EditWorkerForm selectedWorker={row} setRows={setRows} rows={rows} />
-                  </TableCell>
-                  <TableCell align="center">
-                    <DeleteDialog id={row.uuid} setRows={setRows} rows={rows} role="staff" />
-                  </TableCell>
+      <section>
+        {isLoading ? (
+          <CircularProgress size={30} />
+        ) : (
+          <TableContainer component={Paper}>
+            <Table className={classes.table} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  {headers.map((header, key) => {
+                    return (
+                      <TableCell key={key} align="center" className="bg-green-500">
+                        {header}
+                      </TableCell>
+                    );
+                  })}
                 </TableRow>
-              ))}
-            </TableBody>
-          )}
-        </Table>
-      </TableContainer>
+              </TableHead>
+              {!isLoading && !rows.length ? (
+                <tbody>
+                  <tr>
+                    <td className="text-lg pl-3 mb-3 text-red-500">
+                      Staff list is empty. Enter staff details above to add to list
+                    </td>
+                  </tr>
+                </tbody>
+              ) : (
+                <TableBody>
+                  {rows.map((row, key) => (
+                    <TableRow key={key}>
+                      <TableCell align="center">{row.fullName}</TableCell>
+                      <TableCell align="center">{row.username}</TableCell>
+                      <TableCell align="center">{row.role}</TableCell>
+                      <TableCell align="center">
+                        <input type="time" />
+                      </TableCell>
+                      <TableCell align="center">
+                        <input type="time" />
+                      </TableCell>
+                      <TableCell align="center">
+                        <EditWorkerForm selectedWorker={row} setRows={setRows} rows={rows} />
+                      </TableCell>
+                      <TableCell align="center">
+                        <DeleteDialog id={row.uuid} setRows={setRows} rows={rows} role="staff" />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              )}
+            </Table>
+          </TableContainer>
+        )}
+      </section>
     </>
   );
 }

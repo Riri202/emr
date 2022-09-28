@@ -61,10 +61,12 @@ function LabHome() {
               ) : (
                 payments &&
                 payments.map((payment, key) => {
-                  const { patientId, patient } = payment;
+                  const { patientId, patient, sessionId } = payment;
                   return (
                     <li key={key}>
-                      <Link to={`/lab-tests/${patientId}`} style={{ textDecoration: 'none' }}>
+                      <Link
+                        to={`/lab-tests/${patientId}/${sessionId}`}
+                        style={{ textDecoration: 'none' }}>
                         {patient.name}
                       </Link>
                     </li>

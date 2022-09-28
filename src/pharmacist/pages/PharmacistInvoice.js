@@ -31,10 +31,10 @@ const drugHeaders = [
   'Note',
   'Amount'
 ];
-const testHeaders = ['Index', 'Title', 'Description'];
+const testHeaders = ['Index', 'Title', 'Description', 'Amount'];
 function PharmacistInvoice() {
   const user = useCurrentUser();
-  const { patientId } = useParams();
+  const { patientId, sessionId } = useParams();
 
   const [rows, setRows] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -49,7 +49,7 @@ function PharmacistInvoice() {
       setAuthToken(user.token);
     }
     try {
-      const { data } = await getApprovedPaymentsForPatient(patientId);
+      const { data } = await getApprovedPaymentsForPatient(patientId, sessionId);
       setIsLoading(false);
       if (data) {
         setRows(data);
@@ -80,51 +80,59 @@ function PharmacistInvoice() {
         <section>
           <Paper className="flex flex-col items-center flex-1 px-3">
             <h3>Drugs</h3>
-            <TableContainer component={Paper}>
-              <Table className={classes.table}>
-                <TableHead>
-                  <TableRow>
-                    {drugHeaders.map((header, key) => {
-                      return (
-                        <TableCell key={key} align="center" className="bg-green-500">
-                          {header}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {isLoading ? (
-                    <CircularProgress size={30} />
-                  ) : rows && rows.prescriptions && !rows.prescriptions.length ? (
-                    <p className="text-lg pl-3 mb-3 text-red-500">No drugs in this invoice.</p>
+            {isLoading ? (
+              <CircularProgress size={30} />
+            ) : (
+              <TableContainer component={Paper}>
+                <Table className={classes.table}>
+                  <TableHead>
+                    <TableRow>
+                      {drugHeaders.map((header, key) => {
+                        return (
+                          <TableCell key={key} align="center" className="bg-green-500">
+                            {header}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                  </TableHead>
+                  {!isLoading && rows && rows.prescriptions && !rows.prescriptions.length ? (
+                    <tbody>
+                      <tr>
+                        <td className="text-lg pl-3 mb-3 text-red-500">
+                          No drugs in this invoice.{' '}
+                        </td>
+                      </tr>
+                    </tbody>
                   ) : (
                     rows &&
-                    rows.prescriptions &&
-                    rows.prescriptions.map((prescription, index) => {
-                      const { days, quantity, note } = prescription;
+                    rows.drugs &&
+                    rows.drugs.map((drug, index) => {
+                      const { days, name, quantity, note, id } = drug;
                       return (
-                        <TableRow key={index}>
-                          <TableCell align="center">{index + 1}</TableCell>
-                          <TableCell align="center"></TableCell>
-                          <TableCell align="center">{quantity}</TableCell>
-                          <TableCell align="center">{days} days</TableCell>
-                          <TableCell align="center">
-                            <span>&#8358;</span>
-                          </TableCell>
-                          <TableCell align="center">{note}</TableCell>
-                          <TableCell align="center">
-                            <span>&#8358;</span>
-                          </TableCell>
-                        </TableRow>
+                        <TableBody key={id}>
+                          <TableRow key={index}>
+                            <TableCell align="center">{index + 1}</TableCell>
+                            <TableCell align="center"></TableCell>
+                            <TableCell align="center">{quantity}</TableCell>
+                            <TableCell align="center">{days} days</TableCell>
+                            <TableCell align="center">
+                              <span>&#8358;</span>
+                            </TableCell>
+                            <TableCell align="center">{note}</TableCell>
+                            <TableCell align="center">
+                              <span>&#8358;</span>
+                            </TableCell>
+                          </TableRow>
+                        </TableBody>
                       );
                     })
                   )}
-                </TableBody>
-              </Table>
-            </TableContainer>
+                </Table>
+              </TableContainer>
+            )}
             <p className="flex self-end text-lg font-bold">
-              Grand Total:&nbsp; <span>&#8358;</span>
+              Total:&nbsp; <span>&#8358;</span>
             </p>
           </Paper>
         </section>
@@ -132,43 +140,50 @@ function PharmacistInvoice() {
         <section className="mt-5">
           <Paper className="flex flex-col items-center flex-1 px-3">
             <h3>Tests</h3>
-            <TableContainer component={Paper}>
-              <Table className={classes.table}>
-                <TableHead>
-                  <TableRow>
-                    {testHeaders.map((header, key) => {
-                      return (
-                        <TableCell key={key} align="center" className="bg-green-500">
-                          {header}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {isLoading ? (
-                    <CircularProgress size={30} />
-                  ) : rows && rows.tests && !rows.tests.length ? (
-                    <p className="text-lg pl-3 mb-3 text-red-500">No tests in this invoice.</p>
-                  ) : (
-                    rows &&
-                    rows.tests &&
-                    rows.tests.map((test, index) => {
-                      const { title, description } = test;
-                      return (
-                        <TableRow key={index}>
-                          <TableCell align="center">{index + 1}</TableCell>
-                          <TableCell align="center">{title}</TableCell>
-                          <TableCell align="center">{description}</TableCell>
-                        </TableRow>
-                      );
-                    })
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
+            {isLoading ? (
+              <CircularProgress size={30} />
+            ) : (
+              <TableContainer component={Paper}>
+                <Table className={classes.table}>
+                  <TableHead>
+                    <TableRow>
+                      {testHeaders.map((header, key) => {
+                        return (
+                          <TableCell key={key} align="center" className="bg-green-500">
+                            {header}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {!isLoading && rows && rows.tests && !rows.tests.length ? (
+                      <tr>
+                        <td className="text-lg pl-3 mb-3 text-red-500">
+                          No tests in this invoice.{' '}
+                        </td>
+                      </tr>
+                    ) : (
+                      rows &&
+                      rows.tests &&
+                      rows.tests.map((test, index) => {
+                        const { title, description, price } = test;
+                        return (
+                          <TableRow key={index}>
+                            <TableCell align="center">{index + 1}</TableCell>
+                            <TableCell align="center">{title}</TableCell>
+                            <TableCell align="center">{description}</TableCell>
+                            <TableCell align="center">{price}</TableCell>
+                          </TableRow>
+                        );
+                      })
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            )}
             <p className="flex self-end text-lg font-bold">
-              Grand Total:&nbsp; <span>&#8358;</span>
+              Total:&nbsp; <span>&#8358;</span>
             </p>
           </Paper>
         </section>

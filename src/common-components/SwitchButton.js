@@ -17,7 +17,7 @@ function SwitchButton({ id, user }) {
   const isPermitted = useAdminLoginPermission();
   // eslint-disable-next-line no-unused-vars
   const [isAllowed, setIsAllowed] = useState(isPermitted);
-  console.log('first', { isPermitted, isAllowed });
+  // console.log('first', { isPermitted, isAllowed });
 
   const getStatus = (value) => {
     if (value === true) {
@@ -26,32 +26,32 @@ function SwitchButton({ id, user }) {
       return 'FALSE';
     }
   };
-  const getStaffStatus = async () => {
-    if (user) {
-      setAuthToken(user.token);
-    }
-    try {
-      const uuid = id;
-      const { data } = await getSingleStaff(uuid);
-      if (data) {
-        localStorage.setItem('isAdminLoginPermitted', JSON.stringify(data.status));
-        console.log(data.status);
-      }
-    } catch (error) {
-      toast.error('an error occured');
-    }
-  };
+  // const getStaffStatus = async () => {
+  //   if (user) {
+  //     setAuthToken(user.token);
+  //   }
+  //   try {
+  //     const uuid = id;
+  //     const { data } = await getSingleStaff(uuid);
+  //     if (data) {
+  //       localStorage.setItem('isAdminLoginPermitted', JSON.stringify(data.status));
+  //       console.log(data.status);
+  //     }
+  //   } catch (error) {
+  //     toast.error('an error occured');
+  //   }
+  // };
 
   const handleChange = async (event) => {
     setIsLoading(true);
     setIsAllowed(event.target.checked);
-    console.log(event.target.checked, 'checkedTarget');
+    // console.log(event.target.checked, 'checkedTarget');
     if (isAllowed) {
       dispatch(allowed());
     } else {
       dispatch(notAllowed());
     }
-    console.log('second', { isPermitted, isAllowed });
+    // console.log('second', { isPermitted, isAllowed });
 
     if (user) {
       setAuthToken(user.token);
@@ -70,7 +70,7 @@ function SwitchButton({ id, user }) {
   };
 
   useEffect(() => {
-    getStaffStatus();
+    // getStaffStatus();
   }, [isAllowed]);
   return (
     <div className="flex justify-center">

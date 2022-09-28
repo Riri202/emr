@@ -28,7 +28,7 @@ const headers = ['Index', 'Title', 'Description'];
 function LabTests() {
   const classes = useStyles();
   const user = useCurrentUser();
-  const { patientId } = useParams();
+  const { patientId, sessionId } = useParams();
 
   const [rows, setRows] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -39,7 +39,7 @@ function LabTests() {
       setAuthToken(user.token);
     }
     try {
-      const { data } = await getApprovedPaymentsForPatient(patientId);
+      const { data } = await getApprovedPaymentsForPatient(patientId, sessionId);
       setIsLoading(false);
       if (data) {
         setRows(data);
@@ -72,47 +72,55 @@ function LabTests() {
         <section>
           <Paper className="flex flex-col items-center flex-1 px-3">
             <h3>Tests</h3>
-            <TableContainer component={Paper}>
-              <Table className={classes.table}>
-                <TableHead>
-                  <TableRow>
-                    {headers.map((header, key) => {
-                      return (
-                        <TableCell key={key} align="center" className="bg-green-500">
-                          {header}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {isLoading ? (
-                    <CircularProgress size={30} />
-                  ) : rows && rows.tests && !rows.tests.length ? (
-                    <p className="text-lg pl-3 mb-3 text-red-500">No tests in this invoice.</p>
+            {isLoading ? (
+              <CircularProgress size={30} />
+            ) : (
+              <TableContainer component={Paper}>
+                <Table className={classes.table}>
+                  <TableHead>
+                    <TableRow>
+                      {headers.map((header, key) => {
+                        return (
+                          <TableCell key={key} align="center" className="bg-green-500">
+                            {header}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                  </TableHead>
+                  {rows.tests && !rows.tests.length ? (
+                    <tbody>
+                      <tr>
+                        <td className="text-lg pl-3 mb-3 text-red-500">
+                          No tests in this invoice.
+                        </td>
+                      </tr>
+                    </tbody>
                   ) : (
                     rows &&
                     rows.tests &&
                     rows.tests.map((test, index) => {
                       const { title, description, id } = test;
                       return (
-                        <Link
-                          className="hover:bg-slate-400"
-                          key={id}
-                          to={`/lab-results/${id}/${title}/${description}`}
-                          style={{ textDecoration: 'none' }}>
-                          <TableRow>
-                            <TableCell align="center">{index + 1}</TableCell>
-                            <TableCell align="center">{title}</TableCell>
-                            <TableCell align="center">{description}</TableCell>
-                          </TableRow>
-                        </Link>
+                        <TableBody key={id}>
+                          <Link
+                            className="hover:bg-slate-400"
+                            key={id}
+                            to={`/lab-results/${id}/${title}/${description}`}
+                            style={{ textDecoration: 'none' }}>
+                            <TableRow>
+                              <TableCell align="center">{index + 1}</TableCell>
+                              <TableCell align="center">{title}</TableCell>
+                              <TableCell align="center">{description}</TableCell>
+                            </TableRow>
+                          </Link>
+                        </TableBody>
                       );
                     })
                   )}
-                </TableBody>
-              </Table>
-            </TableContainer>
+                </Table>
+              </TableContainer>
+            )}
             <p className="flex self-end text-lg font-bold">
               Grand Total:&nbsp; <span>&#8358;</span>
             </p>

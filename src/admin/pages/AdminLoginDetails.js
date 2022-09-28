@@ -62,6 +62,7 @@ function AdminLoginDetails() {
   return (
     <>
       <h2 className="text-lg mb-3">EMR Admins</h2>
+      <div>{isLoading ? <CircularProgress size={30} /> : null}</div>
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
@@ -76,12 +77,12 @@ function AdminLoginDetails() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {isLoading ? (
-              <CircularProgress size={30} />
-            ) : !adminList.length ? (
-              <p className="text-lg pl-3 mb-3 text-red-500">
-                Admin list is empty. Add new admin in worker login details page.
-              </p>
+            {!isLoading && !adminList.length ? (
+              <tr>
+                <td className="text-lg pl-3 mb-3 text-red-500">
+                  Admin list is empty. Add new admin in worker login details page.
+                </td>
+              </tr>
             ) : (
               adminList.map((row, key) => (
                 <TableRow key={key}>

@@ -29,6 +29,13 @@ import {
   CASHIER_USER_ROLE
 } from './utils/constants';
 import LabResults from './lab/pages/LabResults';
+import WorkerLoginDetails from './admin/pages/WorkerLoginDetails';
+import AdminLoginDetails from './admin/pages/AdminLoginDetails';
+import Inventory from './admin/pages/Inventory';
+import PatientsBiodata from './admin/pages/PatientsBiodata';
+import PatientDetails from './admin/pages/Patients';
+import Symptoms from './admin/pages/Symptoms';
+import Diagnosis from './admin/pages/Diagnosis';
 
 function App() {
   return (
@@ -40,7 +47,15 @@ function App() {
 
           {/* TODO wrap routes in admin nav component with protected routes */}
           <Route element={<ProtectedRoutes allowedRole={ADMIN_USER_ROLE} />}>
-            <Route path="/admin//*" element={<AdminLayout />} />
+            <Route path="admin" element={<AdminLayout />}>
+              <Route path="worker-login" element={<WorkerLoginDetails />} />
+              <Route path="admin-login" element={<AdminLoginDetails />} />
+              <Route path="inventory" element={<Inventory />} />
+              <Route path="patients-biodata" element={<PatientsBiodata />} />
+              <Route path="patient/:id/:name" element={<PatientDetails />} />
+              <Route path="symptoms" element={<Symptoms />} />
+              <Route path="diagnosis" element={<Diagnosis />} />
+            </Route>
           </Route>
 
           <Route element={<ProtectedRoutes allowedRole={RECEPTIONIST_USER_ROLE} />}>
@@ -69,13 +84,13 @@ function App() {
           {/* pharmacist routes */}
           <Route element={<ProtectedRoutes allowedRole={PHARMACIST_USER_ROLE} />}>
             <Route path="/pharmacist" element={<PharmacistHome />} />
-            <Route path="/approved-invoice/:patientId" element={<PharmacistInvoice />} />
+            <Route path="/approved-invoice/:patientId/:sessionId" element={<PharmacistInvoice />} />
           </Route>
 
           {/* lab routes */}
           <Route element={<ProtectedRoutes allowedRole={LAB_USER_ROLE} />}>
             <Route path="/lab" element={<LabHome />} />
-            <Route path="/lab-tests/:patientId" element={<LabTests />} />
+            <Route path="/lab-tests/:patientId/:sessionId" element={<LabTests />} />
             <Route path="/lab-results/:testId/:testTitle/:testDesc" element={<LabResults />} />
           </Route>
 

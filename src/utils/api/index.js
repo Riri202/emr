@@ -84,12 +84,21 @@ export const getAllSessionsForPatient = (patientId) => {
   return httpService.get(SessionUrl + '/' + patientId, { params: { page: 0, size: 5 } });
 };
 
+export const addToDiagnosisList = (data) => {
+  return httpService.post(StaffUrl + DiagnosisUrl, data);
+};
 export const addNewDiagnosis = (data) => {
   return httpService.post(DiagnosisUrl, data);
 };
 
+export const addToSymptomList = (data) => {
+  return httpService.post(StaffUrl + SymptomsUrl, data);
+};
 export const addNewSymptom = (data) => {
   return httpService.post(SymptomsUrl, data);
+};
+export const getSymptomsList = () => {
+  return httpService.get(LabUrl + SymptomsUrl);
 };
 
 export const approvePayment = (data) => {
@@ -98,6 +107,6 @@ export const approvePayment = (data) => {
 export const getApprovedPayments = () => {
   return httpService.get(ApprovePaymentUrl);
 };
-export const getApprovedPaymentsForPatient = (patientId) => {
-  return httpService.get(ApprovePaymentUrl + '/' + patientId);
+export const getApprovedPaymentsForPatient = (patientId, sessionId) => {
+  return httpService.get(ApprovePaymentUrl + '/session/' + sessionId + '/' + patientId);
 };

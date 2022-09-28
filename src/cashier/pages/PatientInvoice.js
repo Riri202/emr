@@ -120,7 +120,9 @@ function PatientInvoice() {
                 </TableHead>
                 <TableBody>
                   {prescription && !prescription.length ? (
-                    <p className="text-lg pl-3 mb-3 text-red-500">No drugs in this invoice</p>
+                    <tr>
+                      <td className="text-lg pl-3 mb-3 text-red-500">No drugs in this invoice. </td>
+                    </tr>
                   ) : (
                     prescription.map((item, index) => {
                       const { drug, note, id, quantity, days } = item;
@@ -166,7 +168,9 @@ function PatientInvoice() {
                 </TableHead>
                 <TableBody>
                   {tests && !tests.length ? (
-                    <p className="text-lg pl-3 mb-3 text-red-500">No tests in this invoice</p>
+                    <tr>
+                      <td className="text-lg pl-3 mb-3 text-red-500">No tests in this invoice. </td>
+                    </tr>
                   ) : (
                     tests.map((test, index) => {
                       const { title, description, id } = test;

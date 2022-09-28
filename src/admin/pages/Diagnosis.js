@@ -9,15 +9,15 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import { toast } from 'react-toastify';
 import { Edit } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
 import DeleteDialog from '../components/DeleteDialog';
-import { Divider } from '@material-ui/core';
 import InputDetailsForm from '../components/InputDetailsForm';
 import useForm from '../../utils/formValidations/useForm';
+import setAuthToken from '../../utils/setAuthToken';
+import { useCurrentUser } from '../../utils/hooks';
+import { addToDiagnosisList } from '../../utils/api';
 
 const useStyles = makeStyles({
   table: {
@@ -27,20 +27,14 @@ const useStyles = makeStyles({
 
 function Diagnosis() {
   const classes = useStyles();
+  const user = useCurrentUser();
+
   const headers = ['No', 'Diagnosis', 'Edit', 'Delete'];
   const [isAddingDiagnosis, setIsAddingDiagnosis] = useState(false);
-  const [rows, setRows] = useState(JSON.parse(localStorage.getItem('diagnosisRows')) ?? []);
-  // const [inputData, setInputData] = useState({
-  //   id: '',
-  //   diagnosis: ''
-  // });
-  // const { id, diagnosis } = inputData;
-  // const handleChange = (e) => {
-  //   setInputData((prevState) => ({
-  //     ...prevState,
-  //     [e.target.name]: e.target.value
-  //   }));
-  // };
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [rows, setRows] = useState([]);
+
   const handleCsvChange = (event) => {
     // Passing file data (event.target.files[0]) to parse using Papa.parse
     Papa.parse(event.target.files[0], {
@@ -62,38 +56,35 @@ function Diagnosis() {
     });
   };
 
-  const addDiagnosis = (e) => {
-    e.preventDefault();
-    const inputData = { id, diagnosis };
+  const addDiagnosis = async () => {
     setIsAddingDiagnosis(true);
-    if (rows.length > 0) {
-      setRows([...rows, inputData]);
+    const requestData = { name };
+    if (user) {
+      setAuthToken(user.token);
     }
-    if (rows.length === 0) {
-      setRows([inputData]);
+    try {
+      const { data } = await addToDiagnosisList(requestData);
+      setIsAddingDiagnosis(false);
+      toast.success('Item added successfully');
+      if (rows.length) {
+        setRows([...rows, data]);
+      }
+      if (!rows.length) {
+        setRows([data]);
+      }
+    } catch (error) {
+      setIsAddingDiagnosis(false);
+      toast.error(error.message);
     }
-    setIsAddingDiagnosis(false);
   };
-
-  // persist data in local storage
-  useEffect(() => {
-    localStorage.setItem('diagnosisRows', JSON.stringify(rows));
-  }, [rows]);
 
   const { handleChange, values, errors, handleSubmit } = useForm(addDiagnosis);
 
-  const { id, diagnosis } = values;
+  const { name } = values;
   const formInputDetails = [
     {
-      // Name might change depending on what is in the backend
-      name: 'diagnosis',
-      id: 'diagnosis',
+      name: 'name',
       label: 'Diagnosis'
-    },
-    {
-      name: 'id',
-      id: 'id',
-      label: 'ID'
     }
   ];
   return (
@@ -109,7 +100,7 @@ function Diagnosis() {
         btnText="Add diagnosis"
       />
       <TableContainer component={Paper}>
-        <h2 className="text-lg mb-3 pl-3">Diagnoses List</h2>
+        <h2 className="text-lg mb-3 pl-3">Diagnosis List</h2>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -122,16 +113,20 @@ function Diagnosis() {
               })}
             </TableRow>
           </TableHead>
-          {rows.length === 0 ? (
-            <p className="text-lg mb-3 pl-3 text-red-500">
-              Diagnoses list is empty. Add new diagnosis above
-            </p>
+          {!isLoading && !rows.length ? (
+            <tbody>
+              <tr>
+                <td className="text-lg pl-3 mb-3 text-red-500">
+                  Diagnosis list is empty. Add new diagnosis above
+                </td>
+              </tr>
+            </tbody>
           ) : (
             <TableBody>
               {rows.map((row, index) => (
                 <TableRow key={index}>
                   <TableCell align="center">{index + 1}</TableCell>
-                  <TableCell align="center">{row.diagnosis}</TableCell>
+                  <TableCell align="center">{row.name}</TableCell>
                   <TableCell align="center">
                     <IconButton className="outline-none">
                       <Edit />

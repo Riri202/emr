@@ -172,56 +172,69 @@ function PatientsBiodata() {
         btnText="Add new patient"
         isDateRequired={true}
       />
-      <TableContainer component={Paper}>
-        <Table className={classes.table} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              {headers.map((header, key) => {
-                return (
-                  <TableCell key={key} align="center" className="bg-green-500">
-                    {header}
-                  </TableCell>
-                );
-              })}
-            </TableRow>
-          </TableHead>
-          {isLoading ? (
-            <CircularProgress size={30} />
-          ) : !rows.length ? (
-            <p className="text-lg mb-3 pl-3 text-red-500">
-              Patients list is empty. Add new Patients above
-            </p>
-          ) : (
-            <TableBody>
-              {rows.map((row, index) => {
-                const dob = new Date(row.dob).toDateString();
-                return (
-                  <TableRow key={row.name}>
-                    <TableCell align="center">{index + 1}</TableCell>
-                    <TableCell align="center">{row.id}</TableCell>
-                    <TableCell align="center">
-                      <Link
-                        style={{ textDecoration: 'none' }}
-                        to={`/patients-biodata/${row.id}/${row.name}`}>
-                        {row.name}
-                      </Link>
-                    </TableCell>
-                    <TableCell align="center">{row.email}</TableCell>
-                    <TableCell align="center">{row.phoneNumber}</TableCell>
-                    <TableCell align="center">{dob}</TableCell>
-                    <TableCell align="center">
-                      <EditPatientForm selectedPatient={row} setRows={setRows} rows={rows} />
-                    </TableCell>
-                    <TableCell align="center">
-                      <DeleteDialog id={row.uuid} setRows={setRows} rows={rows} role="patient" />
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          )}
-        </Table>
-      </TableContainer>
+      <section>
+        {isLoading ? (
+          <CircularProgress size={30} />
+        ) : (
+          <TableContainer component={Paper}>
+            <Table className={classes.table} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  {headers.map((header, key) => {
+                    return (
+                      <TableCell key={key} align="center" className="bg-green-500">
+                        {header}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              </TableHead>
+              {!isLoading && !rows.length ? (
+                <tbody>
+                  <tr>
+                    <td className="text-lg pl-3 mb-3 text-red-500">
+                      Patients list is empty. Add new Patients above
+                    </td>
+                  </tr>
+                </tbody>
+              ) : (
+                <TableBody>
+                  {rows.map((row, index) => {
+                    const dob = new Date(row.dob).toDateString();
+                    return (
+                      <TableRow key={row.name}>
+                        <TableCell align="center">{index + 1}</TableCell>
+                        <TableCell align="center">{row.id}</TableCell>
+                        <TableCell className="hover:bg-slate-400" align="center">
+                          <Link
+                            style={{ textDecoration: 'none' }}
+                            to={`/admin/patient/${row.id}/${row.name}`}>
+                            {row.name}
+                          </Link>
+                        </TableCell>
+                        <TableCell align="center">{row.email}</TableCell>
+                        <TableCell align="center">{row.phoneNumber}</TableCell>
+                        <TableCell align="center">{dob}</TableCell>
+                        <TableCell align="center">
+                          <EditPatientForm selectedPatient={row} setRows={setRows} rows={rows} />
+                        </TableCell>
+                        <TableCell align="center">
+                          <DeleteDialog
+                            id={row.uuid}
+                            setRows={setRows}
+                            rows={rows}
+                            role="patient"
+                          />
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              )}
+            </Table>
+          </TableContainer>
+        )}
+      </section>
     </div>
   );
 }
