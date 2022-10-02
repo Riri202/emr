@@ -1,5 +1,6 @@
+/* eslint-disable no-unused-vars */
 import * as React from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 // import { Routes, Route } from 'react-router-dom';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -18,7 +19,7 @@ import ListItem from '@mui/material/ListItem';
 import { ListItemButton } from '@mui/material';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { FaHospitalUser, FaUserNurse } from 'react-icons/fa';
+import { FaHospitalUser, FaUserNurse, FaDiagnoses } from 'react-icons/fa';
 import { RiAdminLine } from 'react-icons/ri';
 import { MdOutlineInventory, MdSick } from 'react-icons/md';
 
@@ -131,9 +132,30 @@ export default function AdminLayout() {
     }
   };
 
-  // const handleListItemActive = () => {
-  //   setIsActive(!isActive);
-  // };
+  const navLinks = {
+    0: '/admin/worker-login',
+    1: `/admin/admin-login`,
+    2: `/admin/inventory`,
+    3: `/admin/patients-biodata`,
+    4: `/admin/symptoms`,
+    5: `/admin/diagnosis`
+  };
+  const navItems = [
+    'Worker Login',
+    'Admin Login',
+    'Inventory',
+    'Patients Bio-Data',
+    'Symptoms',
+    'Diagnosis'
+  ];
+  const navIcons = {
+    0: <FaUserNurse />,
+    1: <RiAdminLine />,
+    2: <MdOutlineInventory />,
+    3: <FaHospitalUser />,
+    4: <MdSick />,
+    5: <FaDiagnoses />
+  };
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -165,15 +187,15 @@ export default function AdminLayout() {
         </DrawerHeader>
         <Divider />
         <List>
-          {[
-            'Worker Login',
-            'Admin Login',
-            'Inventory',
-            'Patients Bio-Data',
-            'Symptoms',
-            'Diagnosis'
-          ].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+          {navItems.map((text, index) => (
+            <ListItem
+              key={text}
+              component={NavLink}
+              to={navLinks[index]}
+              style={({ isActive }) => ({ backgroundColor: isActive ? '#f6f7fa' : '' })}
+              exact
+              disablePadding
+              sx={{ display: 'block', color: 'inherit' }}>
               <ListItemButton
                 sx={{
                   minHeight: 48,
@@ -182,22 +204,13 @@ export default function AdminLayout() {
                   width: 25,
                   height: 25
                 }}
-                onClick={() => handleNavigation(index)}>
+                // onClick={() => handleNavigation(index)}
+              >
                 <ListItemIcon
-                  className={(open ? 'mr-3' : 'auto') + ' justify-center min-w-0 text-green-500'}>
-                  {index === 0 ? (
-                    <FaUserNurse />
-                  ) : index === 1 ? (
-                    <RiAdminLine />
-                  ) : index === 2 ? (
-                    <MdOutlineInventory />
-                  ) : index === 3 ? (
-                    <FaHospitalUser />
-                  ) : index === 4 ? (
-                    <MdSick />
-                  ) : (
-                    <MdSick />
-                  )}
+                  className={
+                    (open ? 'mr-3' : 'auto') + ' justify-center min-w-0 text-green-500 text-2xl'
+                  }>
+                  {navIcons[index]}
                 </ListItemIcon>
                 <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>

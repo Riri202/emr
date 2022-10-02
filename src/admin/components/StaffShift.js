@@ -66,26 +66,36 @@ function StaffShift({ user, selectedStaff, getStaff, name }) {
       </IconButton>
       <Dialog open={open} onClose={handleClose} fullWidth>
         <form onSubmit={setStaffTimes} className="w-full">
-          <DialogTitle>Set {`${name}'s`} shift hours </DialogTitle>
+          <DialogTitle>Set {`${name}'s`} clock in and clock out hours </DialogTitle>
           <DialogContent>
             <DialogContentText style={{ marginBottom: 5 }}>Edit details below</DialogContentText>
             <div className="flex flex-col space-y-4">
-              <input
-                className="p-3"
-                type="time"
-                name="clockIn"
-                defaultValue={clockIn}
-                required
-                onChange={handleStaffClockChange}
-              />
-              <input
-                className="p-3"
-                type="time"
-                name="clockOut"
-                defaultValue={clockOut}
-                required
-                onChange={handleStaffClockChange}
-              />
+              <div className="flex flex-col space-y-1">
+                <label htmlFor="clockIn" className="font-semibold">
+                  Clock In:
+                </label>
+                <input
+                  className="p-3"
+                  type="time"
+                  name="clockIn"
+                  defaultValue={clockIn}
+                  required
+                  onChange={handleStaffClockChange}
+                />
+              </div>
+              <div className="flex flex-col space-y-1">
+                <label htmlFor="clockOut" className="font-semibold">
+                  Clock Out:
+                </label>
+                <input
+                  className="p-3"
+                  type="time"
+                  name="clockOut"
+                  defaultValue={clockOut}
+                  required
+                  onChange={handleStaffClockChange}
+                />
+              </div>
               <div className="w-full">
                 <IntuitiveButton text="Set shift" isLoading={isLoading} />
               </div>

@@ -8,8 +8,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import { Edit, Delete } from '@mui/icons-material';
-import IconButton from '@mui/material/IconButton';
+// import { Edit, Delete } from '@mui/icons-material';
+// import IconButton from '@mui/material/IconButton';
 import setAuthToken from '../../utils/setAuthToken';
 import { getAllStaff } from '../../utils/api';
 import { CircularProgress } from '@material-ui/core';
@@ -23,7 +23,7 @@ const useStyles = makeStyles({
   }
 });
 
-const headers = ['Name', 'Username', 'Role', 'Access', 'Edit', 'Delete'];
+const headers = ['Name', 'Username', 'Role', 'Access'];
 
 function AdminLoginDetails() {
   const user = useCurrentUser();
@@ -92,7 +92,7 @@ function AdminLoginDetails() {
                   <TableCell align="center">
                     <SwitchButton id={row.uuid} user={user} />
                   </TableCell>
-                  <TableCell align="center">
+                  {/* <TableCell align="center">
                     <IconButton className="outline-none">
                       <Edit />
                     </IconButton>
@@ -101,7 +101,7 @@ function AdminLoginDetails() {
                     <IconButton>
                       <Delete />
                     </IconButton>
-                  </TableCell>
+                  </TableCell> */}
                 </TableRow>
               ))
             )}
