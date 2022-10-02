@@ -211,11 +211,11 @@ export default function AdminLayout() {
           <Box sx={{ display: 'flex' }}>
             <Box sx={{ flexGrow: 1 }} />
             <Typography
-              variant="h3"
+              variant="h5"
               noWrap
               component="div"
               sx={{ mt: -1, mr: 2, justifySelf: 'end' }}>
-              Welcome admin {user.user.fullName}
+              <span className="font-semibold">Admin</span> {user.user.fullName}
             </Typography>
           </Box>
         </div>

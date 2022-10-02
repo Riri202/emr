@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
@@ -43,8 +44,11 @@ function PatientDetails() {
       toast.error(error.message);
     }
   };
-
-  const { handleChange, values, handleSubmit } = useForm(addBiodata);
+  // isEditing = Object.keys(data).length !== 0 or data !== {}... data is where response from GET patient biodata endpoint so if it's null then no biodata for patient so it can't be an editing.
+  function onSubmit() {
+    return isEditing ? UpdateBiodata() : addBiodata();
+  }
+  const { handleChange, values, handleSubmit } = useForm(onSubmit);
 
   const { age, sex, address, genotype, bloodGroup } = values;
 
@@ -153,47 +157,49 @@ function PatientDetails() {
       <p className="text-xl font-bold mb-3">Patient Biodata Details</p>
       <p className="text-lg mb-1">Patient ID: {id}</p>
       <p className="text-lg mb-3">Patient Name: {name}</p>
-      <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-2 gap-4">
-          {formInputDetails.map((detail) => {
-            const { name, id, label, isSelectInput, options } = detail;
-            return (
-              <div key={id} className="col-span-1">
-                {isSelectInput ? (
-                  <TextField
-                    fullWidth
-                    select
-                    options={options}
-                    label={label}
-                    name={name}
-                    defaultValue=""
-                    onChange={handleChange}
-                    variant="outlined">
-                    {options.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.title}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                ) : (
-                  <TextField
-                    fullWidth
-                    onChange={handleChange}
-                    label={label}
-                    name={name}
-                    variant="outlined"
-                  />
-                )}
-              </div>
-            );
-          })}
-        </div>
-        <div className="flex mt-6 flex-1 flex-row justify-end">
-          <div className="w-1/4">
-            <IntuitiveButton text="Submit" />
+      <Paper style={{ padding: 35 }}>
+        <form onSubmit={handleSubmit}>
+          <div className="grid grid-cols-2 gap-4">
+            {formInputDetails.map((detail) => {
+              const { name, id, label, isSelectInput, options } = detail;
+              return (
+                <div key={id} className="col-span-1">
+                  {isSelectInput ? (
+                    <TextField
+                      fullWidth
+                      select
+                      options={options}
+                      label={label}
+                      name={name}
+                      defaultValue=""
+                      onChange={handleChange}
+                      variant="outlined">
+                      {options.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.title}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  ) : (
+                    <TextField
+                      fullWidth
+                      onChange={handleChange}
+                      label={label}
+                      name={name}
+                      variant="outlined"
+                    />
+                  )}
+                </div>
+              );
+            })}
           </div>
-        </div>
-      </form>
+          <div className="flex mt-6 flex-1 flex-row justify-end">
+            <div className="w-1/4">
+              <IntuitiveButton text="Submit" />
+            </div>
+          </div>
+        </form>
+      </Paper>
     </div>
   );
 }
