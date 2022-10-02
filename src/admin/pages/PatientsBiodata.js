@@ -37,7 +37,7 @@ function PatientsBiodata() {
 
   const navigate = useNavigate();
 
-  const handlePatientRowClick = (id, name) => {
+  const handlePatientNameClick = (id, name) => {
     navigate(`/admin/patient/${id}/${name}`);
   };
 
@@ -171,13 +171,15 @@ function PatientsBiodata() {
                   {rows.map((row, index) => {
                     const dob = new Date(row.dob).toDateString();
                     return (
-                      <TableRow
-                        key={row.name}
-                        onClick={() => handlePatientRowClick(row.id, row.name)}
-                        className="cursor-pointer hover:shadow-md hover:bg-slate-50">
+                      <TableRow key={row.name}>
                         <TableCell align="center">{index + 1}</TableCell>
                         <TableCell align="center">{row.id}</TableCell>
-                        <TableCell align="center">{row.name}</TableCell>
+                        <TableCell
+                          align="center"
+                          onClick={() => handlePatientNameClick(row.id, row.name)}
+                          className="cursor-pointer hover:shadow-md bg-slate-50">
+                          {row.name}
+                        </TableCell>
                         <TableCell align="center">{row.email}</TableCell>
                         <TableCell align="center">{row.phoneNumber}</TableCell>
                         <TableCell align="center">{dob}</TableCell>

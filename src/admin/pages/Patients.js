@@ -173,7 +173,8 @@ function PatientDetails() {
                       name={name}
                       defaultValue=""
                       onChange={handleChange}
-                      variant="outlined">
+                      variant="outlined"
+                    >
                       {options.map((option) => (
                         <MenuItem key={option.value} value={option.value}>
                           {option.title}

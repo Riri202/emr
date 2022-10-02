@@ -75,7 +75,8 @@ export default function DeleteDialog({ id, rows, setRows, role }) {
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 width: '100%'
-              }}>
+              }}
+            >
               <Button
                 sx={{ mr: 3 }}
                 onClick={handleClose}
@@ -85,7 +86,8 @@ export default function DeleteDialog({ id, rows, setRows, role }) {
                   padding: 12,
                   backgroundColor: '#888888',
                   color: '#000'
-                }}>
+                }}
+              >
                 Cancel
               </Button>
               <div className="w-1/2">

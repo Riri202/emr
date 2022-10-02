@@ -17,7 +17,8 @@ function TransformButton({ btnText, name, id, isSuccessful, isLoading }) {
             type="submit"
             disabled={isLoading}
             variant="contained"
-            className="w-full p-3 mt-1 bg-green-500 text-[#000] ml-3">
+            className="w-full p-3 mt-1 bg-green-500 text-[#000] ml-3"
+          >
             {btnText}
           </Button>
           {isLoading && (

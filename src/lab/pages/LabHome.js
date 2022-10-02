@@ -66,7 +66,8 @@ function LabHome() {
                     <li key={key}>
                       <Link
                         to={`/lab-tests/${patientId}/${sessionId}`}
-                        style={{ textDecoration: 'none' }}>
+                        style={{ textDecoration: 'none' }}
+                      >
                         {patient.name}
                       </Link>
                     </li>

@@ -107,7 +107,8 @@ function LabTests() {
                             className="hover:bg-slate-400"
                             key={id}
                             to={`/lab-results/${id}/${title}/${description}`}
-                            style={{ textDecoration: 'none' }}>
+                            style={{ textDecoration: 'none' }}
+                          >
                             <TableRow>
                               <TableCell align="center">{index + 1}</TableCell>
                               <TableCell align="center">{title}</TableCell>

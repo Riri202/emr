@@ -26,7 +26,8 @@ function InputDetailsForm({
           display: 'flex',
           flexDirection: 'column',
           spacing: 2
-        }}>
+        }}
+      >
         <form onSubmit={onSubmit}>
           <div className="flex flex-row justify-center space-x-4">
             {formDetails.map((detail, key) => {

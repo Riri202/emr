@@ -35,7 +35,8 @@ export default function AccountMenu() {
         aria-controls={open ? 'demo-positioned-menu' : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
-        onClick={handleClick}>
+        onClick={handleClick}
+      >
         <Avatar sx={{ bgcolor: '#fff', mt: 1 }} variant="circular">
           <Person sx={{ color: 'rgb(34 197 94)' }} />
         </Avatar>
@@ -74,7 +75,8 @@ export default function AccountMenu() {
           }
         }}
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+      >
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
     </div>

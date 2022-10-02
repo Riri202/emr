@@ -159,7 +159,8 @@ function DoctorHome() {
                           <TableCell align="center">
                             <Link
                               style={{ textDecoration: 'none' }}
-                              to={`/patient/${data.Patient.uuid}/${data.Patient.name}/${data.session.id}`}>
+                              to={`/patient/${data.Patient.uuid}/${data.Patient.name}/${data.session.id}`}
+                            >
                               {data.Patient.name}
                             </Link>
                           </TableCell>

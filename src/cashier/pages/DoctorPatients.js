@@ -68,7 +68,8 @@ function DoctorPatients() {
                     <li key={key}>
                       <Link
                         to={`/patient-invoice/${session.id}/${Patient.id}`}
-                        style={{ textDecoration: 'none' }}>
+                        style={{ textDecoration: 'none' }}
+                      >
                         {data.Patient.name}
                       </Link>
                     </li>

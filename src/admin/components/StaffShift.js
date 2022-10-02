@@ -114,7 +114,8 @@ function StaffShift({ user, selectedStaff, getStaff, name }) {
                 backgroundColor: '#888888',
                 color: '#000',
                 justifySelf: 'self-end'
-              }}>
+              }}
+            >
               Cancel
             </Button>
           </DialogActions>

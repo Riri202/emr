@@ -170,7 +170,8 @@ export default function AdminLayout() {
             sx={{
               marginRight: 5,
               ...(open && { display: 'none' })
-            }}>
+            }}
+          >
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
@@ -195,7 +196,8 @@ export default function AdminLayout() {
               style={({ isActive }) => ({ backgroundColor: isActive ? '#f6f7fa' : '' })}
               exact
               disablePadding
-              sx={{ display: 'block', color: 'inherit' }}>
+              sx={{ display: 'block', color: 'inherit' }}
+            >
               <ListItemButton
                 sx={{
                   minHeight: 48,
@@ -209,7 +211,8 @@ export default function AdminLayout() {
                 <ListItemIcon
                   className={
                     (open ? 'mr-3' : 'auto') + ' justify-center min-w-0 text-green-500 text-2xl'
-                  }>
+                  }
+                >
                   {navIcons[index]}
                 </ListItemIcon>
                 <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
@@ -227,7 +230,8 @@ export default function AdminLayout() {
               variant="h5"
               noWrap
               component="div"
-              sx={{ mt: -1, mr: 2, justifySelf: 'end' }}>
+              sx={{ mt: -1, mr: 2, justifySelf: 'end' }}
+            >
               <span className="font-semibold">Admin</span> {user.user.fullName}
             </Typography>
           </Box>

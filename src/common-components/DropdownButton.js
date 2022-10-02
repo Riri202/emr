@@ -14,7 +14,8 @@ export default function DropdownButton({ menuItems, onChange, choice }) {
         name="select"
         label="select"
         value={choice}
-        onChange={onChange}>
+        onChange={onChange}
+      >
         {menuItems.map((option) => (
           <MenuItem key={option} value={option}>
             {option}

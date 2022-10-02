@@ -89,14 +89,16 @@ function XrayResults() {
                       align="center"
                       component="th"
                       scope="row"
-                      className="bg-green-500 font-bold">
+                      className="bg-green-500 font-bold"
+                    >
                       Total Amount
                     </TableCell>
                     <TableCell
                       align="center"
                       component="th"
                       scope="row"
-                      className="bg-green-500 font-bold">
+                      className="bg-green-500 font-bold"
+                    >
                       <span>&#8358;</span> {drugsTotalAmount}
                     </TableCell>
                   </TableRow>
@@ -112,7 +114,8 @@ function XrayResults() {
             />
             <Button
               onClick={handleDisplayAddTestSection}
-              className="p-2 mt-1 bg-green-500 text-[#000] ml-3">
+              className="p-2 mt-1 bg-green-500 text-[#000] ml-3"
+            >
               Add x-ray test results
             </Button>
           </div>
