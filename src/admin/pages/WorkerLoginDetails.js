@@ -182,7 +182,7 @@ function WorkerLoginDetails() {
                         <input
                           type="time"
                           name="clockIn"
-                          className="p-2"
+                          className="text-base"
                           defaultValue={row.clockIn || '09:00'}
                           readOnly
                         />
@@ -191,7 +191,7 @@ function WorkerLoginDetails() {
                         <input
                           type="time"
                           name="clockOut"
-                          className="p-2"
+                          className="text-base"
                           defaultValue={row.clockOut || '00:00'}
                           readOnly
                         />

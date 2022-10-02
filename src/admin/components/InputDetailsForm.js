@@ -58,7 +58,7 @@ function InputDetailsForm({
         </form>
         <Divider className="mt-2 mb-2" orientation="horizontal" variant="fullWidth" />
         <form className="flex flex-row mt-2 justify-center">
-          <div className="p-3 bg-green-500 rounded-md cursor-pointer">
+          <div className="p-3 bg-green-500 hover:bg-green-600 rounded-md cursor-pointer">
             <label htmlFor="csvFile" className="cursor-pointer">
               Import a csv files <FaFileCsv className="text-[30px] mb-[-5px]" />
               <input

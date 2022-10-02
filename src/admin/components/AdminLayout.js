@@ -193,7 +193,7 @@ export default function AdminLayout() {
               key={text}
               component={NavLink}
               to={navLinks[index]}
-              style={({ isActive }) => ({ backgroundColor: isActive ? '#f6f7fa' : '' })}
+              style={({ isActive }) => ({ backgroundColor: isActive ? '#dddee1' : '' })}
               exact
               disablePadding
               sx={{ display: 'block', color: 'inherit' }}

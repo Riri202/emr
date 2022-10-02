@@ -75,7 +75,7 @@ function StaffShift({ user, selectedStaff, getStaff, name }) {
                   Clock In:
                 </label>
                 <input
-                  className="p-3"
+                  className="p-2 text-lg"
                   type="time"
                   name="clockIn"
                   defaultValue={clockIn}
@@ -88,7 +88,7 @@ function StaffShift({ user, selectedStaff, getStaff, name }) {
                   Clock Out:
                 </label>
                 <input
-                  className="p-3"
+                  className="p-2 text-lg"
                   type="time"
                   name="clockOut"
                   defaultValue={clockOut}

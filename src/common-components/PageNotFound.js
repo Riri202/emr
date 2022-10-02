@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { MdArrowBackIosNew } from 'react-icons/md';
 import { useCurrentUser } from '../utils/hooks';
 
-function Unauthorized() {
+function PageNotFound() {
   const user = useCurrentUser();
 
   if (!user) return (window.location.href = '/');
@@ -15,9 +15,9 @@ function Unauthorized() {
     <div className="h-screen flex flex-row justify-center items-center">
       <div className=" flex flex-col space-y-2 justify-center text-center">
         <div className="">
-          <p className="text-4xl font-bold">401: Unauthorized</p>
+          <p className="text-4xl font-bold">404: Not Found</p>
           <p className="text-2xl font-semibold">
-            Ooops! Looks like you are not authorized to access this page.
+            Ooops! Looks like the page you are looking for does not exist.
           </p>
         </div>
         <div className="flex flex-row justify-center">
@@ -33,4 +33,4 @@ function Unauthorized() {
   );
 }
 
-export default Unauthorized;
+export default PageNotFound;

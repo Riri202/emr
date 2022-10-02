@@ -36,6 +36,7 @@ import PatientsBiodata from './admin/pages/PatientsBiodata';
 import PatientDetails from './admin/pages/Patients';
 import Symptoms from './admin/pages/Symptoms';
 import Diagnosis from './admin/pages/Diagnosis';
+import PageNotFound from './common-components/PageNotFound';
 
 function App() {
   return (
@@ -100,6 +101,7 @@ function App() {
           </Route>
 
           <Route path="/unauthorized" element={<Unauthorized />} />
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
       </Router>
     </div>
