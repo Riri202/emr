@@ -5,8 +5,7 @@ import { toast } from 'react-toastify';
 import { updatePatient } from '../../utils/api';
 import setAuthToken from '../../utils/setAuthToken';
 
-const user = JSON.parse(localStorage.getItem('user'));
-export default function EditWorkerForm({ selectedPatient, setRows, rows }) {
+export default function EditWorkerForm({ selectedPatient, setRows, rows, user }) {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -15,9 +14,10 @@ export default function EditWorkerForm({ selectedPatient, setRows, rows }) {
     name: selectedPatient.name,
     email: selectedPatient.email,
     phoneNumber: selectedPatient.phoneNumber,
-    dob: selectedPatient.dob
+    dob: selectedPatient.dob,
+    uuid: selectedPatient.uuid
   });
-  const { name, email, phoneNumber, dob } = inputData;
+  const { name, email, phoneNumber, dob, uuid } = inputData;
   const handleChange = (e) => {
     setInputData((prevState) => ({
       ...prevState,
@@ -41,13 +41,13 @@ export default function EditWorkerForm({ selectedPatient, setRows, rows }) {
   const handleUpdatePatientDetails = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    const uuid = selectedPatient.uuid;
-    const patientFormData = { name, email, phoneNumber, dob, uuid };
+    // const uuid = selectedPatient.uuid;
+    // const patientFormData = { name, email, phoneNumber, dob, uuid };
     if (user) {
       setAuthToken(user.token);
     }
     try {
-      const { data } = await updatePatient(patientFormData);
+      const { data } = await updatePatient(inputData);
       updatedPatient(uuid, inputData);
       setIsLoading(false);
       setOpen(false);

@@ -28,7 +28,7 @@ function EditForm({
         <Edit />
       </IconButton>
       <Dialog open={open} onClose={handleClose} fullWidth>
-        <form onSubmit={onSubmit} className="w-full">
+        <form onSubmit={onSubmit} className="w-full p-4">
           <DialogTitle>Edit {titleText}</DialogTitle>
           <DialogContent>
             <DialogContentText style={{ marginBottom: 5 }}>Edit details below</DialogContentText>
@@ -65,7 +65,7 @@ function EditForm({
                 paddingBottom: 8,
                 paddingLeft: 16,
                 paddingRight: 16,
-                backgroundColor: 'rgb(34 197 94)',
+                backgroundColor: '#888888',
                 color: '#000',
                 justifySelf: 'self-end'
               }}

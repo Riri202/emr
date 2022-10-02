@@ -45,7 +45,6 @@ function App() {
           {/* public route */}
           <Route path="/" element={<Login />} />
 
-          {/* TODO wrap routes in admin nav component with protected routes */}
           <Route element={<ProtectedRoutes allowedRole={ADMIN_USER_ROLE} />}>
             <Route path="admin" element={<AdminLayout />}>
               <Route path="worker-login" element={<WorkerLoginDetails />} />

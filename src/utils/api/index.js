@@ -30,6 +30,10 @@ export const updateStaffStatus = (uuid, status) => {
   return httpService.put(StaffUrl + '/status/' + uuid + '/' + status);
 };
 
+export const setStaffShiftHours = (data) => {
+  return httpService.put(StaffUrl + '/hours', data);
+};
+
 export const sendQueue = (data) => {
   return httpService.post(sendQueueUrl, data);
 };
@@ -39,6 +43,9 @@ export const getReceivedQueues = (staffId, status) => {
 
 export const addNewPatients = (data) => {
   return httpService.post(PatientUrl, data);
+};
+export const addPatientBiodata = (data) => {
+  return httpService.post(PatientUrl + '/bio', data);
 };
 export const getAllPatients = (page, size) => {
   return httpService.get(PatientUrl, { params: { page, size } });
@@ -90,6 +97,12 @@ export const addToDiagnosisList = (data) => {
 export const addNewDiagnosis = (data) => {
   return httpService.post(DiagnosisUrl, data);
 };
+export const getDiagnosisList = () => {
+  return httpService.get(StaffUrl + DiagnosisUrl);
+};
+export const updateDiagnosisItem = (data) => {
+  return httpService.put(StaffUrl + DiagnosisUrl, data);
+};
 
 export const addToSymptomList = (data) => {
   return httpService.post(StaffUrl + SymptomsUrl, data);
@@ -98,7 +111,10 @@ export const addNewSymptom = (data) => {
   return httpService.post(SymptomsUrl, data);
 };
 export const getSymptomsList = () => {
-  return httpService.get(LabUrl + SymptomsUrl);
+  return httpService.get(StaffUrl + SymptomsUrl);
+};
+export const updateSymptomItem = (data) => {
+  return httpService.put(StaffUrl + SymptomsUrl, data);
 };
 
 export const approvePayment = (data) => {

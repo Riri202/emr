@@ -9,14 +9,13 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import { Edit } from '@mui/icons-material';
-import IconButton from '@mui/material/IconButton';
 import DeleteDialog from '../components/DeleteDialog';
 import InputDetailsForm from '../components/InputDetailsForm';
 import useForm from '../../utils/formValidations/useForm';
 import setAuthToken from '../../utils/setAuthToken';
 import { useCurrentUser } from '../../utils/hooks';
 import { addToSymptomList, getSymptomsList } from '../../utils/api';
+import EditSymptomForm from '../components/EditSymptomsForm';
 
 const useStyles = makeStyles({
   table: {
@@ -85,16 +84,15 @@ function Symptoms() {
 
   const getSymptoms = async () => {
     setIsLoading(true);
-    const page = 0;
-    const size = 20;
     if (user) {
       setAuthToken(user.token);
     }
     try {
-      const { data } = await getSymptomsList(page, size);
+      const { data } = await getSymptomsList();
       setIsLoading(false);
       if (data) {
-        setRows(data.rows);
+        console.log(data);
+        setRows(data);
       }
     } catch (error) {
       setIsLoading(false);
@@ -157,9 +155,7 @@ function Symptoms() {
                   <TableCell align="center">{index + 1}</TableCell>
                   <TableCell align="center">{row.name}</TableCell>
                   <TableCell align="center">
-                    <IconButton className="outline-none">
-                      <Edit />
-                    </IconButton>
+                    <EditSymptomForm selectedItem={row} setRows={setRows} rows={rows} user={user} />
                   </TableCell>
                   <TableCell align="center">
                     <DeleteDialog id={row.id} setRows={setRows} rows={rows} />

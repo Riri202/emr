@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { makeStyles } from '@material-ui/core/styles';
@@ -17,6 +18,7 @@ import InputDetailsForm from '../components/InputDetailsForm';
 import useForm from '../../utils/formValidations/useForm';
 import { CircularProgress } from '@material-ui/core';
 import { useCurrentUser } from '../../utils/hooks';
+import StaffShift from '../components/StaffShift';
 
 const useStyles = makeStyles({
   table: {
@@ -24,7 +26,16 @@ const useStyles = makeStyles({
   }
 });
 
-const headers = ['Name', 'Username', 'Role', 'Shift start', 'Shift end', 'Edit', 'Delete'];
+const headers = [
+  'Name',
+  'Username',
+  'Role',
+  'Clock In',
+  'Clock Out',
+  'Set Shift',
+  'Edit',
+  'Delete'
+];
 
 function WorkerLoginDetails() {
   const user = useCurrentUser();
@@ -33,20 +44,6 @@ function WorkerLoginDetails() {
   const [rows, setRows] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isAddingStaff, setIsAddingStaff] = useState(false);
-
-  // const [inputData, setInputData] = useState({
-  //   fullName: '',
-  //   username: '',
-  //   password: '',
-  //   role: ''
-  // });
-  // const { fullName, username, password, role } = inputData;
-  // const handleChange = (e) => {
-  //   setInputData((prevState) => ({
-  //     ...prevState,
-  //     [e.target.name]: e.target.value
-  //   }));
-  // };
 
   const handleCsvChange = (event) => {
     // Passing file data (event.target.files[0]) to parse using Papa.parse
@@ -182,13 +179,36 @@ function WorkerLoginDetails() {
                       <TableCell align="center">{row.username}</TableCell>
                       <TableCell align="center">{row.role}</TableCell>
                       <TableCell align="center">
-                        <input type="time" />
+                        <input
+                          type="time"
+                          name="clockIn"
+                          defaultValue={row.clockIn || '09:00'}
+                          readOnly
+                        />
                       </TableCell>
                       <TableCell align="center">
-                        <input type="time" />
+                        <input
+                          type="time"
+                          name="clockOut"
+                          defaultValue={row.clockOut || '00:00'}
+                          readOnly
+                        />
                       </TableCell>
                       <TableCell align="center">
-                        <EditWorkerForm selectedWorker={row} setRows={setRows} rows={rows} />
+                        <StaffShift
+                          name={row.fullName}
+                          getStaff={getStaff}
+                          user={user}
+                          selectedStaff={row}
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        <EditWorkerForm
+                          selectedWorker={row}
+                          setRows={setRows}
+                          rows={rows}
+                          user={user}
+                        />
                       </TableCell>
                       <TableCell align="center">
                         <DeleteDialog id={row.uuid} setRows={setRows} rows={rows} role="staff" />

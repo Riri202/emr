@@ -11,6 +11,7 @@ import IconButton from '@mui/material/IconButton';
 import { Delete } from '@mui/icons-material';
 import IntuitiveButton from '../../common-components/IntuitiveButton';
 import authHeader from '../../redux/features/auth/authHeader';
+import { DialogContent, DialogContentText } from '@material-ui/core';
 
 export default function DeleteDialog({ id, rows, setRows, role }) {
   const [open, setOpen] = React.useState(false);
@@ -60,19 +61,35 @@ export default function DeleteDialog({ id, rows, setRows, role }) {
         <Delete />
       </IconButton>
       <Dialog open={open} onClose={handleClose} fullWidth>
-        <form className="w-full" onSubmit={handleDelete}>
+        <form className="w-full p-4" onSubmit={handleDelete}>
           <DialogTitle>Are you sure you want to delete?</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              This will permanently remove the details from the system and cannot be reversed.
+            </DialogContentText>
+          </DialogContent>
           <DialogActions>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                width: '100%'
+              }}>
               <Button
                 sx={{ mr: 3 }}
                 onClick={handleClose}
-                variant="outlined"
-                className="w-1/2 p-3 mt-1 bg-green-500 text-[#000]">
-                No
+                variant="contained"
+                style={{
+                  width: '50%',
+                  padding: 12,
+                  backgroundColor: '#888888',
+                  color: '#000'
+                }}>
+                Cancel
               </Button>
               <div className="w-1/2">
-                <IntuitiveButton text="Yes" isLoading={isLoading} />
+                <IntuitiveButton isBackgroundRed={true} text="Yes" isLoading={isLoading} />
               </div>
             </Box>
           </DialogActions>

@@ -188,7 +188,7 @@ const useForm = (callback) => {
   };
 
   const handleChange = (event) => {
-    event.persist();
+    // event.persist();
 
     let name = event.target.name;
     let val = event.target.value;

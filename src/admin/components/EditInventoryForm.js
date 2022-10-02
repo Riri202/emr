@@ -5,8 +5,7 @@ import setAuthToken from '../../utils/setAuthToken';
 import { updateInventory } from '../../utils/api';
 import EditForm from './EditForm';
 
-const user = JSON.parse(localStorage.getItem('user'));
-export default function EditInventoryForm({ selectedItem, setRows, rows }) {
+export default function EditInventoryForm({ selectedItem, setRows, rows, user }) {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -15,9 +14,10 @@ export default function EditInventoryForm({ selectedItem, setRows, rows }) {
     name: selectedItem.name,
     quantity: selectedItem.quantity,
     price: selectedItem.price,
-    type: selectedItem.type
+    type: selectedItem.type,
+    id: selectedItem.id
   });
-  const { name, quantity, price, type } = inputData;
+  const { name, quantity, price, type, id } = inputData;
   const handleChange = (e) => {
     setInputData((prevState) => ({
       ...prevState,
@@ -41,17 +41,17 @@ export default function EditInventoryForm({ selectedItem, setRows, rows }) {
   const handleUpdateInventoryItem = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    const id = selectedItem.id;
-    const InventoryFormData = { id, name, price, quantity, type };
+    // const id = selectedItem.id;
+    // const InventoryFormData = { id, name, price, quantity, type };
     if (user) {
       setAuthToken(user.token);
     }
     try {
-      const data = await updateInventory(InventoryFormData);
-      updatedInventory(id, data);
+      const { data } = await updateInventory(inputData);
+      updatedInventory(id, inputData);
       setIsLoading(false);
       setOpen(false);
-      toast.success('Inventory item edited successfully');
+      toast.success(data.message);
     } catch (error) {
       setIsLoading(false);
       console.log(error);

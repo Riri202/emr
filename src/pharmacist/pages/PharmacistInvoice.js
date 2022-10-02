@@ -96,7 +96,7 @@ function PharmacistInvoice() {
                       })}
                     </TableRow>
                   </TableHead>
-                  {!isLoading && rows && rows.prescriptions && !rows.prescriptions.length ? (
+                  {!isLoading && rows && !rows.length ? (
                     <tbody>
                       <tr>
                         <td className="text-lg pl-3 mb-3 text-red-500">
@@ -106,34 +106,36 @@ function PharmacistInvoice() {
                     </tbody>
                   ) : (
                     rows &&
-                    rows.drugs &&
-                    rows.drugs.map((drug, index) => {
-                      const { days, name, quantity, note, id } = drug;
-                      return (
-                        <TableBody key={id}>
-                          <TableRow key={index}>
-                            <TableCell align="center">{index + 1}</TableCell>
-                            <TableCell align="center"></TableCell>
-                            <TableCell align="center">{quantity}</TableCell>
-                            <TableCell align="center">{days} days</TableCell>
-                            <TableCell align="center">
-                              <span>&#8358;</span>
-                            </TableCell>
-                            <TableCell align="center">{note}</TableCell>
-                            <TableCell align="center">
-                              <span>&#8358;</span>
-                            </TableCell>
-                          </TableRow>
-                        </TableBody>
-                      );
-                    })
+                    rows
+                      .filter((item) => item.Prescriptions.length)
+                      .map((item, index) => {
+                        const { Prescriptions, id, amount } = item;
+                        const { drug, note, quantity, days } = Prescriptions[0];
+                        return (
+                          <TableBody key={id}>
+                            <TableRow key={index}>
+                              <TableCell align="center">{index + 1}</TableCell>
+                              <TableCell align="center">{drug.name}</TableCell>
+                              <TableCell align="center">{quantity}</TableCell>
+                              <TableCell align="center">{days} days</TableCell>
+                              <TableCell align="center">
+                                <span>&#8358; {drug.price}</span>
+                              </TableCell>
+                              <TableCell align="center">{note}</TableCell>
+                              <TableCell align="center">
+                                <span>&#8358; {amount}</span>
+                              </TableCell>
+                            </TableRow>
+                          </TableBody>
+                        );
+                      })
                   )}
                 </Table>
               </TableContainer>
             )}
-            <p className="flex self-end text-lg font-bold">
-              Total:&nbsp; <span>&#8358;</span>
-            </p>
+            {/* <p className="flex self-end text-lg font-bold">
+              Total:&nbsp; <span>&#8358; {amount}</span>
+            </p> */}
           </Paper>
         </section>
 

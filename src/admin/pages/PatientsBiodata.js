@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
 import { toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -34,20 +34,12 @@ function PatientsBiodata() {
   const [rows, setRows] = useState([]);
   const [isAddingPatient, setIsAddingPatient] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  // const [inputData, setInputData] = useState({
-  //   name: '',
-  //   email: '',
-  //   phoneNumber: '',
-  //   dob: ''
-  // });
-  // const { name, email, phoneNumber, dob } = inputData;
 
-  // const handleChange = (e) => {
-  //   setInputData((prevState) => ({
-  //     ...prevState,
-  //     [e.target.name]: e.target.value
-  //   }));
-  // };
+  const navigate = useNavigate();
+
+  const handlePatientRowClick = (id, name) => {
+    navigate(`/admin/patient/${id}/${name}`);
+  };
 
   const handleCsvChange = (event) => {
     // Passing file data (event.target.files[0]) to parse using Papa.parse
@@ -81,39 +73,16 @@ function PatientsBiodata() {
       setIsAddingPatient(false);
       toast.success('Item added successfully');
       if (rows.length > 0) {
-        setRows([...rows, data]);
+        setRows([...rows, patientFormData]);
       }
       if (rows.length === 0) {
-        setRows([data]);
+        setRows([patientFormData]);
       }
     } catch (error) {
       setIsAddingPatient(false);
       toast.error(error.message);
     }
   };
-  // const getAllPatients = async () => {
-  //   // setIsLoading(true);
-  //   try {
-  //     const response = await axios({
-  //       method: 'get',
-  //       url: 'https://emr-server.herokuapp.com/patient',
-  //       params: {
-  //         page: 0,
-  //         size: 20
-  //       },
-  //       headers: authHeader()
-  //     }).then((response) => {
-  //       console.log(response);
-  //       if (response.data.rows.length) {
-  //         setRows(response.data.rows);
-  //       }
-  //       // setIsLoading(false);
-  //     });
-  //     console.log(response);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
   const getPatients = async () => {
     setIsLoading(true);
     const page = 0;
@@ -145,7 +114,7 @@ function PatientsBiodata() {
     {
       name: 'name',
       id: 'name',
-      label: 'Name'
+      label: 'fullname'
     },
     {
       name: 'email',
@@ -202,21 +171,23 @@ function PatientsBiodata() {
                   {rows.map((row, index) => {
                     const dob = new Date(row.dob).toDateString();
                     return (
-                      <TableRow key={row.name}>
+                      <TableRow
+                        key={row.name}
+                        onClick={() => handlePatientRowClick(row.id, row.name)}
+                        className="cursor-pointer hover:shadow-md hover:bg-slate-50">
                         <TableCell align="center">{index + 1}</TableCell>
                         <TableCell align="center">{row.id}</TableCell>
-                        <TableCell className="hover:bg-slate-400" align="center">
-                          <Link
-                            style={{ textDecoration: 'none' }}
-                            to={`/admin/patient/${row.id}/${row.name}`}>
-                            {row.name}
-                          </Link>
-                        </TableCell>
+                        <TableCell align="center">{row.name}</TableCell>
                         <TableCell align="center">{row.email}</TableCell>
                         <TableCell align="center">{row.phoneNumber}</TableCell>
                         <TableCell align="center">{dob}</TableCell>
                         <TableCell align="center">
-                          <EditPatientForm selectedPatient={row} setRows={setRows} rows={rows} />
+                          <EditPatientForm
+                            selectedPatient={row}
+                            setRows={setRows}
+                            rows={rows}
+                            user={user}
+                          />
                         </TableCell>
                         <TableCell align="center">
                           <DeleteDialog

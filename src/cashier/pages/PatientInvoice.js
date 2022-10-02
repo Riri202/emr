@@ -31,7 +31,7 @@ const drugHeaders = [
   'Note',
   'Amount'
 ];
-const testHeaders = ['Index', 'Title', 'Description'];
+const testHeaders = ['Index', 'Title', 'Description', 'Price'];
 function PatientInvoice() {
   const user = useCurrentUser();
 
@@ -46,6 +46,7 @@ function PatientInvoice() {
     return (
       prescription &&
       prescription
+        .filter((item) => !item.paid)
         .map((item) => item.quantity * item.drug.price)
         .reduce((prev, curr) => prev + curr, 0)
     );
@@ -124,25 +125,27 @@ function PatientInvoice() {
                       <td className="text-lg pl-3 mb-3 text-red-500">No drugs in this invoice. </td>
                     </tr>
                   ) : (
-                    prescription.map((item, index) => {
-                      const { drug, note, id, quantity, days } = item;
-                      const total = quantity * drug.price;
-                      return (
-                        <TableRow key={id}>
-                          <TableCell align="center">{index + 1}</TableCell>
-                          <TableCell align="center">{drug.name}</TableCell>
-                          <TableCell align="center">{quantity}</TableCell>
-                          <TableCell align="center">{days} days</TableCell>
-                          <TableCell align="center">
-                            <span>&#8358;</span> {drug.price}
-                          </TableCell>
-                          <TableCell align="center">{note}</TableCell>
-                          <TableCell align="center">
-                            <span>&#8358;</span> {total.toLocaleString()}
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })
+                    prescription
+                      .filter((item) => !item.paid)
+                      .map((item, index) => {
+                        const { drug, note, id, quantity, days } = item;
+                        const total = quantity * drug.price;
+                        return (
+                          <TableRow key={id}>
+                            <TableCell align="center">{index + 1}</TableCell>
+                            <TableCell align="center">{drug.name}</TableCell>
+                            <TableCell align="center">{quantity}</TableCell>
+                            <TableCell align="center">{days} days</TableCell>
+                            <TableCell align="center">
+                              <span>&#8358;</span> {drug.price}
+                            </TableCell>
+                            <TableCell align="center">{note}</TableCell>
+                            <TableCell align="center">
+                              <span>&#8358;</span> {total.toLocaleString()}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })
                   )}
                 </TableBody>
               </Table>
@@ -172,16 +175,19 @@ function PatientInvoice() {
                       <td className="text-lg pl-3 mb-3 text-red-500">No tests in this invoice. </td>
                     </tr>
                   ) : (
-                    tests.map((test, index) => {
-                      const { title, description, id } = test;
-                      return (
-                        <TableRow key={id}>
-                          <TableCell align="center">{index + 1}</TableCell>
-                          <TableCell align="center">{title}</TableCell>
-                          <TableCell align="center">{description}</TableCell>
-                        </TableRow>
-                      );
-                    })
+                    tests
+                      .filter((test) => !test.paid)
+                      .map((test, index) => {
+                        const { title, description, id, price } = test;
+                        return (
+                          <TableRow key={id}>
+                            <TableCell align="center">{index + 1}</TableCell>
+                            <TableCell align="center">{title}</TableCell>
+                            <TableCell align="center">{description}</TableCell>
+                            <TableCell align="center">{price}</TableCell>
+                          </TableRow>
+                        );
+                      })
                   )}
                 </TableBody>
               </Table>

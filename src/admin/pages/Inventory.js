@@ -247,6 +247,7 @@ function Inventory() {
                             selectedItem={row}
                             setRows={setInventoryList}
                             rows={inventoryList}
+                            user={user}
                           />
                         </TableCell>
                         <TableCell align="center">

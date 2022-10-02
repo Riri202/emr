@@ -32,7 +32,7 @@ function Login() {
       const userRole = user.user.role;
       switch (userRole) {
         case ADMIN_USER_ROLE:
-          navigate(`/admin//*`);
+          navigate(`/admin`);
           break;
         case RECEPTIONIST_USER_ROLE:
           navigate(`/receptionist`);
