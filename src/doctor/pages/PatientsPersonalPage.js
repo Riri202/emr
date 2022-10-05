@@ -46,14 +46,17 @@ function PatientsPersonalPage() {
   return (
     <div className="">
       <div className="p-10">
-        <section className="flex space-x-9 items-center mb-6">
+        <section className="grid justify-items-stretch mb-6">
+          <div className="justify-self-start">
+
           <div className="flex space-x-3 items-center">
             <Icon className="mt-[-5px]">
               <Sick />
             </Icon>
             <h1 className="">{name}</h1>
           </div>
-          <div>
+          </div>
+          <div className="justify-self-center">
             <NavTabs currentTab={currentTab} handleTabChange={handleTabChange} tabs={tabs} />
           </div>
         </section>

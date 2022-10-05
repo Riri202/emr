@@ -7,6 +7,8 @@ import { getSessionPrescriptions, getSessionTests } from '../../utils/api';
 import setAuthToken from '../../utils/setAuthToken';
 import PrescriptionHistory from '../components/PrescriptionHistory';
 import TestHistory from '../components/TestHistory';
+import SymptomsHistory from '../components/SymptomsHistory';
+import DiagnosisHistory from '../components/DiagnosisHistory';
 
 const user = JSON.parse(localStorage.getItem('user'));
 
@@ -48,6 +50,7 @@ function PatientHistory() {
       toast.error('an error occured');
     }
   };
+
   useEffect(() => {
     getPrescriptionsInSession();
     getTestsInSession();
@@ -58,6 +61,8 @@ function PatientHistory() {
       <div className="px-10 pb-8">
         <h1 className="">Patient History</h1>
         <Paper>
+          <SymptomsHistory user={user} sessionId={sessionId} />
+          <DiagnosisHistory user={user} sessionId={sessionId} />
           <PrescriptionHistory isLoading={isPrescritionLoading} prescription={prescription} />
           <TestHistory isLoading={isTestLoading} tests={tests} />
         </Paper>

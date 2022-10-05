@@ -21,13 +21,15 @@ import { MenuItem } from '@mui/material';
 import IntuitiveButton from '../../common-components/IntuitiveButton';
 import { useCurrentUser } from '../../utils/hooks';
 import setAuthToken from '../../utils/setAuthToken';
-import { addPatientBiodata } from '../../utils/api';
+import { addPatientBiodata, getPatientBiodata } from '../../utils/api';
 import useForm from '../../utils/formValidations/useForm';
 
 function PatientDetails() {
   const { id, name } = useParams();
   const user = useCurrentUser();
   const [isAdding, setIsAdding] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [info, setInfo] = useState({});
 
   const addBiodata = async () => {
     setIsAdding(true);
@@ -38,6 +40,7 @@ function PatientDetails() {
     try {
       const { data } = await addPatientBiodata(biodata);
       setIsAdding(false);
+      getBiodata();
       toast.success('Item added successfully');
     } catch (error) {
       setIsAdding(false);
@@ -45,10 +48,32 @@ function PatientDetails() {
     }
   };
   // isEditing = Object.keys(data).length !== 0 or data !== {}... data is where response from GET patient biodata endpoint so if it's null then no biodata for patient so it can't be an editing.
+
+  const getBiodata = async () => {
+    setIsLoading(true);
+    if (user) {
+      setAuthToken(user.token);
+    }
+    try {
+      const { data } = await getPatientBiodata(id);
+      setIsLoading(false);
+      console.log(data)
+      setInfo(data)
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error);
+      // toast.error('an error occured');
+    }
+  };
+
+  useEffect(() => {
+    getBiodata();
+  }, [])
+  
   function onSubmit() {
     return isEditing ? UpdateBiodata() : addBiodata();
   }
-  const { handleChange, values, handleSubmit } = useForm(onSubmit);
+  const { handleChange, values, handleSubmit } = useForm(addBiodata);
 
   const { age, sex, address, genotype, bloodGroup } = values;
 

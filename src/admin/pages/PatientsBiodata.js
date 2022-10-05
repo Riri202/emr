@@ -68,16 +68,16 @@ function PatientsBiodata() {
       setAuthToken(user.token);
     }
     try {
-      const { data } = await addNewPatients(patientFormData);
-      console.log(data);
+      await addNewPatients(patientFormData);
       setIsAddingPatient(false);
-      toast.success('Item added successfully');
-      if (rows.length > 0) {
-        setRows([...rows, patientFormData]);
-      }
-      if (rows.length === 0) {
-        setRows([patientFormData]);
-      }
+      toast.success('Patient added successfully');
+      // if (rows.length > 0) {
+      //   setRows([...rows, patientFormData]);
+      // }
+      // if (rows.length === 0) {
+      //   setRows([patientFormData]);
+      // }
+      getPatients();
     } catch (error) {
       setIsAddingPatient(false);
       toast.error(error.message);

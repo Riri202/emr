@@ -73,15 +73,16 @@ function Inventory() {
       setAuthToken(user.token);
     }
     try {
-      const { data } = await addNewInventory(inventoryFormData);
+      await addNewInventory(inventoryFormData);
       setIsAddingInventory(false);
       toast.success('Item added successfully');
-      if (inventoryList.length > 0) {
-        setInventoryList([...inventoryList, data]);
-      }
-      if (inventoryList.length === 0) {
-        setInventoryList([data]);
-      }
+      // if (inventoryList.length > 0) {
+      //   setInventoryList([...inventoryList, data]);
+      // }
+      // if (inventoryList.length === 0) {
+      //   setInventoryList([data]);
+      // }
+      getInventory();
     } catch (error) {
       setIsAddingInventory(false);
       toast.error(error.message);

@@ -18,7 +18,6 @@ const API_URL = 'https://emr-server.herokuapp.com';
 export const login = createAsyncThunk(`${API_URL}/auth/login`, async (userData, thunkAPI) => {
   try {
     const { data } = await authService.login(userData);
-    console.log(data);
     if (data) {
       setAuthToken(data.token);
       localStorage.setItem('user', JSON.stringify(data));

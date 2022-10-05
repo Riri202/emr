@@ -60,8 +60,7 @@ function DiagnosisForm({ diagnosis, handleChange, inputData, sessionId, patientI
   );
 }
 
-function DiagnosisCard({ sessionId, patientId }) {
-  const drugs = JSON.parse(localStorage.getItem('drugsList'));
+function DiagnosisCard({ sessionId, patientId, diagnosisList }) {
   const [choice, setChoice] = useState([]);
   const [inputData, setInputData] = useState({
     title: '',
@@ -93,7 +92,7 @@ function DiagnosisCard({ sessionId, patientId }) {
         <h3 className="text-lg mb-3">Diagnosis</h3>
         <DropdownSearch
           btnText="Add diagnosis"
-          menuItems={drugs}
+          menuItems={diagnosisList}
           handleCheckboxChange={handleDiagnosisChoice}
         />
       </div>

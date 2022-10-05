@@ -45,9 +45,15 @@ const useForm = (callback) => {
         if (value.length <= 10) {
           setErrors({
             ...errors,
-            phoneNumber: 'Invalid phone number, must be 11 characters'
+            phoneNumber: 'Invalid phone number, must be 11 digits'
           });
-        } else {
+        } else if (!new RegExp(/^\d+$/).test(value)) {
+          setErrors({
+            ...errors,
+            phoneNumber: 'Invalid phone number, must contain only digits'
+          });
+        }  
+        else {
           let newObj = omit(errors, 'phoneNumber');
           setErrors(newObj);
         }

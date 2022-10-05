@@ -12,7 +12,6 @@ import { getAllSessionsForPatient } from '../../utils/api';
 import setAuthToken from '../../utils/setAuthToken';
 import { useCurrentUser } from '../../utils/hooks';
 
-// const user = JSON.parse(localStorage.getItem('user'));
 
 function HistoryOverview() {
   // const [isSearching, setIsSearching] = useState(false);
@@ -47,7 +46,7 @@ function HistoryOverview() {
     <div>
       <div className="pb-8 px-10">
         <h1>Patients History</h1>
-        <Paper>
+        <Paper style={{padding: 10}}>
           <List>
             {historyList.map((history, index) => {
               const { createdAt, id } = history;
@@ -59,7 +58,7 @@ function HistoryOverview() {
               const date = new Date(createdAt).toDateString();
               return (
                 <>
-                  <ListItem component={Link} to={`/history/${sessionId}`}>
+                  <ListItem component={Link} to={`/history/${sessionId}`} className="hover:bg-slate-100">
                     <ListItemAvatar>
                       <Avatar className="bg-orange-500">{monthShortened}</Avatar>
                     </ListItemAvatar>

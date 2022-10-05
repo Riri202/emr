@@ -60,15 +60,16 @@ function Diagnosis() {
       setAuthToken(user.token);
     }
     try {
-      const { data } = await addToDiagnosisList(requestData);
+      await addToDiagnosisList(requestData);
       setIsAddingDiagnosis(false);
-      toast.success('Item added successfully');
-      if (rows.length) {
-        setRows([...rows, data]);
-      }
-      if (!rows.length) {
-        setRows([data]);
-      }
+      toast.success('Diagnosis added successfully');
+      // if (rows.length) {
+      //   setRows([...rows, data]);
+      // }
+      // if (!rows.length) {
+      //   setRows([data]);
+      // }
+      getDiagnosis();
     } catch (error) {
       setIsAddingDiagnosis(false);
       toast.error(error.message);
@@ -155,7 +156,7 @@ function Diagnosis() {
                     />
                   </TableCell>
                   <TableCell align="center">
-                    <DeleteDialog id={row.id} setRows={setRows} rows={rows} />
+                    <DeleteDialog id={row.id} setRows={setRows} role="diagnosis" rows={rows} />
                   </TableCell>
                 </TableRow>
               ))}

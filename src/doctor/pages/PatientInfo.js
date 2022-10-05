@@ -6,9 +6,10 @@ const patientsInfo = JSON.parse(localStorage.getItem('patientsInfo/Biodata'));
 
 function PatientInfo() {
   return (
-    <div>
-      <Paper className="p-5 w-full">
-        <h3>Patients Information and Biodata</h3>
+    <>
+    <div className="px-10 pb-8">
+    <h1>Patients Information and Biodata</h1>
+      <Paper className="p-3 w-full">
         <div>
           <ol>
             {patientsInfo &&
@@ -23,6 +24,7 @@ function PatientInfo() {
         </div>
       </Paper>
     </div>
+    </>
   );
 }
 

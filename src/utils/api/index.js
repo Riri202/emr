@@ -47,6 +47,9 @@ export const addNewPatients = (data) => {
 export const addPatientBiodata = (data) => {
   return httpService.post(PatientUrl + '/bio', data);
 };
+export const getPatientBiodata = (patientId) => {
+  return httpService.get(PatientUrl + '/bio' + '/' + patientId);
+};
 export const getAllPatients = (page, size) => {
   return httpService.get(PatientUrl, { params: { page, size } });
 };
@@ -103,6 +106,9 @@ export const getDiagnosisList = () => {
 export const updateDiagnosisItem = (data) => {
   return httpService.put(StaffUrl + DiagnosisUrl, data);
 };
+export const getSessionDiagnosis = (sessionId) => {
+  return httpService.get(DiagnosisUrl + "/session/" + sessionId);
+};
 
 export const addToSymptomList = (data) => {
   return httpService.post(StaffUrl + SymptomsUrl, data);
@@ -115,6 +121,9 @@ export const getSymptomsList = () => {
 };
 export const updateSymptomItem = (data) => {
   return httpService.put(StaffUrl + SymptomsUrl, data);
+};
+export const getSessionSymptoms = (sessionId) => {
+  return httpService.get(SymptomsUrl + "/session/" + sessionId);
 };
 
 export const approvePayment = (data) => {

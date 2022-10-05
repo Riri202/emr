@@ -47,7 +47,7 @@ function InputDetailsForm({
               );
             })}
             {isDateRequired ? (
-              <input name="dob" type="date" id="dob" onChange={onChange} required className="p-3" />
+              <input name="dob" type="date" id="dob" max={new Date().toISOString().substring(0, 10)} onChange={onChange} required className="p-3" />
             ) : null}
           </div>
           <div className="flex justify-center mt-2 mb-2">

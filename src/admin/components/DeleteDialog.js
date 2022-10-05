@@ -28,7 +28,7 @@ export default function DeleteDialog({ id, rows, setRows, role }) {
     if (role === 'patient' || role === 'staff') {
       const filteredRows = rows.filter((row) => row.uuid !== id);
       setRows(filteredRows);
-    } else if (role === 'inventory') {
+    } else if (role === 'inventory' || role === 'diagnosis' || role === 'symptoms') {
       const filteredRows = rows.filter((row) => row.id !== id);
       setRows(filteredRows);
     }
@@ -41,7 +41,8 @@ export default function DeleteDialog({ id, rows, setRows, role }) {
     try {
       await axios({
         method: 'delete',
-        url: `https://emr-server.herokuapp.com/${role}/${id}`,
+        // url: `https://emr-server.herokuapp.com/${role}/${id}`,
+        url: `http://localhost:3111/${role}/${id}`,
         headers: authHeader()
       }).then((response) => {
         deletedItem(id, rows);

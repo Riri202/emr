@@ -72,12 +72,13 @@ function WorkerLoginDetails() {
       const { data } = await addNewStaff(staffFormData);
       setIsAddingStaff(false);
       toast.success('Item added successfully');
-      if (rows.length > 0) {
-        setRows([...rows, data]);
-      }
-      if (rows.length === 0) {
-        setRows([data]);
-      }
+      // if (rows.length > 0) {
+      //   setRows([...rows, data]);
+      // }
+      // if (rows.length === 0) {
+      //   setRows([data]);
+      // }
+      getStaff();
     } catch (error) {
       setIsAddingStaff(false);
       toast.error(error.message);

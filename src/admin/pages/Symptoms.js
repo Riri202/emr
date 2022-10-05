@@ -67,15 +67,16 @@ function Symptoms() {
       setAuthToken(user.token);
     }
     try {
-      const { data } = await addToSymptomList(requestData);
+      await addToSymptomList(requestData);
       setIsAddingSymptom(false);
-      toast.success('Item added successfully');
-      if (rows.length) {
-        setRows([...rows, data]);
-      }
-      if (!rows.length) {
-        setRows([data]);
-      }
+      toast.success('Symptom added successfully');
+      // if (rows.length) {
+      //   setRows([...rows, data]);
+      // }
+      // if (!rows.length) {
+      //   setRows([data]);
+      // }
+      getSymptoms();
     } catch (error) {
       setIsAddingSymptom(false);
       toast.error(error.message);
@@ -158,7 +159,7 @@ function Symptoms() {
                     <EditSymptomForm selectedItem={row} setRows={setRows} rows={rows} user={user} />
                   </TableCell>
                   <TableCell align="center">
-                    <DeleteDialog id={row.id} setRows={setRows} rows={rows} />
+                    <DeleteDialog id={row.id} setRows={setRows} role="symptoms" rows={rows} />
                   </TableCell>
                 </TableRow>
               ))}
