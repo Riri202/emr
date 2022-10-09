@@ -2,76 +2,54 @@
 /* eslint-disable react/prop-types */
 import { CircularProgress } from '@material-ui/core';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getSingleStaff, updateStaffStatus } from '../utils/api';
-import { useAdminLoginPermission } from '../utils/hooks';
 import setAuthToken from '../utils/setAuthToken';
 import './../styles/SwitchButton.css';
-import { allowed, notAllowed } from '../redux/features/others/admin/adminPermissionSlice';
 
 function SwitchButton({ id, user }) {
-  const dispatch = useDispatch();
-
   const [isLoading, setIsLoading] = useState(false);
-  const isPermitted = useAdminLoginPermission();
-  // eslint-disable-next-line no-unused-vars
-  const [isAllowed, setIsAllowed] = useState(isPermitted);
-  // console.log('first', { isPermitted, isAllowed });
+  const [staffStatus, setStaffStatus] = useState(null);
 
-  const getStatus = (value) => {
-    if (value === true) {
-      return 'TRUE';
-    } else {
-      return 'FALSE';
-    }
-  };
-  // const getStaffStatus = async () => {
-  //   if (user) {
-  //     setAuthToken(user.token);
-  //   }
-  //   try {
-  //     const uuid = id;
-  //     const { data } = await getSingleStaff(uuid);
-  //     if (data) {
-  //       localStorage.setItem('isAdminLoginPermitted', JSON.stringify(data.status));
-  //       console.log(data.status);
-  //     }
-  //   } catch (error) {
-  //     toast.error('an error occured');
-  //   }
-  // };
-
-  const handleChange = async (event) => {
+  const getStaffStatus = async () => {
     setIsLoading(true);
-    setIsAllowed(event.target.checked);
-    // console.log(event.target.checked, 'checkedTarget');
-    if (isAllowed) {
-      dispatch(allowed());
-    } else {
-      dispatch(notAllowed());
-    }
-    // console.log('second', { isPermitted, isAllowed });
-
     if (user) {
       setAuthToken(user.token);
     }
     try {
       const uuid = id;
-      const status = getStatus(isAllowed);
-      const { data } = await updateStaffStatus(uuid, status);
+      const { data } = await getSingleStaff(uuid);
       setIsLoading(false);
-      toast.success(data.message);
+
+      if (data) {
+        setStaffStatus(data.status);
+      }
     } catch (error) {
       setIsLoading(false);
+      console.log(error);
+      toast.error('an error occured');
+    }
+  };
+
+  const handleChange = async (event) => {
+    if (user) {
+      setAuthToken(user.token);
+    }
+    try {
+      const uuid = id;
+      const status = event.target.checked ? 'TRUE' : 'FALSE';
+      const { data } = await updateStaffStatus(uuid, status);
+      toast.success(data.message);
+      getStaffStatus();
+    } catch (error) {
       console.log(error);
       toast.error('an error occured while switching');
     }
   };
 
   useEffect(() => {
-    // getStaffStatus();
-  }, [isAllowed]);
+    getStaffStatus();
+  }, []);
   return (
     <div className="flex justify-center">
       {isLoading ? (
@@ -79,9 +57,9 @@ function SwitchButton({ id, user }) {
       ) : (
         <label className="toggle">
           <input
-            // onChange={handleChange}
+            onChange={handleChange}
             className="toggle-checkbox"
-            // checked={isAllowed}
+            checked={staffStatus}
             type="checkbox"
           />
           <div className="toggle-switch"></div>

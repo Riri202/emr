@@ -144,7 +144,7 @@ function Diagnosis() {
           ) : (
             <TableBody>
               {rows.map((row, index) => (
-                <TableRow key={index}>
+                <TableRow key={index} className="odd:bg-white even:bg-slate-50">
                   <TableCell align="center">{index + 1}</TableCell>
                   <TableCell align="center">{row.name}</TableCell>
                   <TableCell align="center">

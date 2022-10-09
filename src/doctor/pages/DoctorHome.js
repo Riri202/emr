@@ -151,19 +151,14 @@ function DoctorHome() {
                     dataFiltered.map((data, index) => {
                       const dob = new Date(data.Patient.dob).toDateString();
                       return (
-                        <TableRow key={index}>
-                          <TableCell align="center" component="th" scope="row">
-                            {index + 1}
-                          </TableCell>
-                          {/* <TableCell align="center">{data.Patient.id}</TableCell> */}
-                          <TableCell align="center">
-                            <Link
-                              style={{ textDecoration: 'none' }}
-                              to={`/patient/${data.Patient.uuid}/${data.Patient.name}/${data.session.id}`}
-                            >
-                              {data.Patient.name}
-                            </Link>
-                          </TableCell>
+                        <TableRow
+                          key={index}
+                          component={Link}
+                          to={`/patient/${data.Patient.uuid}/${data.Patient.name}/${data.session.id}/${data.Patient.id}`}
+                          style={{ textDecoration: 'none' }}
+                          className="hover:shadow-md hover:bg-slate-50">
+                          <TableCell align="center">{index + 1}</TableCell>
+                          <TableCell align="center">{data.Patient.name}</TableCell>
                           <TableCell align="center">{data.Patient.email}</TableCell>
                           <TableCell align="center">{data.Patient.phoneNumber}</TableCell>
                           <TableCell align="center">{dob}</TableCell>

@@ -85,7 +85,7 @@ function AdminLoginDetails() {
               </tr>
             ) : (
               adminList.map((row, key) => (
-                <TableRow key={key}>
+                <TableRow key={key} className="odd:bg-white even:bg-slate-50">
                   <TableCell align="center">{row.fullName}</TableCell>
                   <TableCell align="center">{row.username}</TableCell>
                   <TableCell align="center">{row.role}</TableCell>

@@ -52,8 +52,7 @@ const useForm = (callback) => {
             ...errors,
             phoneNumber: 'Invalid phone number, must contain only digits'
           });
-        }  
-        else {
+        } else {
           let newObj = omit(errors, 'phoneNumber');
           setErrors(newObj);
         }

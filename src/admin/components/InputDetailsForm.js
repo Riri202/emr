@@ -26,8 +26,7 @@ function InputDetailsForm({
           display: 'flex',
           flexDirection: 'column',
           spacing: 2
-        }}
-      >
+        }}>
         <form onSubmit={onSubmit}>
           <div className="flex flex-row justify-center space-x-4">
             {formDetails.map((detail, key) => {
@@ -47,7 +46,15 @@ function InputDetailsForm({
               );
             })}
             {isDateRequired ? (
-              <input name="dob" type="date" id="dob" max={new Date().toISOString().substring(0, 10)} onChange={onChange} required className="p-3" />
+              <input
+                name="dob"
+                type="date"
+                id="dob"
+                max={new Date().toISOString().substring(0, 10)}
+                onChange={onChange}
+                required
+                className="p-3"
+              />
             ) : null}
           </div>
           <div className="flex justify-center mt-2 mb-2">

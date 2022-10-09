@@ -21,7 +21,7 @@ export const getAllStaff = (page, size) => {
   return httpService.get(StaffUrl, { params: { page, size } });
 };
 export const getSingleStaff = (uuid) => {
-  return httpService.get(StaffUrl + '/' + uuid);
+  return httpService.get(StaffUrl + '/info/' + uuid);
 };
 export const updateStaff = (data) => {
   return httpService.patch(StaffUrl, data);

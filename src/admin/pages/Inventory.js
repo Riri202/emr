@@ -180,7 +180,7 @@ function Inventory() {
                   inventoryList
                     .filter((row) => row.type === 'DRUG')
                     .map((row, index) => (
-                      <TableRow key={row.name}>
+                      <TableRow key={row.name} className="odd:bg-white even:bg-slate-50">
                         <TableCell align="center">{index + 1}</TableCell>
                         <TableCell align="center">{row.name}</TableCell>
                         <TableCell align="center">{row.quantity}</TableCell>
@@ -238,7 +238,7 @@ function Inventory() {
                   inventoryList
                     .filter((row) => row.type === 'TEST')
                     .map((row, index) => (
-                      <TableRow key={row.name}>
+                      <TableRow key={row.name} className="odd:bg-white even:bg-slate-50">
                         <TableCell align="center">{index + 1}</TableCell>
                         <TableCell align="center">{row.name}</TableCell>
                         <TableCell align="center">{row.quantity}</TableCell>

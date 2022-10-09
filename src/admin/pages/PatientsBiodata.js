@@ -177,7 +177,7 @@ function PatientsBiodata() {
                         <TableCell
                           align="center"
                           onClick={() => handlePatientNameClick(row.id, row.name)}
-                          className="cursor-pointer hover:shadow-md bg-slate-50">
+                          className="cursor-pointer hover:shadow-md underline decoration-orange-500">
                           {row.name}
                         </TableCell>
                         <TableCell align="center">{row.email}</TableCell>

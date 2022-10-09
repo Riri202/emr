@@ -17,7 +17,7 @@ const TabPanel = (props) => {
   );
 };
 function PatientsPersonalPage() {
-  let { patientId, name, sessionId } = useParams();
+  let { patientId, name, sessionId, id } = useParams();
 
   const [currentTab, setCurrentTab] = React.useState(0);
 
@@ -48,20 +48,19 @@ function PatientsPersonalPage() {
       <div className="p-10">
         <section className="grid justify-items-stretch mb-6">
           <div className="justify-self-start">
-
-          <div className="flex space-x-3 items-center">
-            <Icon className="mt-[-5px]">
-              <Sick />
-            </Icon>
-            <h1 className="">{name}</h1>
-          </div>
+            <div className="flex space-x-3 items-center">
+              <Icon className="mt-[-5px]">
+                <Sick />
+              </Icon>
+              <h1 className="">{name}</h1>
+            </div>
           </div>
           <div className="justify-self-center">
             <NavTabs currentTab={currentTab} handleTabChange={handleTabChange} tabs={tabs} />
           </div>
         </section>
         <TabPanel current={currentTab} index={0}>
-          <PatientInfo />
+          <PatientInfo patientId={id} />
         </TabPanel>
         <TabPanel current={currentTab} index={1}>
           <DrugsTestDiagnosis />
