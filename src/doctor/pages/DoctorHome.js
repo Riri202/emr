@@ -27,8 +27,7 @@ const useStyles = makeStyles({
   }
 });
 
-const headers = ['Index', 'Name', 'Email', 'Phone No', 'DOB'];
-// const user = JSON.parse(localStorage.getItem('user'));
+const headers = ['Index', 'ID', 'Name', 'Email', 'Phone No', 'DOB'];
 
 function DoctorHome() {
   const classes = useStyles();
@@ -158,6 +157,7 @@ function DoctorHome() {
                           style={{ textDecoration: 'none' }}
                           className="hover:shadow-md hover:bg-slate-50">
                           <TableCell align="center">{index + 1}</TableCell>
+                          <TableCell align="center">{data.Patient.id}</TableCell>
                           <TableCell align="center">{data.Patient.name}</TableCell>
                           <TableCell align="center">{data.Patient.email}</TableCell>
                           <TableCell align="center">{data.Patient.phoneNumber}</TableCell>

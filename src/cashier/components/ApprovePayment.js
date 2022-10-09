@@ -31,7 +31,7 @@ function ApprovePayment({ user, amount, sessionId, patientId, cashierId }) {
     <div className="w-full mt-3 mb-3">
       <IntuitiveButton
         onClick={approvePaymentByCashier}
-        text="Approve payment"
+        text={`Approve payment of N ${amount}`}
         isLoading={isSending}
       />
     </div>

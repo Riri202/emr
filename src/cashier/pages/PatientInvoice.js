@@ -42,7 +42,7 @@ function PatientInvoice() {
   const classes = useStyles();
 
   let total;
-  const calcTotalAmount = (prescription) => {
+  const calcTotalPrescriptionAmount = (prescription) => {
     return (
       prescription &&
       prescription
@@ -51,6 +51,16 @@ function PatientInvoice() {
         .reduce((prev, curr) => prev + curr, 0)
     );
   };
+  const calcTotalTestsAmount = (tests) => {
+    return (
+      tests &&
+      tests
+        .filter((item) => !item.paid)
+        .map((item) => item.price)
+        .reduce((prev, curr) => prev + curr, 0)
+    );
+  };
+
   const getPrescriptionsInSession = async () => {
     if (user) {
       setAuthToken(user.token);
@@ -61,7 +71,7 @@ function PatientInvoice() {
         setPrescription(data.Prescriptions);
         console.log(data);
         const drugs = prescription.map((item) => item.drug);
-        calcTotalAmount(drugs);
+        calcTotalPrescriptionAmount(drugs);
       }
     } catch (error) {
       console.log(error);
@@ -75,16 +85,15 @@ function PatientInvoice() {
       const { data } = await getSessionTests(sessionId);
       if (data) {
         setTests(data.LabTests);
-        console.log(data);
-        console.log(tests);
-        // const testArr = tests.map((item) => item.drug);
-        // calcTotalAmount(testArr);
+        calcTotalTestsAmount(data.LabTests)
       }
     } catch (error) {
       console.log(error);
     }
   };
-  const grandTotal = calcTotalAmount(prescription);
+  const grandTotalPrescription = calcTotalPrescriptionAmount(prescription);
+  const grandTotalTests = calcTotalTestsAmount(tests);
+
   useEffect(() => {
     getPrescriptionsInSession();
     getTestsInSession();
@@ -151,7 +160,7 @@ function PatientInvoice() {
               </Table>
             </TableContainer>
             <p className="flex self-end text-lg font-bold">
-              Grand Total:&nbsp; <span>&#8358;</span> {grandTotal.toLocaleString()}
+              Grand Total:&nbsp; <span>&#8358;</span> {grandTotalPrescription.toLocaleString()}
             </p>
           </Paper>
           <Paper className="flex mt-4 flex-col items-center flex-1 px-3">
@@ -193,13 +202,13 @@ function PatientInvoice() {
               </Table>
             </TableContainer>
             <p className="flex self-end text-lg font-bold">
-              Grand Total:&nbsp; <span>&#8358;</span> {grandTotal.toLocaleString()}
+              Grand Total:&nbsp; <span>&#8358;</span> {grandTotalTests.toLocaleString()}
             </p>
           </Paper>
           <div className="w-1/3 flex self-end">
             <ApprovePayment
               user={user}
-              amount={grandTotal}
+              amount={grandTotalPrescription + grandTotalTests}
               sessionId={sessionId}
               patientId={patientId}
               cashierId={237}

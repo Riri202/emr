@@ -37,6 +37,7 @@ import PatientDetails from './admin/pages/Patients';
 import Symptoms from './admin/pages/Symptoms';
 import Diagnosis from './admin/pages/Diagnosis';
 import PageNotFound from './common-components/PageNotFound';
+import XrayTests from './x-ray/pages/XrayTests';
 
 function App() {
   return (
@@ -100,7 +101,8 @@ function App() {
           {/* x-ray routes */}
           <Route element={<ProtectedRoutes allowedRole={XRAY_USER_ROLE} />}>
             <Route path="/xray" element={<XrayHome />} />
-            <Route path="/xray-results" element={<XrayResults />} />
+            <Route path="/xray-tests/:patientId/:sessionId" element={<XrayTests />} />
+            <Route path="/xray-results/:testId/:testTitle/:testDesc" element={<XrayResults />} />
           </Route>
 
           <Route path="/unauthorized" element={<Unauthorized />} />

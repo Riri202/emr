@@ -20,8 +20,6 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { useCurrentUser } from '../../utils/hooks';
 
-// const user = JSON.parse(localStorage.getItem('user'));
-
 function ReceptionistHome() {
   const [searchQuery, setSearchQuery] = useState('');
   const user = useCurrentUser();
@@ -29,11 +27,9 @@ function ReceptionistHome() {
   const [patientsList, setPatientsList] = useState([]);
   const [doctorsList, setDoctorsList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [dateState, setDateState] = useState(new Date());
   // const [staffName, setStaffName] = useState('');
 
-  const today = new Date();
-  const date = today.toDateString();
-  const time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
 
   const filterData = (query, patientsList) => {
     if (!query) {
@@ -96,6 +92,10 @@ function ReceptionistHome() {
     getAllDoctors();
   }, []);
 
+  useEffect(() => {
+    setInterval(() => setDateState(new Date()), 30000);
+  }, []);
+
   return (
     <div>
       {/* <Nav /> */}
@@ -112,13 +112,21 @@ function ReceptionistHome() {
                 <ListItemIcon>
                   <CalendarMonthIcon />
                 </ListItemIcon>
-                <ListItemText primary={date} />
+                <ListItemText primary={dateState.toDateString('en-GB', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                })} />
               </ListItem>
               <ListItem>
                 <ListItemIcon>
                   <AccessTimeIcon />
                 </ListItemIcon>
-                <ListItemText primary={time} />
+                <ListItemText primary={dateState.toLocaleString('en-US', {
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    hour12: true,
+                })} />
               </ListItem>
             </List>
           </div>
