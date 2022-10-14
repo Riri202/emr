@@ -46,7 +46,7 @@ function SymptomsForm({ symptom, handleChange, inputData, sessionId, patientId }
           disabled={isSuccessful}
           name="description"
           onChange={handleChange}
-          value={description}
+          // value={description}
           placeholder="description"
         />
         <TransformButton btnText="Add symptom" isSuccessful={isSuccessful} isLoading={isLoading} />
@@ -65,7 +65,7 @@ export default function SymptomCard({ sessionId, patientId, symptomsList }) {
   const handleChange = (e) => {
     setInputData((prevState) => ({
       ...prevState,
-      description: e.target.value
+      [e.target.name]: e.target.value
     }));
   };
 

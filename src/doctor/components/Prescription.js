@@ -148,7 +148,7 @@ function Prescription({ sessionId, patientId, drugsList }) {
           </div>
         ) : (
           <p className="text-lg mb-3 text-red-500">
-            Select from drug options above to add prescription
+            Select from drug options above
           </p>
         )}
       </div>

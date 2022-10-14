@@ -74,6 +74,7 @@ function DrugsTestDiagnosis() {
     <div>
       <div className="px-10 pb-8">
         <h1>Prescription</h1>
+        <p className="text-xs italic text-gray-600">(See patient history for previously added drugs, tests, symptoms and diagnosis)</p>
 
         <section className="flex space-x-3">
           <div className="w-1/2">

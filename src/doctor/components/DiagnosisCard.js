@@ -9,8 +9,6 @@ import { addNewDiagnosis } from '../../utils/api';
 import TransformButton from '../../common-components/TransformButton';
 import { useCurrentUser } from '../../utils/hooks';
 
-// const user = JSON.parse(localStorage.getItem('user'));
-
 function DiagnosisForm({ diagnosis, handleChange, inputData, sessionId, patientId }) {
   const user = useCurrentUser();
 
