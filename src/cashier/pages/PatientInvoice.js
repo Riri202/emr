@@ -85,7 +85,7 @@ function PatientInvoice() {
       const { data } = await getSessionTests(sessionId);
       if (data) {
         setTests(data.LabTests);
-        calcTotalTestsAmount(data.LabTests)
+        calcTotalTestsAmount(data.LabTests);
       }
     } catch (error) {
       console.log(error);

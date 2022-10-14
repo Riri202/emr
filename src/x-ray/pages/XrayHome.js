@@ -52,7 +52,7 @@ function XrayHome() {
         </div>
         <section>
           <Paper sx={{ width: '70vw' }} className="p-4">
-          <h3>Incoming approved payments</h3>
+            <h3>Incoming approved payments</h3>
             <ol>
               {isLoading ? (
                 <CircularProgress size={30} />

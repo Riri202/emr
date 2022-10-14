@@ -40,7 +40,8 @@ function EditBiodataForm({ formInputDetails, info, handleNotEditing, isEditing, 
                             name={name}
                             id={name}
                             type="text"
-                            variant="outlined">
+                            variant="outlined"
+                          >
                             {options.map((option) => (
                               <MenuItem key={option.value} value={option.value}>
                                 {option.title}
@@ -82,7 +83,8 @@ function EditBiodataForm({ formInputDetails, info, handleNotEditing, isEditing, 
                         backgroundColor: '#888888',
                         color: '#000',
                         justifySelf: 'self-end'
-                      }}>
+                      }}
+                    >
                       Cancel
                     </Button>
                   </div>

@@ -107,7 +107,7 @@ export const updateDiagnosisItem = (data) => {
   return httpService.put(StaffUrl + DiagnosisUrl, data);
 };
 export const getSessionDiagnosis = (sessionId) => {
-  return httpService.get(DiagnosisUrl + "/session/" + sessionId);
+  return httpService.get(DiagnosisUrl + '/session/' + sessionId);
 };
 
 export const addToSymptomList = (data) => {
@@ -123,7 +123,7 @@ export const updateSymptomItem = (data) => {
   return httpService.put(StaffUrl + SymptomsUrl, data);
 };
 export const getSessionSymptoms = (sessionId) => {
-  return httpService.get(SymptomsUrl + "/session/" + sessionId);
+  return httpService.get(SymptomsUrl + '/session/' + sessionId);
 };
 
 export const approvePayment = (data) => {

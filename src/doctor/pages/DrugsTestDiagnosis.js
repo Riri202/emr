@@ -21,7 +21,6 @@ function DrugsTestDiagnosis() {
   // eslint-disable-next-line no-unused-vars
   const [diagnosisList, setDiagnosisList] = useState([]);
 
-
   const getInventory = async () => {
     const page = 0;
     const size = 20;
@@ -46,7 +45,7 @@ function DrugsTestDiagnosis() {
     }
     try {
       const { data } = await getSymptomsList();
-      setSymptomsList(data)
+      setSymptomsList(data);
     } catch (error) {
       toast.error(error.message);
     }
@@ -58,7 +57,7 @@ function DrugsTestDiagnosis() {
     }
     try {
       const { data } = await getDiagnosisList();
-      setDiagnosisList(data)
+      setDiagnosisList(data);
     } catch (error) {
       toast.error(error.message);
     }
@@ -74,7 +73,9 @@ function DrugsTestDiagnosis() {
     <div>
       <div className="px-10 pb-8">
         <h1>Prescription</h1>
-        <p className="text-xs italic text-gray-600">(See patient history for previously added drugs, tests, symptoms and diagnosis)</p>
+        <p className="text-xs italic text-gray-600">
+          (See patient history for previously added drugs, tests, symptoms and diagnosis)
+        </p>
 
         <section className="flex space-x-3">
           <div className="w-1/2">
@@ -82,7 +83,11 @@ function DrugsTestDiagnosis() {
           </div>
 
           <div className="w-1/2">
-            <DiagnosisCard sessionId={sessionId} diagnosisList={diagnosisList} patientId={patientId} />
+            <DiagnosisCard
+              sessionId={sessionId}
+              diagnosisList={diagnosisList}
+              patientId={patientId}
+            />
           </div>
         </section>
 

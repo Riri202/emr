@@ -66,8 +66,7 @@ function PharmacistHome() {
                     <li key={key}>
                       <Link
                         to={`/approved-invoice/${patientId}/${sessionId}`}
-                        style={{ textDecoration: 'none' }}
-                      >
+                        style={{ textDecoration: 'none' }}>
                         {patient.name}
                       </Link>
                     </li>

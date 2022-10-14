@@ -16,13 +16,14 @@ export const prescriptionSlice = createSlice({
       state.symptom = {
         title: action.payload.title,
         description: action.payload.description
-      }
+      };
     },
-   selected_patient_symptom_choice: (state, action) => {
-    state.symptomChoice = action.payload
-   }
+    selected_patient_symptom_choice: (state, action) => {
+      state.symptomChoice = action.payload;
+    }
   }
 });
 
 export default prescriptionSlice.reducer;
-export const { selected_patient_symptom, selected_patient_symptom_choice } = prescriptionSlice.actions;
+export const { selected_patient_symptom, selected_patient_symptom_choice } =
+  prescriptionSlice.actions;

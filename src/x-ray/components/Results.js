@@ -7,7 +7,6 @@ import setAuthToken from '../../utils/setAuthToken';
 import TestResultForm from '../../common-components/TestResultForm';
 import { addLabTestResult } from '../../utils/api';
 
-
 // eslint-disable-next-line react/prop-types
 function Results({ role, testId, title, description }) {
   const user = useCurrentUser();

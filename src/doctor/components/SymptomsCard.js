@@ -7,7 +7,7 @@ import DropdownSearch from '../../common-components/DropdownSearch';
 import setAuthToken from '../../utils/setAuthToken';
 import { addNewSymptom } from '../../utils/api';
 import TransformButton from '../../common-components/TransformButton';
-import { useCurrentUser} from '../../utils/hooks';
+import { useCurrentUser } from '../../utils/hooks';
 
 // eslint-disable-next-line no-unused-vars
 function SymptomsForm({ symptom, handleChange, inputData, sessionId, patientId }) {
@@ -25,7 +25,7 @@ function SymptomsForm({ symptom, handleChange, inputData, sessionId, patientId }
       setAuthToken(user.token);
     }
     try {
-      const title = symptom
+      const title = symptom;
       const requestBody = { description, sessionId, patientId, title };
       await addNewSymptom(requestBody);
       setIsLoading(false);
@@ -56,11 +56,10 @@ function SymptomsForm({ symptom, handleChange, inputData, sessionId, patientId }
 }
 
 export default function SymptomCard({ sessionId, patientId, symptomsList }) {
-
   const [choice, setChoice] = useState([]);
   const [inputData, setInputData] = useState({
-    title:'',
-    description:''
+    title: '',
+    description: ''
   });
   const handleChange = (e) => {
     setInputData((prevState) => ({

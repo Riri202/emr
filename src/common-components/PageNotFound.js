@@ -23,7 +23,8 @@ function PageNotFound() {
         <div className="flex flex-row justify-center">
           <button
             className="w-1/4 py-3 px-4 border-0 rounded-md flex flex-row items-center justify-center space-x-2 text-base cursor-pointer bg-green-500 hover:bg-green-600"
-            onClick={GoBack}>
+            onClick={GoBack}
+          >
             {' '}
             <MdArrowBackIosNew /> <span>Go Back</span>{' '}
           </button>

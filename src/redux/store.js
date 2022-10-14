@@ -6,7 +6,7 @@ import prescriptionSlice from './features/others/prescriptionSlice';
 const customizedMiddleware = getDefaultMiddleware({
   immutableCheck: false,
   serializableCheck: false
-})
+});
 export const store = configureStore({
   reducer: {
     auth: authReducer,

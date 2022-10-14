@@ -30,7 +30,6 @@ function ReceptionistHome() {
   const [dateState, setDateState] = useState(new Date());
   // const [staffName, setStaffName] = useState('');
 
-
   const filterData = (query, patientsList) => {
     if (!query) {
       return patientsList;
@@ -112,21 +111,25 @@ function ReceptionistHome() {
                 <ListItemIcon>
                   <CalendarMonthIcon />
                 </ListItemIcon>
-                <ListItemText primary={dateState.toDateString('en-GB', {
+                <ListItemText
+                  primary={dateState.toDateString('en-GB', {
                     day: 'numeric',
                     month: 'short',
-                    year: 'numeric',
-                })} />
+                    year: 'numeric'
+                  })}
+                />
               </ListItem>
               <ListItem>
                 <ListItemIcon>
                   <AccessTimeIcon />
                 </ListItemIcon>
-                <ListItemText primary={dateState.toLocaleString('en-US', {
+                <ListItemText
+                  primary={dateState.toLocaleString('en-US', {
                     hour: 'numeric',
                     minute: 'numeric',
-                    hour12: true,
-                })} />
+                    hour12: true
+                  })}
+                />
               </ListItem>
             </List>
           </div>

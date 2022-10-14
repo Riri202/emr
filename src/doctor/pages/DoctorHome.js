@@ -155,7 +155,8 @@ function DoctorHome() {
                           component={Link}
                           to={`/patient/${data.Patient.uuid}/${data.Patient.name}/${data.session.id}/${data.Patient.id}`}
                           style={{ textDecoration: 'none' }}
-                          className="hover:shadow-md hover:bg-slate-50">
+                          className="hover:shadow-md hover:bg-slate-50"
+                        >
                           <TableCell align="center">{index + 1}</TableCell>
                           <TableCell align="center">{data.Patient.id}</TableCell>
                           <TableCell align="center">{data.Patient.name}</TableCell>
