@@ -160,7 +160,7 @@ function PatientInvoice() {
               </Table>
             </TableContainer>
             <p className="flex self-end text-lg font-bold">
-              Grand Total:&nbsp; <span>&#8358;</span> {grandTotalPrescription.toLocaleString()}
+              Total:&nbsp; <span>&#8358;</span> {grandTotalPrescription.toLocaleString()}
             </p>
           </Paper>
           <Paper className="flex mt-4 flex-col items-center flex-1 px-3">
@@ -202,7 +202,7 @@ function PatientInvoice() {
               </Table>
             </TableContainer>
             <p className="flex self-end text-lg font-bold">
-              Grand Total:&nbsp; <span>&#8358;</span> {grandTotalTests.toLocaleString()}
+              Total:&nbsp; <span>&#8358;</span> {grandTotalTests.toLocaleString()}
             </p>
           </Paper>
           <div className="w-1/3 flex self-end">
