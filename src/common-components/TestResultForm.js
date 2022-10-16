@@ -19,7 +19,7 @@ function TestResultForm({ role, handleChange, handleSubmit, isLoading }) {
           required
           fullWidth
           multiline
-          rows={2}
+          minRows={2}
           variant="outlined"
           label="Result description"
           name="resultDescription"

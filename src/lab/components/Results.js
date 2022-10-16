@@ -28,7 +28,8 @@ function Results({ role, testId, title, description }) {
   };
   // pass title and description as params in the submit function
 
-  const addTestResult = async () => {
+  const addTestResult = async (event) => {
+    event.preventDefault()
     setIsAddingTest(true);
     const id = testId;
     const requestData = { id, title, description, result, resultDescription };
@@ -39,11 +40,13 @@ function Results({ role, testId, title, description }) {
       const { data } = await addLabTestResult(requestData);
       setIsAddingTest(false);
       if (data) {
+        console.log(data)
         toast.success('Result added successfully');
       }
-      navigate(`/${role}-tests/${testId}`);
+      navigate(`/${role}`);
     } catch (error) {
       setIsAddingTest(false);
+      console.log(error)
       toast.error(error.message);
     }
   };
