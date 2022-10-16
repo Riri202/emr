@@ -36,7 +36,6 @@ const CustomizedListItem = ({ patient, doctorsList }) => {
 
   const handleDoctorChoice = (event) => {
     setStaffName(event.target.value);
-    console.log(staffName);
   };
 
   const getSelectedDoctorInfo = (name, doctorsList) => {
