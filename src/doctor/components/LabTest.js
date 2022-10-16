@@ -11,7 +11,7 @@ import { useCurrentUser } from '../../utils/hooks';
 // const drugs = JSON.parse(localStorage.getItem('drugsList'));
 // const user = JSON.parse(localStorage.getItem('user'));
 
-function LabTestForm({ test, handleChange, inputData, sessionId }) {
+function LabTestForm({ test, handleChange, inputData, sessionId, testsList }) {
   const user = useCurrentUser();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -19,11 +19,18 @@ function LabTestForm({ test, handleChange, inputData, sessionId }) {
 
   const { description } = inputData;
 
+  const getSelectedTestInfo = (title, list) => {
+    return list.find((test) => test.name === title);
+  };
+
   const onSubmitTestForm = async (event) => {
     event.preventDefault();
     setIsLoading(true);
     const title = test;
-    const requestBody = { description, sessionId, title };
+    const testInfo = getSelectedTestInfo(test, testsList)
+    console.log(testInfo);
+    const drugId = testInfo.id;
+    const requestBody = { description, sessionId, title, drugId };
     if (user) {
       setAuthToken(user.token);
     }
@@ -114,6 +121,7 @@ function LabTest({ sessionId, testsList }) {
                       handleChange={handleTestFormChange}
                       inputData={testInputData}
                       sessionId={sessionId}
+                      testsList={testsList}
                     />
                     {index === testChoice.length - 1 ? null : (
                       <Divider orientation="horizontal" variant="fullWidth" />
