@@ -1,17 +1,39 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
+import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem } from '@mui/material';
 import IntuitiveButton from '../../common-components/IntuitiveButton';
+import setAuthToken from '../../utils/setAuthToken';
+import { toast } from 'react-toastify';
+import { updatePatientBiodata } from '../../utils/api';
+import useForm from '../../utils/formValidations/useForm';
 
-function EditBiodataForm({ formInputDetails, info, handleNotEditing, isEditing, handleIsEditing }) {
-  const handleSubmit = () => {
-    console.log('here');
-  };
+function EditBiodataForm({ formInputDetails, info, handleNotEditing, isEditing, handleIsEditing, user, getBiodata, patientId }) {
+  const [dateType, setDateType] = useState("text");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleChange = () => {
-    console.log('here');
-  };
+  const handleUpdatePatientBio = async () => {
+    setIsLoading(true);
+
+    if (user) {
+      setAuthToken(user.token);
+    }
+    try {
+      const requestData = {patientId, age, occupation, sex, address, genoType, bloodGroup }
+      const { data } = await updatePatientBiodata(requestData);
+      setIsLoading(false);
+      getBiodata();
+      handleNotEditing()
+      toast.success(data.message);
+    } catch (error) {
+      setIsLoading(false);
+      toast.error(error.response.data.message);
+    }}
+
+    const { handleChange, values, handleSubmit } = useForm(handleUpdatePatientBio);
+
+    const { age, occupation, sex, address, genoType, bloodGroup } = values;
+
   return (
     <>
       <Button className="mb-4" onClick={handleIsEditing} variant="outlined">
@@ -62,13 +84,29 @@ function EditBiodataForm({ formInputDetails, info, handleNotEditing, isEditing, 
                             type="text"
                             variant="outlined"
                           />
+
                         </>
                       )}
+
                     </div>
                   );
+
                 })}
+                <input
+                  name="registration"
+                  placeholder="date of registration"
+                  type={dateType}
+                  onFocus={() => setDateType("date")}
+                  onBlur={() => setDateType("text")}
+                  defaultValue={info["registration"]}
+                  id="registration"
+                  max={new Date().toISOString().substring(0, 10)}
+                  onChange={handleChange}
+                  required
+                  className="p-3 py-4 border border-solid border-['#666666']"
+                />
                 <div className="w-full">
-                  <IntuitiveButton text="Edit" />
+                  <IntuitiveButton text="Edit"  disabled={isLoading}/>
                 </div>
               </div>
               <DialogActions>
