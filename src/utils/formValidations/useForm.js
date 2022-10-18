@@ -42,7 +42,7 @@ const useForm = (callback) => {
         break;
 
       case 'phoneNumber':
-        if (value.length <= 10) {
+        if (value.length < 11 || value.length > 11) {
           setErrors({
             ...errors,
             phoneNumber: 'Invalid phone number, must be 11 digits'
