@@ -25,6 +25,14 @@ const formInputDetails = [
     options: []
   },
   {
+    name: 'occupation',
+    id: 'occupation',
+    label: 'Occupation',
+    isSelectInput: false,
+    defaultValue: '',
+    options: []
+  },
+  {
     name: 'sex',
     id: 'sex',
     label: 'Sex',
@@ -150,7 +158,7 @@ function PatientDetails() {
 
   const addBiodata = async () => {
     setIsAdding(true);
-    const biodata = { age, sex, address, genoType, bloodGroup, patientId };
+    const biodata = { age, sex, address, genoType, bloodGroup, occupation, registration, patientId };
     if (user) {
       setAuthToken(user.token);
     }
@@ -187,7 +195,7 @@ function PatientDetails() {
 
   const { handleChange, values, handleSubmit } = useForm(addBiodata);
 
-  const { age, sex, address, genoType, bloodGroup } = values;
+  const { age, sex, address, genoType, bloodGroup, occupation, registration } = values;
 
   return (
     <div className="p-6">
@@ -201,6 +209,9 @@ function PatientDetails() {
           handleIsEditing={handleIsEditing}
           isEditing={isEditing}
           handleNotEditing={handleNotEditing}
+          user={user}
+          patientId={patientId}
+          getBiodata={getBiodata}
         />
       ) : null}
 
