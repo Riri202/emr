@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { updatePatient } from '../../utils/api';
 import setAuthToken from '../../utils/setAuthToken';
 
-export default function EditWorkerForm({ selectedPatient, setRows, rows, user }) {
+export default function EditWorkerForm({ selectedPatient, user, getPatients }) {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -15,9 +15,10 @@ export default function EditWorkerForm({ selectedPatient, setRows, rows, user })
     email: selectedPatient.email,
     phoneNumber: selectedPatient.phoneNumber,
     dob: selectedPatient.dob,
-    uuid: selectedPatient.uuid
+    uuid: selectedPatient.uuid,
+    PID: selectedPatient.PID
   });
-  const { name, email, phoneNumber, dob, uuid } = inputData;
+  const { name, email, phoneNumber, dob, PID } = inputData;
   const handleChange = (e) => {
     setInputData((prevState) => ({
       ...prevState,
@@ -34,9 +35,9 @@ export default function EditWorkerForm({ selectedPatient, setRows, rows, user })
   };
 
   // add changes made to the patient table
-  const updatedPatient = (id, inputData) => {
-    setRows(rows.map((row) => (row.uuid === id ? inputData : row)));
-  };
+  // const updatedPatient = (id, inputData) => {
+  //   setRows(rows.map((row) => (row.uuid === id ? inputData : row)));
+  // };
 
   const handleUpdatePatientDetails = async (e) => {
     e.preventDefault();
@@ -48,9 +49,10 @@ export default function EditWorkerForm({ selectedPatient, setRows, rows, user })
     }
     try {
       const { data } = await updatePatient(inputData);
-      updatedPatient(uuid, inputData);
+      // updatedPatient(uuid, inputData);
       setIsLoading(false);
       setOpen(false);
+      getPatients();
       toast.success(data.message);
     } catch (error) {
       setIsLoading(false);
@@ -61,26 +63,40 @@ export default function EditWorkerForm({ selectedPatient, setRows, rows, user })
     {
       name: 'name',
       id: 'name',
-      label: 'Name',
-      defaultValue: name
+      label: 'FullName',
+      defaultValue: name,
+      isDateInput: false
     },
     {
       name: 'email',
       id: 'email',
       label: 'Email',
-      defaultValue: email
+      defaultValue: email,
+      isDateInput: false
+
     },
     {
       name: 'phoneNumber',
       id: 'phoneNumber',
-      label: 'Phone Number',
-      defaultValue: phoneNumber
+      label: 'Phone No.',
+      defaultValue: phoneNumber,
+      isDateInput: false
+
     },
     {
       name: 'dob',
       id: 'dob',
-      label: 'Date of Birth',
-      defaultValue: dob
+      placeholder: 'Date of birth',
+      defaultValue: new Date(dob).toDateString(),
+      isDateInput: true
+
+    },
+    {
+      name: 'PID',
+      id: 'PID',
+      defaultValue: PID,
+      label: 'Patient ID',
+
     }
   ];
 
