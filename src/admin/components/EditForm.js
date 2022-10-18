@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -22,6 +22,8 @@ function EditForm({
   titleText,
   btnText
 }) {
+  const [dateType, setDateType] = useState("text");
+
   return (
     <>
       <IconButton className="outline-none" onClick={handleClickOpen}>
@@ -34,20 +36,42 @@ function EditForm({
             <DialogContentText style={{ marginBottom: 5 }}>Edit details below</DialogContentText>
             <div className="flex flex-col space-y-4">
               {formDetails.map((detail, key) => {
+                const { isDateInput } = detail;
+
                 return (
-                  <TextField
-                    key={key}
-                    name={detail.name}
-                    id={detail.id}
-                    label={detail.label}
-                    type="text"
-                    fullWidth
-                    variant="outlined"
-                    onChange={handleChange}
-                    defaultValue={detail.defaultValue}
-                    multiline={true}
-                    rows={2}
-                  />
+                  <>
+
+                    {!isDateInput ? (<>
+                      <TextField
+                        key={key}
+                        name={detail.name}
+                        id={detail.id}
+                        label={detail.label}
+                        type="text"
+                        fullWidth
+                        variant="outlined"
+                        onChange={handleChange}
+                        defaultValue={detail.defaultValue}
+                        multiline={true}
+                        rows={2}
+                      />
+                    </>) :
+                      <input
+                        name={detail.name}
+                        id={detail.id} 
+                        placeholder={detail.placeholder}
+                        type={dateType}
+                        onFocus={() => setDateType("date")}
+                        onBlur={() => setDateType("text")}
+                        max={new Date().toISOString().substring(0, 10)}
+                        defaultValue={detail.defaultValue}
+                        onChange={handleChange}
+                        required
+                        className="p-3 text-base w-full"
+                      />
+                    }
+                  </>
+
                 );
               })}
               <div className="w-full">
@@ -69,7 +93,7 @@ function EditForm({
                 color: '#000',
                 justifySelf: 'self-end'
               }}
-              // className="pt-2 pb-2 pl-4 pr-4 mt-1 bg-green-500 text-[#000] self-end"
+            // className="pt-2 pb-2 pl-4 pr-4 mt-1 bg-green-500 text-[#000] self-end"
             >
               Cancel
             </Button>

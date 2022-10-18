@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Box, TextField, Divider, Paper } from '@material-ui/core';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { FaFileCsv } from 'react-icons/fa';
 import IntuitiveButton from '../../common-components/IntuitiveButton';
 
@@ -15,6 +15,7 @@ function InputDetailsForm({
   errors
 }) {
   const inputRef = useRef(null);
+  const [dateType, setDateType] = useState("text");
 
   return (
     <div>
@@ -29,7 +30,7 @@ function InputDetailsForm({
         }}
       >
         <form onSubmit={onSubmit}>
-          <div className="flex flex-row justify-center space-x-4">
+          <div className="flex flex-row justify-center space-x-4 w-full">
             {formDetails.map((detail, key) => {
               return (
                 <TextField
@@ -49,12 +50,14 @@ function InputDetailsForm({
             {isDateRequired ? (
               <input
                 name="dob"
-                type="date"
-                id="dob"
+                placeholder="date of birth"
+                type={dateType}
+                onFocus={() => setDateType("date")}
+                onBlur={() => setDateType("text")}                id="dob"
                 max={new Date().toISOString().substring(0, 10)}
                 onChange={onChange}
                 required
-                className="p-3"
+                className="p-3 border-0 border-b-[1px] pb-0 text-base"
               />
             ) : null}
           </div>
