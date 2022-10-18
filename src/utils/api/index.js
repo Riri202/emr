@@ -50,6 +50,9 @@ export const addPatientBiodata = (data) => {
 export const getPatientBiodata = (patientId) => {
   return httpService.get(PatientUrl + '/bio' + '/' + patientId);
 };
+export const updatePatientBiodata = (data) => {
+  return httpService.put(PatientUrl + '/bio', data);
+};
 export const getAllPatients = (page, size) => {
   return httpService.get(PatientUrl, { params: { page, size } });
 };
@@ -134,4 +137,8 @@ export const getApprovedPayments = () => {
 };
 export const getApprovedPaymentsForPatient = (patientId, sessionId) => {
   return httpService.get(ApprovePaymentUrl + '/session/' + sessionId + '/' + patientId);
+};
+
+export const StaffInvoiceApproval = (data) => {
+  return httpService.put(ApprovePaymentUrl + "/confirm", data);
 };
