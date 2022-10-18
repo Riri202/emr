@@ -31,13 +31,14 @@ function ReceptionistHome() {
   // const [staffName, setStaffName] = useState('');
 
   const filterData = (query, patientsList) => {
-    if (!query) {
-      return patientsList;
-    } else {
-      return patientsList
-        .map((patient) => patient)
-        .filter((patient) => patient.name.toLowerCase().includes(query.toLowerCase()));
-    }
+    let terms = query.split(" ");
+    return patientsList.filter(object =>
+      terms.every(term =>
+        Object.values(object).some(value =>
+          String(value).toLowerCase().includes(term.toLowerCase())
+        )
+      )
+     );
   };
 
   const getAvailableDoctors = (allStaff) => {

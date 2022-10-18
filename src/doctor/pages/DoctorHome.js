@@ -43,13 +43,14 @@ function DoctorHome() {
   );
 
   const filterData = (query, patientsList) => {
-    if (!query) {
-      return patientsList;
-    } else {
-      return patientsList
-        .map((data) => data)
-        .filter((data) => data.Patient.name.toLowerCase().includes(query.toLowerCase()));
-    }
+    let terms = query.split(" ");
+    return patientsList.filter(object =>
+      terms.every(term =>
+        Object.values(object).some(value =>
+          String(value).toLowerCase().includes(term.toLowerCase())
+        )
+      )
+     );
   };
 
   const patientsFromReceptionist = async () => {
