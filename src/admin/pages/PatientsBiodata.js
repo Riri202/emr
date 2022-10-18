@@ -63,7 +63,7 @@ function PatientsBiodata() {
   };
   const addPatient = async () => {
     setIsAddingPatient(true);
-    const patientFormData = { name, email, phoneNumber, dob };
+    const patientFormData = { name, email, phoneNumber, dob, PID };
     if (user) {
       setAuthToken(user.token);
     }
@@ -108,13 +108,13 @@ function PatientsBiodata() {
 
   const { handleChange, values, errors, handleSubmit } = useForm(addPatient);
 
-  const { name, email, phoneNumber, dob } = values;
+  const { name, email, phoneNumber, dob, PID } = values;
 
   const formInputDetails = [
     {
       name: 'name',
       id: 'name',
-      label: 'fullname'
+      label: 'Fullname'
     },
     {
       name: 'email',
@@ -123,8 +123,13 @@ function PatientsBiodata() {
     },
     {
       name: 'phoneNumber',
-      id: 'phoneNumber',
+      id: 'PhoneNumber',
       label: 'Phone No.'
+    },
+    {
+      name: 'PID',
+      id: 'PID',
+      label: 'Patient ID'
     }
   ];
 
@@ -173,7 +178,7 @@ function PatientsBiodata() {
                     return (
                       <TableRow key={row.name}>
                         <TableCell align="center">{index + 1}</TableCell>
-                        <TableCell align="center">{row.id}</TableCell>
+                        <TableCell align="center">{row.PID}</TableCell>
                         <TableCell
                           align="center"
                           onClick={() => handlePatientNameClick(row.id, row.name)}
@@ -190,6 +195,7 @@ function PatientsBiodata() {
                             setRows={setRows}
                             rows={rows}
                             user={user}
+                            getPatients={getPatients}
                           />
                         </TableCell>
                         <TableCell align="center">
