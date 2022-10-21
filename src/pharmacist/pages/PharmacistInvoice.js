@@ -11,9 +11,11 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { useCurrentUser } from '../../utils/hooks';
-import { useParams } from 'react-router';
+import { useParams, useNavigate } from 'react-router';
 import setAuthToken from '../../utils/setAuthToken';
-import { getApprovedPaymentsForPatient } from '../../utils/api';
+import { getApprovedPaymentsForPatient, StaffInvoiceApproval } from '../../utils/api';
+import IntuitiveButton from '../../common-components/IntuitiveButton';
+
 import { toast } from 'react-toastify';
 import { CircularProgress } from '@material-ui/core';
 
@@ -34,14 +36,15 @@ const drugHeaders = [
 const testHeaders = ['Index', 'Title', 'Description', 'Amount'];
 function PharmacistInvoice() {
   const user = useCurrentUser();
-  const { patientId, sessionId } = useParams();
+  const navigate = useNavigate();
+  const { patientId, sessionId, paymentId } = useParams();
 
   const [rows, setRows] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isApproving, setIsApproving] = useState(false);
+
 
   const classes = useStyles();
-
-  // get drugs total amount
 
   const getPatientsApprovedInvoice = async () => {
     setIsLoading(true);
@@ -58,6 +61,26 @@ function PharmacistInvoice() {
     } catch (error) {
       setIsLoading(false);
       console.log(error);
+      toast.error('an error occured');
+    }
+  };
+
+  const confirmDrugDispersal = async () => {
+    setIsLoading(true);
+
+    if (user) {
+      setAuthToken(user.token);
+    }
+    try {
+      const type = "P"
+      const requestData = { paymentId, type }
+      const { data } = await StaffInvoiceApproval(requestData);
+      setIsApproving(false);
+      toast.success(data.message);
+      navigate(`/pharmacist`)
+
+    } catch (error) {
+      setIsApproving(false);
       toast.error('an error occured');
     }
   };
@@ -110,18 +133,18 @@ function PharmacistInvoice() {
                       .filter((item) => item.Prescriptions.length)
                       .map((item, index) => {
                         const { Prescriptions, id, amount } = item;
-                        const { drug, note, quantity, days } = Prescriptions[0];
+                        // const { drug, note, quantity, days } = Prescriptions[0];
                         return (
                           <TableBody key={id}>
                             <TableRow key={index}>
                               <TableCell align="center">{index + 1}</TableCell>
-                              <TableCell align="center">{drug.name}</TableCell>
-                              <TableCell align="center">{quantity}</TableCell>
-                              <TableCell align="center">{days} days</TableCell>
+                              <TableCell align="center">{Prescriptions[0]?.drug?.name}</TableCell>
+                              <TableCell align="center">{Prescriptions[0]?.quantity}</TableCell>
+                              <TableCell align="center">{Prescriptions[0]?.days} days</TableCell>
                               <TableCell align="center">
-                                <span>&#8358; {drug.price}</span>
+                                <span>&#8358; {Prescriptions[0]?.drug?.price}</span>
                               </TableCell>
-                              <TableCell align="center">{note}</TableCell>
+                              <TableCell align="center">{Prescriptions[0]?.note}</TableCell>
                               <TableCell align="center">
                                 <span>&#8358; {amount}</span>
                               </TableCell>
@@ -133,9 +156,6 @@ function PharmacistInvoice() {
                 </Table>
               </TableContainer>
             )}
-            {/* <p className="flex self-end text-lg font-bold">
-              Total:&nbsp; <span>&#8358; {amount}</span>
-            </p> */}
           </Paper>
         </section>
 
@@ -159,34 +179,43 @@ function PharmacistInvoice() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {!isLoading && rows && rows.tests && !rows.tests.length ? (
+                    {!isLoading && rows && !rows.length ? (
                       <tr>
                         <td className="text-lg pl-3 mb-3 text-red-500">
-                          No tests in this invoice.{' '}
+                          No tests in this invoice.
                         </td>
                       </tr>
                     ) : (
-                      rows &&
-                      rows.tests &&
-                      rows.tests.map((test, index) => {
-                        const { title, description, price } = test;
-                        return (
-                          <TableRow key={index}>
-                            <TableCell align="center">{index + 1}</TableCell>
-                            <TableCell align="center">{title}</TableCell>
-                            <TableCell align="center">{description}</TableCell>
-                            <TableCell align="center">{price}</TableCell>
-                          </TableRow>
-                        );
-                      })
+                      rows && rows
+                        .filter((item) => item.Prescriptions.length)
+                        .map((item, index) => {
+                          const { Prescriptions } = item;
+                          // const { test } = Prescriptions[0];
+                          return (
+                            <TableRow key={index}>
+                              <TableCell align="center">{index + 1}</TableCell>
+                              <TableCell align="center">{Prescriptions[0]?.test?.title}</TableCell>
+                              <TableCell align="center">{Prescriptions[0]?.test?.description}</TableCell>
+                              <TableCell align="center">{Prescriptions[0]?.test?.price}</TableCell>
+                            </TableRow>
+                          );
+                        })
                     )}
                   </TableBody>
                 </Table>
               </TableContainer>
             )}
-            <p className="flex self-end text-lg font-bold">
-              Total:&nbsp; <span>&#8358;</span>
-            </p>
+            <div className="w-1/3 flex self-end">
+              <div className="w-full mt-3 mb-3">
+
+                <IntuitiveButton
+                  onClick={confirmDrugDispersal}
+                  text="confirm drug dispersal"
+                  isLoading={isApproving}
+                />
+              </div>
+
+            </div>
           </Paper>
         </section>
       </div>
@@ -195,3 +224,35 @@ function PharmacistInvoice() {
 }
 
 export default PharmacistInvoice;
+
+
+{/* {rows.tests && !rows.tests.length ? (
+                    <tbody>
+                      <tr>
+                        <td className="text-lg pl-3 mb-3 text-red-500">
+                          No tests in this invoice.
+                        </td>
+                      </tr>
+                    </tbody>
+                  ) : (
+                    rows && rows
+                    .map((item, index) => {
+                      const { Prescriptions } = item;
+                      const { test, testId } = Prescriptions[0];
+                      return (
+                        <TableBody key={index}>
+                          <Link
+                            className="hover:bg-slate-400"
+                            to={`/lab-results/${testId}/${test.title}/${test.description}`}
+                            style={{ textDecoration: 'none' }}
+                          >
+                            <TableRow>
+                              <TableCell align="center">{index + 1}</TableCell>
+                              <TableCell align="center">{test.title}</TableCell>
+                              <TableCell align="center">{test.description}</TableCell>
+                            </TableRow>
+                          </Link>
+                        </TableBody>
+                      );
+                    })
+                  )} */}
