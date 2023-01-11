@@ -5,7 +5,7 @@ import setAuthToken from '../../utils/setAuthToken';
 import { updateInventory } from '../../utils/api';
 import EditForm from './EditForm';
 
-export default function EditInventoryForm({ selectedItem, setRows, rows, user }) {
+export default function EditInventoryForm({ selectedItem, getInventory, user }) {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -15,7 +15,7 @@ export default function EditInventoryForm({ selectedItem, setRows, rows, user })
     quantity: selectedItem.quantity,
     price: selectedItem.price,
     type: selectedItem.type,
-    id: selectedItem.id
+    id: selectedItem._id
   });
   const { name, quantity, price, type, id } = inputData;
   const handleChange = (e) => {
@@ -33,24 +33,17 @@ export default function EditInventoryForm({ selectedItem, setRows, rows, user })
     setOpen(false);
   };
 
-  // add changes made to the staff table
-  const updatedInventory = (id, inputData) => {
-    setRows(rows.map((row) => (row.id === id ? inputData : row)));
-  };
-
   const handleUpdateInventoryItem = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    // const id = selectedItem.id;
-    // const InventoryFormData = { id, name, price, quantity, type };
     if (user) {
       setAuthToken(user.token);
     }
     try {
-      const { data } = await updateInventory(inputData);
-      updatedInventory(id, inputData);
+      const { data } = await updateInventory(id, inputData);
       setIsLoading(false);
       setOpen(false);
+      getInventory();
       toast.success(data.message);
     } catch (error) {
       setIsLoading(false);

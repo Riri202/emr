@@ -53,7 +53,8 @@ function InputDetailsForm({
                 placeholder="date of birth"
                 type={dateType}
                 onFocus={() => setDateType("date")}
-                onBlur={() => setDateType("text")}                id="dob"
+                onBlur={() => setDateType("text")} 
+                id="dob"
                 max={new Date().toISOString().substring(0, 10)}
                 onChange={onChange}
                 required

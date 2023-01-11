@@ -46,7 +46,7 @@ function DoctorHome() {
     let terms = query.split(" ");
     return patientsList.filter(object =>
       terms.every(term =>
-        Object.values(object).some(value =>
+        Object.values(object.Patient).some(value =>
           String(value).toLowerCase().includes(term.toLowerCase())
         )
       )
@@ -68,8 +68,7 @@ function DoctorHome() {
       console.log(error);
     }
   };
-  const dataFiltered = filterData(searchQuery, patientsList);
-  console.log(dataFiltered);
+
   // TODO this function will instead make a patch or put request to update the doctors availability on the backend
   const handleCheckboxChange = (event) => {
     if (event.target.checked) {
@@ -85,6 +84,7 @@ function DoctorHome() {
       setAvailableDoctors(availableDoctors.filter((doc) => doc !== user.user.fullName));
     }
   };
+  const dataFiltered = filterData(searchQuery, patientsList);
 
   useEffect(() => {
     localStorage.setItem('availableDoctors', JSON.stringify(availableDoctors));

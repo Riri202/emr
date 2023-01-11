@@ -11,14 +11,14 @@ function ProtectedRoutes({ allowedRole }) {
 
   if (!user) return (window.location.href = '/');
 
-  const isAdmin = user.user.role === ADMIN_USER_ROLE;
+  const isAdmin = user.data.role === ADMIN_USER_ROLE;
 
-  return user && user.user.role === allowedRole ? (
+  return user && user.data.role === allowedRole ? (
     <>
       {!isAdmin ? <Nav /> : null}
       <Outlet />
     </>
-  ) : user && user.user.role !== allowedRole ? (
+  ) : user && user.data.role !== allowedRole ? (
     <Navigate to={'/unauthorized'} state={{ from: location }} replace />
   ) : (
     <Navigate to={'/'} state={{ from: location }} replace />

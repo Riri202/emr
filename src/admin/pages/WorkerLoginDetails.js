@@ -64,20 +64,14 @@ function WorkerLoginDetails() {
   };
   const addStaff = async () => {
     setIsAddingStaff(true);
-    const staffFormData = { fullName, username, password, role };
+    const staffFormData = { fullName, username, password, role};
     if (user) {
       setAuthToken(user.token);
     }
     try {
-      const { data } = await addNewStaff(staffFormData);
+      await addNewStaff(staffFormData);
       setIsAddingStaff(false);
-      toast.success('Item added successfully');
-      // if (rows.length > 0) {
-      //   setRows([...rows, data]);
-      // }
-      // if (rows.length === 0) {
-      //   setRows([data]);
-      // }
+      toast.success('Staff created successfully');
       getStaff();
     } catch (error) {
       setIsAddingStaff(false);
@@ -96,12 +90,16 @@ function WorkerLoginDetails() {
       const { data } = await getAllStaff(page, size);
       setIsLoading(false);
       if (data) {
-        setRows(data.rows);
+        if (data.message) {
+          toast.error(data.message)
+        }
+        setRows(data.data);
       }
     } catch (error) {
-      setIsLoading(false);
       console.log(error);
-      toast.error('an error occured');
+    } finally {
+      setIsLoading(false);
+
     }
   };
 
@@ -208,13 +206,15 @@ function WorkerLoginDetails() {
                       <TableCell align="center">
                         <EditWorkerForm
                           selectedWorker={row}
-                          setRows={setRows}
-                          rows={rows}
+                          // setRows={setRows}
+                          // delete these and make like DeleteDialog
+                          // rows={rows}
+                          getStaff={getStaff}
                           user={user}
                         />
                       </TableCell>
                       <TableCell align="center">
-                        <DeleteDialog id={row.uuid} setRows={setRows} rows={rows} role="staff" />
+                        <DeleteDialog id={row.staff_id} getUpdatedList={() => getStaff()} item={row.fullName} role="staff" />
                       </TableCell>
                     </TableRow>
                   ))}

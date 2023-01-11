@@ -22,6 +22,7 @@ function PharmacistHome() {
       setAuthToken(user.token);
     }
     try {
+      
       const { data } = await getApprovedPayments();
       setIsLoading(false);
       if (data) {
@@ -32,6 +33,7 @@ function PharmacistHome() {
       toast.error('an error occured');
     }
   };
+
   useEffect(() => {
     loadApprovedPayments();
   }, []);
@@ -60,12 +62,12 @@ function PharmacistHome() {
                 </p>
               ) : (
                 payments &&
-                payments.map((payment, key) => {
-                  const { patientId, patient, sessionId } = payment;
+                payments.filter(payment => !payment.done && payment.type !== "P").map((payment, key) => {
+                  const { patientId, patient, sessionId, id } = payment;
                   return (
                     <li key={key}>
                       <Link
-                        to={`/approved-invoice/${patientId}/${sessionId}`}
+                        to={`/approved-invoice/${patientId}/${sessionId}/${id}`}
                         style={{ textDecoration: 'none' }}>
                         {patient.name}
                       </Link>
@@ -74,6 +76,7 @@ function PharmacistHome() {
                 })
               )}
             </ol>
+ 
           </Paper>
         </section>
       </div>

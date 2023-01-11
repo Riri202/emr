@@ -33,20 +33,6 @@ function Inventory() {
   const [isLoading, setIsLoading] = useState(false);
   const [isAddingInventory, setIsAddingInventory] = useState(false);
   const [inventoryList, setInventoryList] = useState([]);
-  // const [rows, setRows] = useState([]);
-  // const [inputData, setInputData] = useState({
-  //   name: '',
-  //   quantity: '',
-  //   price: '',
-  //   type: ''
-  // });
-  // const { name, quantity, price, type } = inputData;
-  // const handleChange = (e) => {
-  //   setInputData((prevState) => ({
-  //     ...prevState,
-  //     [e.target.name]: e.target.value
-  //   }));
-  // };
 
   const handleCsvChange = (event) => {
     // Passing file data (event.target.files[0]) to parse using Papa.parse
@@ -76,12 +62,6 @@ function Inventory() {
       await addNewInventory(inventoryFormData);
       setIsAddingInventory(false);
       toast.success('Item added successfully');
-      // if (inventoryList.length > 0) {
-      //   setInventoryList([...inventoryList, data]);
-      // }
-      // if (inventoryList.length === 0) {
-      //   setInventoryList([data]);
-      // }
       getInventory();
     } catch (error) {
       setIsAddingInventory(false);
@@ -100,8 +80,7 @@ function Inventory() {
       const { data } = await getAllInventoryItems(page, size);
       setIsLoading(false);
       if (data) {
-        // const drugs = data.rows.filter((item) => item.type === 'DRUG');
-        setInventoryList(data.rows);
+        setInventoryList(data.data);
       }
     } catch (error) {
       setIsLoading(false);
@@ -178,7 +157,7 @@ function Inventory() {
                 ) : (
                   inventoryList &&
                   inventoryList
-                    .filter((row) => row.type === 'DRUG')
+                    .filter((row) => row.type === 'drug')
                     .map((row, index) => (
                       <TableRow key={row.name} className="odd:bg-white even:bg-slate-50">
                         <TableCell align="center">{index + 1}</TableCell>
@@ -188,15 +167,15 @@ function Inventory() {
                         <TableCell align="center">
                           <EditInventoryForm
                             selectedItem={row}
-                            setRows={setInventoryList}
+                            getInventory={getInventory}
                             rows={inventoryList}
                           />
                         </TableCell>
                         <TableCell align="center">
-                          <DeleteDialog
-                            id={row.id}
-                            setRows={setInventoryList}
-                            rows={inventoryList}
+                        <DeleteDialog
+                            id={row._id}
+                            item={row.name}
+                            getUpdatedList={() => getInventory()}
                             role="inventory"
                           />
                         </TableCell>
@@ -236,7 +215,7 @@ function Inventory() {
                 ) : (
                   inventoryList &&
                   inventoryList
-                    .filter((row) => row.type === 'TEST')
+                    .filter((row) => row.type === 'test')
                     .map((row, index) => (
                       <TableRow key={row.name} className="odd:bg-white even:bg-slate-50">
                         <TableCell align="center">{index + 1}</TableCell>
@@ -244,18 +223,17 @@ function Inventory() {
                         <TableCell align="center">{row.quantity}</TableCell>
                         <TableCell align="center">{row.price}</TableCell>
                         <TableCell align="center">
-                          <EditInventoryForm
+                        <EditInventoryForm
                             selectedItem={row}
-                            setRows={setInventoryList}
+                            getInventory={getInventory}
                             rows={inventoryList}
-                            user={user}
                           />
                         </TableCell>
                         <TableCell align="center">
                           <DeleteDialog
-                            id={row.id}
-                            setRows={setInventoryList}
-                            rows={inventoryList}
+                            id={row._id}
+                            item={row.name}
+                            getUpdatedList={() => getInventory()}
                             role="inventory"
                           />
                         </TableCell>

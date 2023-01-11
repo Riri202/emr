@@ -19,8 +19,9 @@ function EditBiodataForm({ formInputDetails, info, handleNotEditing, isEditing, 
       setAuthToken(user.token);
     }
     try {
-      const requestData = {patientId, age, occupation, sex, address, genoType, bloodGroup }
-      const { data } = await updatePatientBiodata(requestData);
+      const requestData = {age, occupation, sex, address, genotype, bloodGroup }
+      const patient_id = patientId
+      const { data } = await updatePatientBiodata(patient_id, requestData);
       setIsLoading(false);
       getBiodata();
       handleNotEditing()
@@ -32,7 +33,7 @@ function EditBiodataForm({ formInputDetails, info, handleNotEditing, isEditing, 
 
     const { handleChange, values, handleSubmit } = useForm(handleUpdatePatientBio);
 
-    const { age, occupation, sex, address, genoType, bloodGroup } = values;
+    const { age, occupation, sex, address, genotype, bloodGroup } = values;
 
   return (
     <>

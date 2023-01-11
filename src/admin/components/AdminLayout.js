@@ -22,6 +22,7 @@ import ListItemText from '@mui/material/ListItemText';
 import { FaHospitalUser, FaUserNurse, FaDiagnoses } from 'react-icons/fa';
 import { RiAdminLine } from 'react-icons/ri';
 import { MdOutlineInventory, MdSick } from 'react-icons/md';
+import AANU_OLU_HOSPITAL_LOGO from '../../assets/logo/aanu_olu_hospital_logo.jpg';
 
 //admin routes
 // import WorkerLoginDetails from '../pages/WorkerLoginDetails';
@@ -174,9 +175,14 @@ export default function AdminLayout() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            EMR
-          </Typography>
+          <div className="w-10 h-10 lg:w-10 lg:h-10 flex-1">
+            <img
+              src={AANU_OLU_HOSPITAL_LOGO}
+              alt="aanu-olu hospital logo"
+              width="auto"
+              height="100%"
+            />
+          </div>
           <AccountMenu />
         </Toolbar>
       </AppBar>
@@ -205,7 +211,7 @@ export default function AdminLayout() {
                   width: 25,
                   height: 25
                 }}
-                // onClick={() => handleNavigation(index)}
+              // onClick={() => handleNavigation(index)}
               >
                 <ListItemIcon
                   className={
@@ -231,7 +237,7 @@ export default function AdminLayout() {
               component="div"
               sx={{ mt: -1, mr: 2, justifySelf: 'end' }}
             >
-              <span className="font-semibold">Admin</span> {user.user.fullName}
+              <span className="font-semibold">Admin</span> {user.data.fullName}
             </Typography>
           </Box>
         </div>

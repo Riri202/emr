@@ -2,7 +2,7 @@ import httpService from '../axios';
 
 const StaffUrl = '/staff';
 const InventoryUrl = '/inventory';
-const PatientUrl = '/patient';
+const PatientUrl = '/patients';
 const ReceivedQueuesUrl = '/queue/staff/received';
 const sendQueueUrl = '/queue/add';
 const PrescriptionUrl = '/prescription';
@@ -20,14 +20,14 @@ export const addNewStaff = (data) => {
 export const getAllStaff = (page, size) => {
   return httpService.get(StaffUrl, { params: { page, size } });
 };
-export const getSingleStaff = (uuid) => {
-  return httpService.get(StaffUrl + '/info/' + uuid);
+export const getSingleStaff = (staff_id) => {
+  return httpService.get(StaffUrl + '/info/' + staff_id);
 };
-export const updateStaff = (data) => {
-  return httpService.patch(StaffUrl, data);
+export const updateStaff = (data, staff_id) => {
+  return httpService.patch(StaffUrl + '/' + staff_id, data);
 };
-export const updateStaffStatus = (uuid, status) => {
-  return httpService.put(StaffUrl + '/status/' + uuid + '/' + status);
+export const updateStaffStatus = (staff_id) => {
+  return httpService.patch(StaffUrl + '/status/' + staff_id);
 };
 
 export const setStaffShiftHours = (data) => {
@@ -45,19 +45,19 @@ export const addNewPatients = (data) => {
   return httpService.post(PatientUrl, data);
 };
 export const addPatientBiodata = (data) => {
-  return httpService.post(PatientUrl + '/bio', data);
+  return httpService.post(PatientUrl + '/bios', data);
 };
 export const getPatientBiodata = (patientId) => {
-  return httpService.get(PatientUrl + '/bio' + '/' + patientId);
+  return httpService.get(PatientUrl + '/bios' + '/' + patientId);
 };
-export const updatePatientBiodata = (data) => {
-  return httpService.put(PatientUrl + '/bio', data);
+export const updatePatientBiodata = (patient_id, data) => {
+  return httpService.put(PatientUrl + '/bios'+ '/' + patient_id, data);
 };
 export const getAllPatients = (page, size) => {
   return httpService.get(PatientUrl, { params: { page, size } });
 };
-export const updatePatient = (data) => {
-  return httpService.patch(PatientUrl, data);
+export const updatePatient = (data, patient_id) => {
+  return httpService.put(PatientUrl + '/' + patient_id, data);
 };
 
 export const addNewInventory = (data) => {
@@ -66,8 +66,8 @@ export const addNewInventory = (data) => {
 export const getAllInventoryItems = (page, size) => {
   return httpService.get(InventoryUrl, { params: { page, size } });
 };
-export const updateInventory = (data) => {
-  return httpService.patch(InventoryUrl, data);
+export const updateInventory = (id, data) => {
+  return httpService.patch(InventoryUrl+ '/' + id, data);
 };
 
 export const addPrescription = (data) => {

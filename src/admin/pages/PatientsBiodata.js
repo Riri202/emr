@@ -94,7 +94,7 @@ function PatientsBiodata() {
       const { data } = await getAllPatients(page, size);
       setIsLoading(false);
       if (data) {
-        setRows(data.rows);
+        setRows(data.data);
       }
     } catch (error) {
       setIsLoading(false);
@@ -181,7 +181,7 @@ function PatientsBiodata() {
                         <TableCell align="center">{row.PID}</TableCell>
                         <TableCell
                           align="center"
-                          onClick={() => handlePatientNameClick(row.id, row.name)}
+                          onClick={() => handlePatientNameClick(row.patient_id, row.name)}
                           className="cursor-pointer hover:shadow-md underline decoration-orange-500"
                         >
                           {row.name}
@@ -192,18 +192,16 @@ function PatientsBiodata() {
                         <TableCell align="center">
                           <EditPatientForm
                             selectedPatient={row}
-                            setRows={setRows}
-                            rows={rows}
                             user={user}
                             getPatients={getPatients}
                           />
                         </TableCell>
                         <TableCell align="center">
                           <DeleteDialog
-                            id={row.uuid}
-                            setRows={setRows}
-                            rows={rows}
-                            role="patient"
+                            id={row.patient_id}
+                            item={row.name}
+                            getUpdatedList={() => getPatients()}
+                            role="patients"
                           />
                         </TableCell>
                       </TableRow>

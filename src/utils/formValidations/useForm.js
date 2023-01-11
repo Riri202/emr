@@ -135,11 +135,6 @@ const useForm = (callback) => {
             ...errors,
             type: 'required'
           });
-        } else if (!new RegExp(/^[A-Z]*$/).test(value)) {
-          setErrors({
-            ...errors,
-            type: 'type should be in uppercase'
-          });
         } else {
           let newObj = omit(errors, 'type');
           setErrors(newObj);
@@ -152,12 +147,8 @@ const useForm = (callback) => {
             ...errors,
             role: 'required'
           });
-        } else if (!new RegExp(/^[A-Z]*$/).test(value)) {
-          setErrors({
-            ...errors,
-            role: 'role should be in uppercase'
-          });
-        } else {
+        }
+         else {
           let newObj = omit(errors, 'role');
           setErrors(newObj);
         }

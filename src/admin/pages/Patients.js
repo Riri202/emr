@@ -61,7 +61,7 @@ const formInputDetails = [
     options: []
   },
   {
-    name: 'genoType',
+    name: 'genotype',
     id: 'genotype',
     label: 'Genotype',
     isSelectInput: true,
@@ -158,7 +158,7 @@ function PatientDetails() {
 
   const addBiodata = async () => {
     setIsAdding(true);
-    const biodata = { age, sex, address, genoType, bloodGroup, occupation, registration, patientId };
+    const biodata = { age, sex, address, genotype, bloodGroup, occupation, registration, patient_id: patientId };
     if (user) {
       setAuthToken(user.token);
     }
@@ -169,6 +169,7 @@ function PatientDetails() {
       getBiodata();
     } catch (error) {
       setIsAdding(false);
+      console.log(error)
       toast.error(error.message);
     }
   };
@@ -181,21 +182,21 @@ function PatientDetails() {
     try {
       const { data } = await getPatientBiodata(patientId);
       setIsLoading(false);
-      setInfo(data);
+      setInfo(data.data);
     } catch (error) {
       setIsLoading(false);
       console.log(error);
       // toast.error('an error occured');
     }
   };
-
+console.log(info)
   useEffect(() => {
     getBiodata();
   }, []);
 
   const { handleChange, values, handleSubmit } = useForm(addBiodata);
 
-  const { age, sex, address, genoType, bloodGroup, occupation, registration } = values;
+  const { age, sex, address, genotype, bloodGroup, occupation, registration } = values;
 
   return (
     <div className="p-6">

@@ -4,6 +4,7 @@ import FolderSharedIcon from '@mui/icons-material/FolderShared';
 
 // eslint-disable-next-line react/prop-types
 function BiodataDetails({ info }) {
+  console.log(info)
   const arr = ['age', 'sex', 'genoType', 'address', 'bloodGroup', 'registration', 'occupation'];
   return (
     <List component="li" disablePadding className="grid grid-cols-2 gap-4">

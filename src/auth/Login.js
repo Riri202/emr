@@ -29,7 +29,7 @@ function Login() {
   // const loggedInUser = JSON.parse(localStorage.getItem('user'));
   const handleRoleBasedRouting = (user) => {
     if (user) {
-      const userRole = user.user.role;
+      const userRole = user?.data?.role;
       switch (userRole) {
         case ADMIN_USER_ROLE:
           navigate(`/admin`);

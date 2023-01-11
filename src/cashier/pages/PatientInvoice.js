@@ -135,7 +135,7 @@ function PatientInvoice() {
                     </tr>
                   ) : (
                     prescription
-                      .filter((item) => !item.paid)
+                      .filter((item) => !item.paid && item.drug.type === "DRUG")
                       .map((item, index) => {
                         const { drug, note, id, quantity, days } = item;
                         const total = quantity * drug.price;

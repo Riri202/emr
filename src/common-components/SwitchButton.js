@@ -17,12 +17,12 @@ function SwitchButton({ id, user }) {
       setAuthToken(user.token);
     }
     try {
-      const uuid = id;
-      const { data } = await getSingleStaff(uuid);
+      const staff_id = id;
+      const { data } = await getSingleStaff(staff_id);
       setIsLoading(false);
 
       if (data) {
-        setStaffStatus(data.status);
+        setStaffStatus(data.data.status);
       }
     } catch (error) {
       setIsLoading(false);
@@ -36,14 +36,14 @@ function SwitchButton({ id, user }) {
       setAuthToken(user.token);
     }
     try {
-      const uuid = id;
-      const status = event.target.checked ? 'TRUE' : 'FALSE';
-      const { data } = await updateStaffStatus(uuid, status);
+      const staff_id = id;
+      // const status = event.target.checked ? 'TRUE' : 'FALSE';
+      const { data } = await updateStaffStatus(staff_id);
       toast.success(data.message);
       getStaffStatus();
     } catch (error) {
       console.log(error);
-      toast.error('an error occured while switching');
+      toast.error('an error occured');
     }
   };
 

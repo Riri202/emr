@@ -5,7 +5,7 @@ import { updateStaff } from '../../utils/api';
 import setAuthToken from '../../utils/setAuthToken';
 import EditForm from './EditForm';
 
-export default function EditWorkerForm({ selectedWorker, setRows, rows, user }) {
+export default function EditWorkerForm({ selectedWorker, getStaff, user }) {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   // eslint-disable-next-line no-unused-vars
@@ -13,9 +13,10 @@ export default function EditWorkerForm({ selectedWorker, setRows, rows, user }) 
     fullName: selectedWorker.fullName,
     username: selectedWorker.username,
     role: selectedWorker.role,
-    uuid: selectedWorker.uuid
+    staff_id: selectedWorker.staff_id
+    // TODO change uuid to staff_id and remove this updatedStaff function
   });
-  const { fullName, username, role, uuid } = inputData;
+  const { fullName, username, role, staff_id } = inputData;
   const handleChange = (e) => {
     setInputData((prevState) => ({
       ...prevState,
@@ -31,23 +32,17 @@ export default function EditWorkerForm({ selectedWorker, setRows, rows, user }) 
     setOpen(false);
   };
 
-  // add changes made to the staff table
-  const updatedStaff = (id, inputData) => {
-    setRows(rows.map((row) => (row.uuid === id ? inputData : row)));
-  };
 
   const handleUpdateStaffDetails = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    // const uuid = selectedWorker.uuid;
-    // const staffFormData = { fullName, username, role, uuid };
 
     if (user) {
       setAuthToken(user.token);
     }
     try {
-      const { data } = await updateStaff(inputData);
-      updatedStaff(uuid, inputData);
+      const { data } = await updateStaff(inputData, staff_id);
+      getStaff()
       setIsLoading(false);
       setOpen(false);
       toast.success(data.message);

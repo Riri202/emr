@@ -8,15 +8,12 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-// import { Edit, Delete } from '@mui/icons-material';
-// import IconButton from '@mui/material/IconButton';
 import setAuthToken from '../../utils/setAuthToken';
 import { getAllStaff } from '../../utils/api';
 import { CircularProgress } from '@material-ui/core';
 import { useCurrentUser } from '../../utils/hooks';
 import SwitchButton from '../../common-components/SwitchButton';
 import { Link } from 'react-router-dom';
-// import InputDetailsForm from '../components/InputDetailsForm';
 
 const useStyles = makeStyles({
   table: {
@@ -34,7 +31,7 @@ function AdminLoginDetails() {
   const [isLoading, setIsLoading] = useState(false);
 
   const getAdmins = (allStaff) => {
-    const allAdmins = allStaff.rows.filter((staff) => staff.role === 'ADMIN');
+    const allAdmins = allStaff.filter((staff) => staff.role === 'admin');
     setAdminList([...allAdmins]);
   };
 
@@ -49,9 +46,10 @@ function AdminLoginDetails() {
       const { data } = await getAllStaff(page, size);
       setIsLoading(false);
       if (data) {
-        getAdmins(data);
+        getAdmins(data.data);
       }
     } catch (error) {
+      console.log(error)
       setIsLoading(false);
       toast.error('an error occured');
     }
@@ -97,7 +95,7 @@ function AdminLoginDetails() {
                       <TableCell align="center">{row.username}</TableCell>
                       <TableCell align="center">{row.role}</TableCell>
                       <TableCell align="center">
-                        <SwitchButton id={row.uuid} user={user} />
+                        <SwitchButton id={row.staff_id} user={user} />
                       </TableCell>
                       {/* <TableCell align="center">
                     <IconButton className="outline-none">

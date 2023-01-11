@@ -12,10 +12,9 @@ const initialState = {
   isLoading: false,
   message: ''
 };
-const API_URL = 'https://emr-server.herokuapp.com';
 
 // login staff
-export const login = createAsyncThunk(`${API_URL}/auth/login`, async (userData, thunkAPI) => {
+export const login = createAsyncThunk(`${process.env.REACT_APP_BASEURL}/auth/login`, async (userData, thunkAPI) => {
   try {
     const { data } = await authService.login(userData);
     if (data) {

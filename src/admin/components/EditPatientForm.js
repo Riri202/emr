@@ -15,10 +15,10 @@ export default function EditWorkerForm({ selectedPatient, user, getPatients }) {
     email: selectedPatient.email,
     phoneNumber: selectedPatient.phoneNumber,
     dob: selectedPatient.dob,
-    uuid: selectedPatient.uuid,
+    patient_id: selectedPatient.patient_id,
     PID: selectedPatient.PID
   });
-  const { name, email, phoneNumber, dob, PID } = inputData;
+  const { name, email, phoneNumber, dob, PID, patient_id } = inputData;
   const handleChange = (e) => {
     setInputData((prevState) => ({
       ...prevState,
@@ -36,20 +36,20 @@ export default function EditWorkerForm({ selectedPatient, user, getPatients }) {
 
   // add changes made to the patient table
   // const updatedPatient = (id, inputData) => {
-  //   setRows(rows.map((row) => (row.uuid === id ? inputData : row)));
+  //   setRows(rows.map((row) => (row.patient_id === id ? inputData : row)));
   // };
 
   const handleUpdatePatientDetails = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    // const uuid = selectedPatient.uuid;
-    // const patientFormData = { name, email, phoneNumber, dob, uuid };
+    // const patient_id = selectedPatient.patient_id;
+    // const patientFormData = { name, email, phoneNumber, dob, patient_id };
     if (user) {
       setAuthToken(user.token);
     }
     try {
-      const { data } = await updatePatient(inputData);
-      // updatedPatient(uuid, inputData);
+      const { data } = await updatePatient(inputData, patient_id);
+      // updatedPatient(patient_id, inputData);
       setIsLoading(false);
       setOpen(false);
       getPatients();

@@ -88,7 +88,7 @@ function App() {
           {/* pharmacist routes */}
           <Route element={<ProtectedRoutes allowedRole={PHARMACIST_USER_ROLE} />}>
             <Route path="/pharmacist" element={<PharmacistHome />} />
-            <Route path="/approved-invoice/:patientId/:sessionId" element={<PharmacistInvoice />} />
+            <Route path="/approved-invoice/:patientId/:sessionId/:paymentId" element={<PharmacistInvoice />} />
           </Route>
 
           {/* lab routes */}

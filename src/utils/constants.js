@@ -1,9 +1,8 @@
-export const API_URL = 'http://localhost:3111';
 
-export const ADMIN_USER_ROLE = 'ADMIN';
-export const RECEPTIONIST_USER_ROLE = 'RECEPTIONIST';
-export const DOCTOR_USER_ROLE = 'DOCTOR';
-export const CASHIER_USER_ROLE = 'CASHIER';
-export const LAB_USER_ROLE = 'LAB';
-export const PHARMACIST_USER_ROLE = 'PHARMACIST';
-export const XRAY_USER_ROLE = 'XRAY';
+export const ADMIN_USER_ROLE = 'admin';
+export const RECEPTIONIST_USER_ROLE = 'receptionist';
+export const DOCTOR_USER_ROLE = 'doctor';
+export const CASHIER_USER_ROLE = 'cashier';
+export const LAB_USER_ROLE = 'lab';
+export const PHARMACIST_USER_ROLE = 'pharmacist';
+export const XRAY_USER_ROLE = 'xray';

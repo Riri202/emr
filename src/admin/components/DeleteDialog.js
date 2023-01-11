@@ -13,7 +13,7 @@ import IntuitiveButton from '../../common-components/IntuitiveButton';
 import authHeader from '../../redux/features/auth/authHeader';
 import { DialogContent, DialogContentText } from '@material-ui/core';
 
-export default function DeleteDialog({ id, rows, setRows, role }) {
+export default function DeleteDialog({ id, getUpdatedList, item, role }) {
   const [open, setOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -24,15 +24,15 @@ export default function DeleteDialog({ id, rows, setRows, role }) {
   const handleClose = () => {
     setOpen(false);
   };
-  const deletedItem = (id, rows) => {
-    if (role === 'patient' || role === 'staff') {
-      const filteredRows = rows.filter((row) => row.uuid !== id);
-      setRows(filteredRows);
-    } else if (role === 'inventory' || role === 'diagnosis' || role === 'symptoms') {
-      const filteredRows = rows.filter((row) => row.id !== id);
-      setRows(filteredRows);
-    }
-  };
+  // const deletedItem = (id, rows) => {
+  //   if (role === 'patient' || role === 'staff') {
+  //     const filteredRows = rows.filter((row) => row.uuid !== id);
+  //     setRows(filteredRows);
+  //   } else if (role === 'inventory' || role === 'diagnosis' || role === 'symptoms') {
+  //     const filteredRows = rows.filter((row) => row.id !== id);
+  //     setRows(filteredRows);
+  //   }
+  // };
 
   const handleDelete = async (e) => {
     e.preventDefault();
@@ -42,17 +42,18 @@ export default function DeleteDialog({ id, rows, setRows, role }) {
       await axios({
         method: 'delete',
         // url: `https://emr-server.herokuapp.com/${role}/${id}`,
-        url: `http://localhost:3111/${role}/${id}`,
+        url: `${process.env.REACT_APP_BASEURL}/${role}/${id}`,
         headers: authHeader()
       }).then((response) => {
-        deletedItem(id, rows);
-        setIsLoading(false);
-        setOpen(false);
-        toast.success(response.data.message);
+        toast.success(response.data.data);
+        getUpdatedList()
       });
     } catch (error) {
       setIsLoading(false);
       toast.error(error.message);
+    } finally {
+      setIsLoading(false);
+      setOpen(false);
     }
   };
 
@@ -63,7 +64,7 @@ export default function DeleteDialog({ id, rows, setRows, role }) {
       </IconButton>
       <Dialog open={open} onClose={handleClose} fullWidth>
         <form className="w-full p-4" onSubmit={handleDelete}>
-          <DialogTitle>Are you sure you want to delete?</DialogTitle>
+          <DialogTitle>{`Are you sure you want to delete "${item}"?`}</DialogTitle>
           <DialogContent>
             <DialogContentText>
               This will permanently remove the details from the system and cannot be reversed.
